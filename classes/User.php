@@ -21,7 +21,7 @@ class User {
     private $uPrefix;
 
     /**
-     * User constructor.
+     *
      *
      * @param $uID int User ID
      * @param $uName string Username
