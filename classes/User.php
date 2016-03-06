@@ -8,6 +8,8 @@
 
 namespace Entrance;
 
+use PDO;
+use PDO_MYSQL;
 
 class User {
 
