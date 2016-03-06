@@ -14,8 +14,6 @@ use PDO_MYSQL;
 class User {
     private $uID;
     private $uName;
-    private $uFirstName;
-    private $uLastName;
     private $uEmail;
     private $uPassHash;
     private $uPrefix;
@@ -25,20 +23,16 @@ class User {
      *
      * @param $uID int User ID
      * @param $uName string Username
-     * @param $uFirstName string Users Firstname
-     * @param $uLastName string Users Lastname
      * @param $uEmail string Users Email
      * @param $uPassHash string Users md5-hash
      */
-    private function __construct($uID, $uName, $uFirstName, $uLastName, $uEmail, $uPassHash, $level) {
+    private function __construct($uID, $uName, $uEmail, $uPassHash, $level) {
         $this->uID = $uID;
         $this->uName = $uName;
-        $this->uFirstName = $uFirstName;
-        $this->uLastName = $uLastName;
         $this->uEmail = $uEmail;
         $this->uPassHash = $uPassHash;
         $this->uPrefix = $level;
-    } // 0- User | 1- Mod | 2-Admin
+    } // 0- Schleuser | 1- Orga | 2-Admin
 
 
     /**
@@ -50,7 +44,7 @@ class User {
     public static function fromUID($uID) {
         $pdo = new PDO_MYSQL();
         $res = $pdo->query("SELECT * FROM schlopolis_user WHERE uID = :uid", [":uid" => $uID]);
-        return new User($res->uID, $res->username, $res->firstname, $res->lastname, $res->mail, $res->passwd, $res->level);
+        return new User($res->uID, $res->username, $res->mail, $res->passwd, $res->level);
     }
 
     /**
@@ -62,7 +56,7 @@ class User {
     public static function fromUName($uName) {
         $pdo = new PDO_MYSQL();
         $res = $pdo->query("SELECT * FROM schlopolis_user WHERE username = :uname", [":uname" => $uName]);
-        return new User($res->uID, $res->username, $res->firstname, $res->lastname, $res->mail, $res->passwd, $res->level);
+        return new User($res->uID, $res->username, $res->mail, $res->passwd, $res->level);
     }
 
     /**
@@ -77,20 +71,6 @@ class User {
      */
     public function setUName($uName) {
         $this->uName = $uName;
-    }
-
-    /**
-     * @param string $uFirstName
-     */
-    public function setUFirstName($uFirstName) {
-        $this->uFirstName = $uFirstName;
-    }
-
-    /**
-     * @param string $uLastName
-     */
-    public function setULastName($uLastName) {
-        $this->uLastName = $uLastName;
     }
 
     /**
@@ -235,8 +215,6 @@ class User {
             "id" => $this->uID,
             "usrname" => $this->uName,
             "usrchar" => $this->uName[0],
-            "firstname" => $this->uFirstName,
-            "lastname" => $this->uLastName,
             "email" => $this->uEmail,
             "lvl" => $this->uPrefix,
             "prefix" => $this->getPrefixAsHtml()
@@ -254,8 +232,6 @@ class User {
             "id:        ".$this->uID."\n".
             "usrname:   ".$this->uName."\n".
             "usrchar:   ".$this->uName[0]."\n".
-            "firstname: ".$this->uFirstName."\n".
-            "lastname:  ".$this->uLastName."\n".
             "email:     ".$this->uEmail."\n".
             "lvl:       ".$this->uPrefix."\n".
             "prefix:    ".$this->getPrefixAsHtml()."\n";
@@ -300,7 +276,7 @@ class User {
     public static function getAllUsers() {
         $pdo = new PDO_MYSQL();
         $stmt = $pdo->queryMulti("SELECT uID FROM schlopolis_user ORDER BY uID");
-        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\ICMS\\User::fromUID");
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\User::fromUID");
     }
 
     /**
@@ -318,24 +294,22 @@ class User {
      */
     public function saveChanges() {
         $pdo = new PDO_MYSQL();
-        $pdo->query("UPDATE schlopolis_user SET mail = :Email, firstname = :Firstname, lastname = :Lastname, passwd = :Passwd, username = :Username, level = :lvl WHERE uID = :uID LIMIT 1",
-            [":Email" => $this->uEmail, ":Firstname" => $this->uFirstName, ":Lastname" => $this->uLastName, ":Passwd" => $this->uPassHash, ":Username" => $this->uName, ":uID" => $this->uID, ":lvl" => $this->uPrefix]);
+        $pdo->query("UPDATE entrance_user SET mail = :Email, passwd = :Passwd, username = :Username, level = :lvl WHERE uID = :uID LIMIT 1",
+            [":Email" => $this->uEmail, ":Passwd" => $this->uPassHash, ":Username" => $this->uName, ":uID" => $this->uID, ":lvl" => $this->uPrefix]);
     }
 
     /**
      * Creates a new user from the give attribs
      *
      * @param $username string Username
-     * @param $firstname string Firstname
-     * @param $lastname string Lastname
      * @param $email string Email Adress
      * @param $passwdhash string md5 Hash of Password
      * @return User The new User as an Object
      */
-    public static function createUser($username, $firstname, $lastname, $email, $passwdhash) {
+    public static function createUser($username, $email, $passwdhash) {
         $pdo = new PDO_MYSQL();
-        $pdo->query("INSERT INTO schlopolis_user(username, firstname, lastname, mail, passwd) VALUES (:Username, :Firstname, :Lastname, :Email, :Passwd)",
-            [":Username" => $username, ":Firstname" => $firstname, ":Lastname" => $lastname, ":Email" => $email, ":Passwd" => md5($passwdhash)]);
+        $pdo->query("INSERT INTO entrance_user(username, mail, passwd) VALUES (:Username, :Email, :Passwd)",
+            [":Username" => $username, ":Email" => $email, ":Passwd" => md5($passwdhash)]);
         return self::fromUName($username);
     }
 }
