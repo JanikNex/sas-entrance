@@ -91,7 +91,7 @@ class LogEntry {
      */
     public function timeBetweenTwoEntries(){
         $pdo = new PDO_MYSQL();
-        $timeOld = $pdo -> query("SELECT * FROM entrance_logs WHERE cID = :cID AND lID < :lID ORDER BY lID DESC LIMIT 1",
+        $timeOld = $pdo -> query("SELECT * FROM entrance_logs WHERE cID = :cID AND success = 1 AND lID < :lID ORDER BY lID DESC LIMIT 1",
             [":cID" => $this -> cID, ":lID" => $this -> lID]) -> timestamp;
         return $this -> timestamp - $timeOld;
     }

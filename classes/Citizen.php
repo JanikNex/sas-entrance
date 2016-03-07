@@ -147,7 +147,7 @@ class Citizen {
         }
         if($this -> isCitizenInState() == 1){
             $pdo = new PDO_MYSQL();
-            $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
+            $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid AND success = 1 ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
             $time += time() - $res -> timestamp;
         }
         return $time;
