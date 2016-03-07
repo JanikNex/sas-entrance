@@ -1,5 +1,6 @@
 {include file="base.tpl"}
 <div class="content">
+            <link type="text/css" rel="stylesheet" href="libs/materialize/css/materialize.min.css"  media="screen,projection"/>
             <table class="edit">
                 <thead>
                     <tr>

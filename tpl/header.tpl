@@ -16,13 +16,13 @@
         </div>
         <div class="aside">
             <ul>
-                {if $args.level >= 1}
+                {if $args.level >= 0}
                     <li>ICH</li>
                     {if 0 == 1}<li><a href="">Dashboard</a></li>{/if}
                     {if $args.perm.site_view == 1 and false}<li><a href="">Meine Änderungen</a></li>{/if}
                     <li><a href="users.php?action=edit&uID={$args.uID}">Mein Account</a></li>
                     <hr/>
-                    {if $args.perm.citizen_login or $args.perm.citizen_logout}
+                    {if $args.perm.citizen_login == 1 or $args.perm.citizen_logout == 1}
                         <li>Ein/Ausbuchen</li>
                         {if $args.perm.citizen_login == 1}<li><a href="files.php">Einbuchen</a></li>{/if}
                         {if $args.perm.citizen_logout == 1}<li><a href="protocols.php">Ausbuchen</a></li>{/if}
@@ -31,12 +31,12 @@
                     {/if}
                     {if $args.perm.citizen_view == 1}
                         <li>Schüler</li>
-                        {if $args.perm.citizen_view == 1}<li><a href="">Alle Schüler</a></li>{/if}
+                        {if $args.perm.citizen_view == 1}<li><a href="citizen.php">Alle Schüler</a></li>{/if}
                         {if $args.perm.citizen_info_difference == 1}<li><a href="">Böse Schüler</a></li>{/if}
                         {if $args.perm.citizen_present_list == 1}<li><a href="">zZ im Staat</a></li>{/if}
                         <hr/>
                     {/if}
-                    {if $args.perm.citizen_present_list == 1}
+                    {if $args.perm.citizen_present_number == 1}
                         <li>Infobildschirm</li>
                             <li><a href="">Anzahl im Staat</a></li>
                         <hr/>
@@ -51,8 +51,8 @@
             <span style="position: absolute; bottom: 5px; font-family: 'Roboto'; font-size: 11.5px;">SaS Entrance&trade; Version <span style="color: red;">b</span>0.0.2<br/>&copy;2016<br/> Janik Rapp, Yannick F&#233;lix</span>
         </div>
         <div style="position: fixed; top: 0; left: 310px; z-index: 1000; color: red; font-family: 'Roboto'; font-size: 15px">beta</div>
-        <!-- Before body closing tag -->
+        <!-- Before body closing tag
         <script src="libs/bower_components/velocity/velocity.js"></script>
         <script src="libs/bower_components/moment/min/moment-with-locales.js"></script>
         <script src="libs/bower_components/angular/angular.js"></script>
-        <script src="libs/bower_components/lumx/dist/lumx.js"></script>
+        <script src="libs/bower_components/lumx/dist/lumx.js"></script>-->

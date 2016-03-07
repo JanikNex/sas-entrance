@@ -8,6 +8,8 @@
 
 namespace Entrance;
 
+use PDO;
+
 class Citizen {
     private $cID, $firstname, $lastname, $classlevel, $birthday, $barcode;
 
@@ -50,16 +52,15 @@ class Citizen {
     }
 
     /**
-     * @param $cID
      * @param $firstname
      * @param $lastname
      * @param $classlevel
      * @param $birthday
      * @param $barcode
      */
-    public static function createCitizen($cID, $firstname, $lastname, $classlevel, $birthday, $barcode) {
+    public static function createCitizen($firstname, $lastname, $classlevel, $birthday, $barcode) {
         $pdo = new PDO_MYSQL();
-        $pdo->query("INSERT INTO entrance_citizen(firstname, lastname, classlevel, birthday, barcode) VALUES (:firstname, :lastname, :classlevel, birthday, barcode)",
+        $pdo->query("INSERT INTO entrance_citizen(firstname, lastname, classlevel, birthday, barcode) VALUES (:firstname, :lastname, :classlevel, :birthday, :barcode)",
             [":firstname" => $firstname, ":lastname" => $lastname, ":classlevel" => $classlevel, ":birthday" => $birthday, ":barcode" => $barcode]);
     }
 
@@ -95,6 +96,12 @@ class Citizen {
     public static function getAllBadCitizen() {
 
     }
+    
+    public function saveChanges() {
+        $pdo = new PDO_MYSQL();
+        $pdo->query("UPDATE entrance_citizen SET firstname = :firstname, lastname = :lastname, classlevel = :classlevel, birthday = :birthday, barcode = :barcode WHERE cID = :cid",
+            [":firstname" => $this->firstname, ":lastname" => $this->lastname, ":classlevel" => $this->classlevel, ":birthday" => $this->birthday, ":barcode" => $this->barcode, ":cid" => $this->cID]);
+    }
 
     /**
      * @return array
@@ -106,7 +113,8 @@ class Citizen {
             "lastname" => $this->lastname,
             "classlevel" => $this->classlevel,
             "birthday" => $this->birthday,
-            "barcode" => $this->barcode
+            "barcode" => $this->barcode,
+            "inState" => $this->isCitizenInState() ? 0 : 1
         ];
     }
 

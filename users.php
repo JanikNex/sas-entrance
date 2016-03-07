@@ -31,6 +31,7 @@ if($action == "new") {
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Benutzer", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
     }
 } elseif($action == "edit" and is_numeric($uID)) {
     if ($user->isActionAllowed(PERM_USER_EDIT) or $uID == $user->getUID()) {
@@ -44,6 +45,7 @@ if($action == "new") {
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Benutzer", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
     }
 } elseif($action == "postNew") {
     if ($user->isActionAllowed(PERM_USER_CREATE)) {
@@ -53,6 +55,7 @@ if($action == "new") {
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Benutzer", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
     }
 } elseif($action == "postEdit" and is_numeric($uID)) {
     if($user->isActionAllowed(PERM_USER_EDIT) or $uID == $user->getUID()) {
@@ -79,6 +82,7 @@ if($action == "new") {
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Benutzer", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
     }
 } elseif($action == "del" and is_numeric($uID)) {
     if($user->isActionAllowed(PERM_USER_DELETE)) {
@@ -89,6 +93,7 @@ if($action == "new") {
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Benutzer", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
     }
 } elseif($action == "updatePerms" and is_numeric($uID)) {
     if($user->isActionAllowed(PERM_USER_EDIT_PERMISSIONS)) {
@@ -101,6 +106,7 @@ if($action == "new") {
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Benutzer", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
     }
 }
 

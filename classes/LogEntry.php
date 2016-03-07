@@ -14,12 +14,14 @@ class LogEntry {
 
     /**
      * LogEntry constructor.
+     * @param $lID
      * @param $uID
      * @param $timestamp
      * @param $action
      * @param $success
      */
-    public function __construct($uID, $timestamp, $action, $success) {
+    public function __construct($lID, $uID, $timestamp, $action, $success) {
+        $this->lID = $lID;
         $this->uID = $uID;
         $this->timestamp = $timestamp;
         $this->action = $action;
@@ -30,7 +32,7 @@ class LogEntry {
      * @param int $limit
      * @return LogEntry[]
      */
-    public static function getAllLogs($limit = 0) {
+    public static function getAllLogs($limit = 18446744073709551610) {
         $pdo = new PDO_MYSQL();
         $stmt = $pdo->queryMulti("SELECT lID FROM entrance_logs ORDER BY lID LIMIT :limit");
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Logs::fromLID");
