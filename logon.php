@@ -6,10 +6,14 @@
  * Time: 00:41
  */
 
-require_once 'classes/PDO_MYSQL.class.php'; //DB Anbindung
-require_once 'lib/dwoo/lib/Dwoo/Autoloader.php'; //Dwoo Laden
+error_reporting(E_ALL);
+ini_set("diplay_errors", "on");
+
+require_once 'classes/PDO_MYSQL.php'; //DB Anbindung
+require_once 'libs/dwoo/lib/Dwoo/Autoloader.php'; //Dwoo Laden
 require_once 'classes/User.php';
-$pdo = new PDO_MYSQL();
+require_once 'classes/Util.php';
+$pdo = new \Entrance\PDO_MYSQL();
 Dwoo\Autoloader::register();
 $dwoo = new Dwoo\Core();
 
@@ -19,13 +23,13 @@ $logout   = $_GET['logout'];
 $ses      = $_GET['badsession'];
 
 if(isset($usrname)) {
-    if(\ICMS\User::doesUserNameExist($usrname)) {
+    if(\Entrance\User::doesUserNameExist($usrname)) {
 
-        $user = \ICMS\User::fromUName($usrname);
+        $user = \Entrance\User::fromUName($usrname);
         if($user->comparePWHash(md5($password))) {
             session_start();
             $_SESSION['uID'] = $user->getUID();
-            forwardTo("users.php");
+            \Entrance\Util::forwardTo("users.php");
         } else {
             $dwoo->output("tpl/logon.tpl", ["err" => "2","usrname" => $usrname]);
         }

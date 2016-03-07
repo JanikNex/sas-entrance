@@ -20,4 +20,8 @@ namespace Entrance;
      public static function checkSession() {
 
      }
+
+     public static function forwardTo($url) {
+         echo "<meta http-equiv=\"refresh\" content=\"0; url=$url\" />";
+     }
  }
