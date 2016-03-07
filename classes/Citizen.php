@@ -93,8 +93,22 @@ class Citizen {
         return sizeof(self::getAllCitizenInState());
     }
 
+    /**
+     * @return Citizen[]
+     */
     public static function getAllBadCitizen() {
-
+        $citizens = self::getAllCitizen();
+        $days = LogEntry::getProjectDays();
+        $badCitizens = [];
+        foreach($citizens as $citizen){
+            foreach($days as $day){
+                if($citizen -> timePerDay($day) <= 21600){
+                    array_push($badCitizens, $citizen);
+                    break;
+                }
+            }
+        }
+        return $badCitizens;
     }
 
     public function saveChanges() {
