@@ -29,7 +29,6 @@ class Citizen {
         $this->barcode = $barcode;
     }
 
-
     public static function fromCID($cID) {
 
     }
@@ -63,6 +62,10 @@ class Citizen {
     }
 
     public function delete() {
+
+    }
+
+    public function isCitizenInState() {
 
     }
 
