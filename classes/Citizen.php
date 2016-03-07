@@ -29,12 +29,24 @@ class Citizen {
         $this->barcode = $barcode;
     }
 
+    /**
+     * @param $cID
+     * @return Citizen
+     */
     public static function fromCID($cID) {
-
+        $pdo = new PDO_MYSQL();
+        $res = $pdo->query("SELECT * FROM entrance_citizen WHERE cID = :cid", [":cid" => $cID]);
+        return new Citizen($res->cID, $res->firstname, $res->lastname, $res->classLevel, $res->birthday, $res -> barcode);
     }
 
+    /**
+     * @param $barcode
+     * @return Citizen
+     */
     public static function fromBarcode($barcode) {
-
+        $pdo = new PDO_MYSQL();
+        $res = $pdo->query("SELECT * FROM entrance_citizen WHERE barcode = :barcode", [":barcode" => $barcode]);
+        return new Citizen($res->cID, $res->firstname, $res->lastname, $res->classLevel, $res->birthday, $res -> barcode);
     }
 
     /**
@@ -106,6 +118,9 @@ class Citizen {
         return $pdo->query("DELETE FROM entrance_citizen WHERE cID = :cid", [":cid" => $this->cID]);
     }
 
+    /**
+     * @return bool
+     */
     public function isCitizenInState() {
         $pdo = new PDO_MYSQL();
         $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
