@@ -43,7 +43,7 @@ class User {
     public static function fromUID($uID) {
         $pdo = new PDO_MYSQL();
         $res = $pdo->query("SELECT * FROM entrance_user WHERE uID = :uid", [":uid" => $uID]);
-        return new User($res->uID, $res->username, $res->mail, $res->passwd, $res->level);
+        return new User($res->uID, $res->username, $res->email, $res->passwd, $res->lvl);
     }
 
     /**
@@ -55,7 +55,7 @@ class User {
     public static function fromUName($uName) {
         $pdo = new PDO_MYSQL();
         $res = $pdo->query("SELECT * FROM entrance_user WHERE username = :uname", [":uname" => $uName]);
-        return new User($res->uID, $res->username, $res->mail, $res->passwd, $res->level);
+        return new User($res->uID, $res->username, $res->email, $res->passwd, $res->lvl);
     }
 
     /**
@@ -160,7 +160,7 @@ class User {
      * @return bool
      */
     public function isActionAllowed($permission) {
-        if($this->uPrefix != 6) {
+        if($this->uPrefix != 2) {
             $pdo = new PDO_MYSQL();
             $res = $pdo->query("SELECT * FROM entrance_user_rights WHERE uID = :uid AND permission = :key", [":uid" => $this->uID, ":key" => $permission]);
             if($res->active == 1) return true;
@@ -284,7 +284,7 @@ class User {
      */
     public function saveChanges() {
         $pdo = new PDO_MYSQL();
-        $pdo->query("UPDATE entrance_user SET mail = :Email, passwd = :Passwd, username = :Username, level = :lvl WHERE uID = :uID LIMIT 1",
+        $pdo->query("UPDATE entrance_user SET email = :Email, passwd = :Passwd, username = :Username, lvl = :lvl WHERE uID = :uID LIMIT 1",
             [":Email" => $this->uEmail, ":Passwd" => $this->uPassHash, ":Username" => $this->uName, ":uID" => $this->uID, ":lvl" => $this->uPrefix]);
     }
 
@@ -298,7 +298,7 @@ class User {
      */
     public static function createUser($username, $email, $passwdhash) {
         $pdo = new PDO_MYSQL();
-        $pdo->query("INSERT INTO entrance_user(username, mail, passwd) VALUES (:Username, :Email, :Passwd)",
+        $pdo->query("INSERT INTO entrance_user(username, email, passwd) VALUES (:Username, :Email, :Passwd)",
             [":Username" => $username, ":Email" => $email, ":Passwd" => md5($passwdhash)]);
         return self::fromUName($username);
     }
