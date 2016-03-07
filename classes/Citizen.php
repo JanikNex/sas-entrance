@@ -107,7 +107,10 @@ class Citizen {
     }
 
     public function isCitizenInState() {
-
+        $pdo = new PDO_MYSQL();
+        $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
+        if($res -> action == 0) return true;
+        else return false;
     }
 
     /**
