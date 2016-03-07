@@ -68,6 +68,11 @@ class Error{
         $pdo->query("INSERT INTO entrance_error(cID,`timestamp`, errorcode) VALUES (:cID, :timestamp, :errorcode)",
             [":cID" => $cID, ":timestamp" => $date, ":errorcode" => $errorcode]);
     }
+
+    public static function correctError($cID){
+        $pdo = new PDO_MYSQL();
+        $pdo -> query("UPDATE entrance_error SET active = 0 WHERE cID = :cID", [":eID" => $cID]);
+    }
     /**
      * @return mixed
      */

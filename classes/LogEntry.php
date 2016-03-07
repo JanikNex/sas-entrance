@@ -45,45 +45,90 @@ class LogEntry {
     public static function fromLID($lID) {
         $pdo = new PDO_MYSQL();
         $res = $pdo->query("SELECT * FROM entrance_logs WHERE lID = :lid", [":lid" => $lID]);
-        return new LogEntry($res -> cID, $res -> timestamp, $res -> action, $res -> success);
+        return new LogEntry($lID, $res -> cID, $res -> timestamp, $res -> action, $res -> success);
     }
+
 
     /**
      * @param $citizen Citizen
-     * @param $action
+     * @param $action int
+     * @return bool
      */
     public static function createLogEntry($citizen, $action) {
         $pdo = new PDO_MYSQL();
         $date = time();
-        if ($citizen -> isCitizenInState()){
+        if ($citizen -> isCitizenInState() == 0){
             if ($action == 1){ //Schueler ist im Staat und verlaesst ihn
                 $pdo = new PDO_MYSQL();
                 $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, :action, 1)",
                     [":cID" => $citizen -> getCID(), ":timestamp" => $date, ":action" => $action]);
+                return true;
             }
             if ($action == 0){ //Schueler ist im Staat und betritt ihn -> Error
                 $pdo = new PDO_MYSQL();
                 $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, :action, 0)",
                     [":cID" => $citizen -> getCID(), ":timestamp" => $date, ":action" => $action]);
                 Error::createError($citizen -> getCID(), 1);
+                return false;
             }
         }
-        else{
+        elseif($citizen -> isCitizenInState() == 1){
             if ($action == 0){ //Schueler ist nicht im Staat und betritt ihn
                 $pdo = new PDO_MYSQL();
                 $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, :action, 1)",
                     [":cID" => $citizen -> getCID(), ":timestamp" => $date, ":action" => $action]);
+                return true;
             }
             if ($action == 1){ //Schueler ist nicht im Staat und verlaesst ihn -> Error
                 $pdo = new PDO_MYSQL();
                 $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, :action, 0)",
                     [":cID" => $citizen -> getCID(), ":timestamp" => $date, ":action" => $action]);
                 Error::createError($citizen -> getCID(), 2);
+                return false;
             }
         }
 
     }
 
+    /**
+     * @param $citizen Citizen
+     * @return bool
+     */
+    public static function forceErrorCorrect($citizen){
+        $pdo = new PDO_MYSQL();
+        $date = time();
+        if ($citizen -> isCitizenInState() == 1){
+            $pdo = new PDO_MYSQL();
+            $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, 0, 0)",
+                [":cID" => $citizen -> getCID(), ":timestamp" => $date]);
+            self::invalidateLogEntryBeforeEntry($citizen -> getCID(), self::getLastEntry($citizen -> getCID()));
+            Error::correctError($citizen -> getCID());
+            self::createLogEntry($citizen, 1);
+            return true;
+        }
+        elseif($citizen -> isCitizenInState() == 0){
+            $pdo = new PDO_MYSQL();
+            $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, 1, 0)",
+                [":cID" => $citizen -> getCID(), ":timestamp" => $date]);
+            self::invalidateLogEntryBeforeEntry($citizen -> getCID(), self::getLastEntry($citizen -> getCID()));
+            Error::correctError($citizen -> getCID());
+            self::createLogEntry($citizen, 0);
+            return true;
+        }
+    }
+
+    public static function invalidateLogEntryBeforeEntry($cID, $lID){
+        $pdo = new PDO_MYSQL();
+        $toUpdate = $pdo -> query("SELECT * FROM entrance_logs WHERE cID = :cID AND success = 1 AND lID < :lID ORDER BY lID DESC LIMIT 1",
+                [":cID" => $cID, ":lID" => $lID]) -> lID;
+        $pdo -> query("UPDATE entrance_logs SET success = 0 WHERE lID = :lID", [":lID" => $toUpdate]);
+    }
+
+    public static function getLastEntry($cID){
+        $pdo = new PDO_MYSQL();
+        return $pdo -> query("SELECT * FROM entrance_logs WHERE cID = :cID ORDER BY lID DESC LIMIT 1",
+            [":cID" => $cID]) -> lID;
+    }
     /**
      * @return int
      */

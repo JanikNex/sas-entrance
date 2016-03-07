@@ -146,9 +146,9 @@ class Citizen {
     public function isCitizenInState() {
         $pdo = new PDO_MYSQL();
         $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid AND success = 1 ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
-        if(!isset($res->action)) return 2;
-        elseif($res -> action == 0) return 0;
-        elseif($res -> action == 1) return 1;
+        if(!isset($res->action)) return 2; //noch nie im Staat gewesen bzw. kein LogEintrag vorhanden
+        elseif($res -> action == 0) return 0; //Schueler ist drin
+        elseif($res -> action == 1) return 1; //Schueler ist nicht drin
     }
 
     /**
