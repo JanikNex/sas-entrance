@@ -136,9 +136,22 @@ class Citizen {
         else return false;
     }
 
+    /**
+     * @param $date date
+     * @return int
+     */
     public function timePerDay($date){
-
-
+        $entries = LogEntry::allLogsPerDay($this->cID, $date);
+        $time = 0;
+        foreach($entries as $entry){
+            $time += $entry -> timeBetweenTwoEntries();
+        }
+        if($this -> isCitizenInState() == 1){
+            $pdo = new PDO_MYSQL();
+            $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
+            $time += time() - $res -> timestamp;
+        }
+        return $time;
     }
 
     /**
