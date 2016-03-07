@@ -113,8 +113,7 @@ class Citizen {
             "lastname" => $this->lastname,
             "classlevel" => $this->classlevel,
             "birthday" => $this->birthday,
-            "barcode" => $this->barcode,
-            "inState" => $this->isCitizenInState() ? 1 : 0
+            "barcode" => $this->barcode
         ];
     }
 
