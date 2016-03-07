@@ -261,7 +261,7 @@ class User {
     /**
      * Returns all users as a array of Userobjects from db
      *
-     * @return \ICMS\User[]
+     * @return \Entrance\User[]
      */
     public static function getAllUsers() {
         $pdo = new PDO_MYSQL();
