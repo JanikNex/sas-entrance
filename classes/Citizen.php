@@ -96,7 +96,7 @@ class Citizen {
     public static function getAllBadCitizen() {
 
     }
-    
+
     public function saveChanges() {
         $pdo = new PDO_MYSQL();
         $pdo->query("UPDATE entrance_citizen SET firstname = :firstname, lastname = :lastname, classlevel = :classlevel, birthday = :birthday, barcode = :barcode WHERE cID = :cid",
@@ -113,8 +113,7 @@ class Citizen {
             "lastname" => $this->lastname,
             "classlevel" => $this->classlevel,
             "birthday" => $this->birthday,
-            "barcode" => $this->barcode,
-            "inState" => $this->isCitizenInState() ? 0 : 1
+            "barcode" => $this->barcode
         ];
     }
 
