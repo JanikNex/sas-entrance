@@ -7,7 +7,7 @@
  */
 
 namespace Entrance;
-
+use PDO;
 
 class LogEntry {
     private $lID, $uID, $timestamp, $action, $success;
@@ -27,11 +27,15 @@ class LogEntry {
     }
 
     public static function getAllLogs($limit = 0) {
-
+        $pdo = new PDO_MYSQL();
+        $stmt = $pdo->queryMulti("SELECT lID FROM entrance_logs ORDER BY lID LIMIT :limit");
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Logs::fromLID");
     }
 
     public static function fromLID($lID) {
-
+        $pdo = new PDO_MYSQL();
+        $res = $pdo->query("SELECT * FROM entrance_logs WHERE lID = :lid", [":lid" => $lID]);
+        return new LogEntry($res -> uID, $res -> timestamp, $res -> action, $res -> success);
     }
 
 

@@ -24,6 +24,7 @@ class User {
      * @param $uName string Username
      * @param $uEmail string Users Email
      * @param $uPassHash string Users md5-hash
+     * @param $level int User Level
      */
     private function __construct($uID, $uName, $uEmail, $uPassHash, $level) {
         $this->uID = $uID;
