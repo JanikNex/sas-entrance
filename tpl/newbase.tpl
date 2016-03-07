@@ -27,6 +27,10 @@
                 <a href="#!" class="brand-logo" style="padding-left: 250px;">Sas Entrance - {$args.title}</a>
                 <ul class="right hide-on-med-and-down">
                     <!-- Dropdown Trigger -->
+                    {if $args.editor == 1}
+                    <li><a href="{$args.undoUrl}"><i class="material-icons">clear</i></a></li>
+                    <li><a href="javascript:{}" onclick="document.getElementById('form').submit();"><i class="material-icons">done</i></a></li>
+                    {/if}
                     <li><a class="dropdown-button" href="#!" data-activates="dropdown1">{$args.usrname}<i class="material-icons right">arrow_drop_down</i></a></li>
                 </ul>
                 <ul id="slide-out" class="side-nav fixed">
@@ -102,6 +106,7 @@
                                     <ul>
                                         {if $args.perm.users_view == 1}<li><a href="users.php">Benutzerkonten</a></li>{/if}
                                         {if $args.perm.admin_database == 1}<li><a href="adminer-4.2.4-mysql.php">Adminer (Datenbank)</a></li>{/if}
+                                        {if $args.perm.admin_errors == 1}<li><a href="errors.php">Fehlerkorrektur</a></li>{/if}
                                     </ul>
                                 </div>
                             </li>

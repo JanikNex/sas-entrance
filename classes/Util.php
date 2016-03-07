@@ -74,10 +74,12 @@ namespace Entrance;
 
      /**
       * @param $title String
-      * @param $user \ICMS\User
+      * @param $user \Entrance\User
+      * @param bool $editor
+      * @param string $undoUrl
       * @return array
       */
-     public static function getEditorPageDataStub($title, $user) {
+     public static function getEditorPageDataStub($title, $user, $editor = false, $undoUrl = "") {
          return [
              "header" => [
                  "title" => $title,
@@ -85,7 +87,9 @@ namespace Entrance;
                  "usrchar" => substr($user->getUName(), 0, 1),
                  "uID" => $user->getUID(),
                  "level" => $user->getUPrefix(),
-                 "perm" => $user->getPermAsArray()
+                 "perm" => $user->getPermAsArray(),
+                 "editor" => $editor ? 1:0,
+                 "undoUrl" => $undoUrl
              ],
              "perm" => $user->getPermAsArray()
          ];
