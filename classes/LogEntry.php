@@ -97,6 +97,17 @@ class LogEntry {
     }
 
     /**
+     * @param $cID int
+     * @param $date timestamp
+     * @return LogEntry[]
+     */
+    public static function allLogsPerDay($cID, $date){
+        $pdo = new PDO_MYSQL();
+        $stmt = $pdo->queryMulti("SELECT lID FROM entrance_logs WHERE cID = :cid AND DATE(`timestamp`)= :date", [":cid" => $cID, ":date" => $date]);
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Logs::fromLID");
+    }
+
+    /**
      * @return mixed
      */
     public function getUID() {

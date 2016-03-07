@@ -136,6 +136,11 @@ class Citizen {
         else return false;
     }
 
+    public function timePerDay($date){
+
+
+    }
+
     /**
      * @return string
      */
