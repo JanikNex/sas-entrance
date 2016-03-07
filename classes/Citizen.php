@@ -80,7 +80,7 @@ class Citizen {
         $citizens = self::getAllCitizen();
         $citizenInState = [];
         foreach($citizens as $citizen){
-            if($citizen -> isCitizenInState())
+            if($citizen -> isCitizenInState() == 1)
                 array_push($citizenInState, $citizen);
         }
         return $citizenInState;
@@ -113,7 +113,8 @@ class Citizen {
             "lastname" => $this->lastname,
             "classlevel" => $this->classlevel,
             "birthday" => $this->birthday,
-            "barcode" => $this->barcode
+            "barcode" => $this->barcode,
+            "inState" => $this->isCitizenInState()
         ];
     }
 
@@ -126,13 +127,14 @@ class Citizen {
     }
 
     /**
-     * @return bool
+     * @return int
      */
     public function isCitizenInState() {
         $pdo = new PDO_MYSQL();
-        $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
-        if($res -> action == 0) return true;
-        else return false;
+        $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid AND success = 1 ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
+        if(!isset($res->action)) return 2;
+        elseif($res -> action == 0) return 0;
+        elseif($res -> action == 1) return 1;
     }
 
     /**
