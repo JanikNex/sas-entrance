@@ -42,7 +42,7 @@ class User {
      */
     public static function fromUID($uID) {
         $pdo = new PDO_MYSQL();
-        $res = $pdo->query("SELECT * FROM schlopolis_user WHERE uID = :uid", [":uid" => $uID]);
+        $res = $pdo->query("SELECT * FROM entrance_user WHERE uID = :uid", [":uid" => $uID]);
         return new User($res->uID, $res->username, $res->mail, $res->passwd, $res->level);
     }
 
@@ -54,7 +54,7 @@ class User {
      */
     public static function fromUName($uName) {
         $pdo = new PDO_MYSQL();
-        $res = $pdo->query("SELECT * FROM schlopolis_user WHERE username = :uname", [":uname" => $uName]);
+        $res = $pdo->query("SELECT * FROM entrance_user WHERE username = :uname", [":uname" => $uName]);
         return new User($res->uID, $res->username, $res->mail, $res->passwd, $res->level);
     }
 
@@ -143,18 +143,9 @@ class User {
                 return '<span class="uPreUsr">[User]</span>';
                 break;
             case 1:
-                return '<span class="uPreMod">[Partei]</span>';
-                break;
-            case 2:
-                return '<span class="uPreMod">[Ak]</span>';
-                break;
-            case 3:
                 return '<span class="uPreMod">[Orga]</span>';
                 break;
-            case 4:
-                return '<span class="uPreMod">[Lehrer]</span>';
-                break;
-            case 5:
+            case 2:
                 return '<span class="uPreAdm">[Admin]</span>';
                 break;
             default:
@@ -171,7 +162,7 @@ class User {
     public function isActionAllowed($permission) {
         if($this->uPrefix != 6) {
             $pdo = new PDO_MYSQL();
-            $res = $pdo->query("SELECT * FROM schlopolis_user_rights WHERE uID = :uid AND permission = :key", [":uid" => $this->uID, ":key" => $permission]);
+            $res = $pdo->query("SELECT * FROM entrance_user_rights WHERE uID = :uid AND permission = :key", [":uid" => $this->uID, ":key" => $permission]);
             if($res->active == 1) return true;
             else return false;
         } else return true;
@@ -186,7 +177,7 @@ class User {
      */
     public function isActionInDB($permission) {
         $pdo = new PDO_MYSQL();
-        $res = $pdo->query("SELECT * FROM schlopolis_user_rights WHERE uID = :uid AND permission = :key", [":uid" => $this->uID, ":key" => $permission]);
+        $res = $pdo->query("SELECT * FROM entrance_user_rights WHERE uID = :uid AND permission = :key", [":uid" => $this->uID, ":key" => $permission]);
         return isset($res->active);
     }
 
@@ -199,9 +190,9 @@ class User {
     public function setPermission($actionKey, $state) {
         $pdo = new PDO_MYSQL();
         if($this->isActionInDB($actionKey))
-            $pdo->query("UPDATE schlopolis_user_rights SET active = :state WHERE uID = :uid and permission = :key", [":uid" => $this->uID, ":key" => $actionKey, ":state" => $state]);
+            $pdo->query("UPDATE entrance_user_rights SET active = :state WHERE uID = :uid and permission = :key", [":uid" => $this->uID, ":key" => $actionKey, ":state" => $state]);
         else
-            $pdo->query("INSERT INTO schlopolis_user_rights(active, uID, permission) VALUES (:state, :uid, :key)", [":uid" => $this->uID, ":key" => $actionKey, ":state" => $state]);
+            $pdo->query("INSERT INTO entrance_user_rights(active, uID, permission) VALUES (:state, :uid, :key)", [":uid" => $this->uID, ":key" => $actionKey, ":state" => $state]);
     }
 
     /**
@@ -244,7 +235,7 @@ class User {
     public function getPermAsArray() {
         $array = [];
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT * FROM schlopolis_user_rights WHERE uID = :uid", [":uid" => $this->uID]);
+        $stmt = $pdo->queryMulti("SELECT * FROM entrance_user_rights WHERE uID = :uid", [":uid" => $this->uID]);
         while($row = $stmt->fetchObject()) {
             $array[str_replace(".", "_", $row->permission)] = (int) $this->isActionAllowed($row->permission);
         }
@@ -259,7 +250,7 @@ class User {
      */
     public static function doesUserNameExist($uName) {
         $pdo = new PDO_MYSQL();
-        $res = $pdo->query("SELECT * FROM schlopolis_user WHERE username = :uname", [":uname" => $uName]);
+        $res = $pdo->query("SELECT * FROM entrance_user WHERE username = :uname", [":uname" => $uName]);
         if(isset($res->uID)) {
             return true;
         } else {
@@ -274,7 +265,7 @@ class User {
      */
     public static function getAllUsers() {
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT uID FROM schlopolis_user ORDER BY uID");
+        $stmt = $pdo->queryMulti("SELECT uID FROM entrance_user ORDER BY uID");
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\User::fromUID");
     }
 
@@ -285,7 +276,7 @@ class User {
      */
     public function delete() {
         $pdo = new PDO_MYSQL();
-        return $pdo->query("DELETE FROM schlopolis_user WHERE uID = :uid", [":uid" => $this->uID]);
+        return $pdo->query("DELETE FROM entrance_user WHERE uID = :uid", [":uid" => $this->uID]);
     }
 
     /**
