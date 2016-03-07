@@ -10,19 +10,19 @@ namespace Entrance;
 use PDO;
 
 class LogEntry {
-    private $lID, $uID, $timestamp, $action, $success;
+    private $lID, $cID, $timestamp, $action, $success;
 
     /**
      * LogEntry constructor.
      * @param $lID
-     * @param $uID
+     * @param $cID
      * @param $timestamp
      * @param $action
      * @param $success
      */
-    public function __construct($lID, $uID, $timestamp, $action, $success) {
+    public function __construct($lID, $cID, $timestamp, $action, $success) {
         $this->lID = $lID;
-        $this->uID = $uID;
+        $this->cID = $cID;
         $this->timestamp = $timestamp;
         $this->action = $action;
         $this->success = $success;
@@ -45,7 +45,7 @@ class LogEntry {
     public static function fromLID($lID) {
         $pdo = new PDO_MYSQL();
         $res = $pdo->query("SELECT * FROM entrance_logs WHERE lID = :lid", [":lid" => $lID]);
-        return new LogEntry($res -> uID, $res -> timestamp, $res -> action, $res -> success);
+        return new LogEntry($res -> cID, $res -> timestamp, $res -> action, $res -> success);
     }
 
     /**
@@ -87,10 +87,20 @@ class LogEntry {
     }
 
     /**
+     * @return int
+     */
+    public function timeBetweenTwoEntries(){
+        $pdo = new PDO_MYSQL();
+        $timeOld = $pdo -> query("SELECT * FROM entrance_logs WHERE cID = :cID AND lID < :lID ORDER BY lID DESC LIMIT 1",
+            [":cID" => $this -> cID, ":lID" => $this -> lID]) -> timestamp;
+        return $this -> timestamp - $timeOld;
+    }
+
+    /**
      * @return mixed
      */
     public function getUID() {
-        return $this->uID;
+        return $this->cID;
     }
 
     /**
