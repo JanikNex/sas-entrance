@@ -65,8 +65,7 @@ class LogEntry {
                 $pdo = new PDO_MYSQL();
                 $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, :action, 0)",
                     [":cID" => $citizen -> getCID(), ":timestamp" => $date, ":action" => $action]);
-                $pdo->query("INSERT INTO entrance_error(cID,`timestamp`, error) VALUES (:cID, :timestamp, 1)",
-                    [":cID" => $citizen -> getCID(), ":timestamp" => $date]);
+                Error::createError($citizen -> getCID(), 1);
             }
         }
         else{
@@ -79,8 +78,7 @@ class LogEntry {
                 $pdo = new PDO_MYSQL();
                 $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, :action, 0)",
                     [":cID" => $citizen -> getCID(), ":timestamp" => $date, ":action" => $action]);
-                $pdo->query("INSERT INTO entrance_error(cID,`timestamp`, error) VALUES (:cID, :timestamp, 2)",
-                    [":cID" => $citizen -> getCID(), ":timestamp" => $date]);
+                Error::createError($citizen -> getCID(), 2);
             }
         }
 

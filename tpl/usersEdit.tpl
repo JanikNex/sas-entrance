@@ -80,6 +80,7 @@
 
                                     <tr><td><b>Sonstige</b></td></tr>
                                     <tr><td>Datenbank</td> <td><div class="switch"><label>Off<input type="checkbox" id="cb16" {if $perm.admin_database == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh16" type="hidden" value="0" name="admin.database"/></td></tr>
+                                    <tr><td>Fehler ansehen</td> <td><div class="switch"><label>Off<input type="checkbox" id="cb17" {if $perm.admin_errors == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh17" type="hidden" value="0" name="admin.errors"/></td></tr>
 
                                 </table>
                             </form>

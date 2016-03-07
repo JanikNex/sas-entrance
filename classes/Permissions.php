@@ -9,6 +9,7 @@
 namespace Entrance;
 
 define("PERM_DB_LOGIN", "admin.database");
+define("PERM_ERRORS", "admin.errors");
 
 define("PERM_USER_DELETE", "users.del");
 define("PERM_USER_EDIT",   "users.edit");
