@@ -155,6 +155,17 @@ class Citizen {
     }
 
     /**
+     * @return int
+     */
+    public function timePerProject(){
+        $time = $this->timePerDay("2016-07-11");
+        $time += $this->timePerDay("2016-07-12");
+        $time += $this->timePerDay("2016-07-13");
+        $time += $this->timePerDay("2016-07-14");
+        return $time;
+    }
+
+    /**
      * @return string
      */
     public function getBarcode() {
