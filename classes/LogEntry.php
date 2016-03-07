@@ -46,7 +46,43 @@ class LogEntry {
         return new LogEntry($res -> uID, $res -> timestamp, $res -> action, $res -> success);
     }
 
+    /**
+     * @param $citizen Citizen
+     * @param $action
+     */
+    public static function createLogEntry($citizen, $action) {
+        $pdo = new PDO_MYSQL();
+        $date = time();
+        if ($citizen -> isCitizenInState()){
+            if ($action == 1){ //Schueler ist im Staat und verlaesst ihn
+                $pdo = new PDO_MYSQL();
+                $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, :action, 1)",
+                    [":cID" => $citizen -> getCID(), ":timestamp" => $date, ":action" => $action]);
+            }
+            if ($action == 0){ //Schueler ist im Staat und betritt ihn -> Error
+                $pdo = new PDO_MYSQL();
+                $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, :action, 0)",
+                    [":cID" => $citizen -> getCID(), ":timestamp" => $date, ":action" => $action]);
+                $pdo->query("INSERT INTO entrance_error(cID,`timestamp`, error) VALUES (:cID, :timestamp, 1)",
+                    [":cID" => $citizen -> getCID(), ":timestamp" => $date]);
+            }
+        }
+        else{
+            if ($action == 0){ //Schueler ist nicht im Staat und betritt ihn
+                $pdo = new PDO_MYSQL();
+                $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, :action, 1)",
+                    [":cID" => $citizen -> getCID(), ":timestamp" => $date, ":action" => $action]);
+            }
+            if ($action == 1){ //Schueler ist nicht im Staat und verlaesst ihn -> Error
+                $pdo = new PDO_MYSQL();
+                $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, :action, 0)",
+                    [":cID" => $citizen -> getCID(), ":timestamp" => $date, ":action" => $action]);
+                $pdo->query("INSERT INTO entrance_error(cID,`timestamp`, error) VALUES (:cID, :timestamp, 2)",
+                    [":cID" => $citizen -> getCID(), ":timestamp" => $date]);
+            }
+        }
 
+    }
 
     /**
      * @return mixed
