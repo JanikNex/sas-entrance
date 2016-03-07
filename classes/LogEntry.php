@@ -108,6 +108,19 @@ class LogEntry {
     }
 
     /**
+     * @return String[]
+     */
+    public static function getProjectDays(){
+        $pdo = new PDO_MYSQL();
+        $stmt = $pdo->queryMulti("SELECT DATE(timestamp) AS dates FROM entrance_logs GROUP BY DATE(timestamp) ORDER BY dates");
+        $dates = [];
+        while($res = $stmt->fetchObject()) {
+            array_push($dates, $res->dates);
+        }
+        return $dates;
+    }
+
+    /**
      * @return mixed
      */
     public function getUID() {
