@@ -1,36 +1,31 @@
-{include file="base.tpl"}
-<div class="content">
-            <table class="pages">
-                <thead>
-                    <tr>
-                        <th style="width: 30px; max-width: 30px;">#</th>
-                        <th style="width: 90%; max-width: 90%;"></th>
-                        <th style="width: 100px; max-width: 100px;"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {loop $page.items}
-                        <tr>
-                            <td>{$id}</td>
-                            <td>
-                                <div class="list-name">{$usrname}</div>
-                                <div class="list-type">{$prefix} {$usrname} | {$email}</div>
-                            </td>
-                            <td style="">
-                                <a href="users.php?action=edit&uID={$id}" class="normal"><i class="mdi mdi-pencil"></i></a><a href="users.php?action=del&uID={$id}" class="normal"><i class="mdi mdi-delete"></i></a>
-                            </td>
-                        </tr>
-                    {/loop}
-            </table>
-            <div style="position: fixed; bottom: 20px; right: 20px;">
-                <div class="fab">
-                    <button class="fab__primary btn btn--xl btn--green btn--fab" lx-ripple lx-tooltip="Lorem Ipsum" tooltip-position="left" onclick="parent.location='?action=new'">
-                        <i class="mdi mdi-plus"></i>
-                        <i class="mdi mdi-account-plus"></i>
-                    </button>
+{include file="newbase.tpl" args=$header}
+        <main>
+            <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
+                <a href="?action=new" class="btn-floating btn-large green tooltipped"  data-position="left" data-delay="50" data-tooltip="Neuen Benutzer erstellen">
+                <i class="large material-icons">add</i>
+                </a>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <ul class="collection">
+                        {loop $page.items}
+                            <li class="collection-item avatar">
+                                <i class="material-icons circle {if $lvl == 2}red{elseif $lvl == 1}orange{else}grey{/if}">person</i>
+                                <span class="title">{$usrname}</span>
+                                <p>{$prefix} {$usrname} | {$email}
+                                </p>
+                                <span class="secondary-content">
+                                    <a href="users.php?action=edit&uID={$id}">
+                                        <i class="material-icons grey-text text-darken-1">create</i>
+                                    </a>
+                                    <a href="users.php?action=del&uID={$id}">
+                                        <i class="material-icons grey-text text-darken-1">delete</i>
+                                    </a>
+                                </span>
+                            </li>
+                        {/loop}
+                    </ul>
                 </div>
             </div>
-        </div>
-        {include file="header.tpl" args=$header}
-    </body>
-</html>
+        </main>
+{include file="newEnd.tpl"}

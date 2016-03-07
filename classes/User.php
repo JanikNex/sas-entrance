@@ -141,16 +141,16 @@ class User {
     public function getPrefixAsHtml() {
         switch($this->uPrefix) {
             case 0:
-                return '<span class="uPreUsr">[User]</span>';
+                return '<span>[User]</span>';
                 break;
             case 1:
-                return '<span class="uPreMod">[Orga]</span>';
+                return '<span class="orange-text">[Orga]</span>';
                 break;
             case 2:
-                return '<span class="uPreAdm">[Admin]</span>';
+                return '<span class="red-text">[Admin]</span>';
                 break;
             default:
-                return '<span class="uPreUsr">[User]</span>';
+                return '<span>[User]</span>';
         }
     }
 
