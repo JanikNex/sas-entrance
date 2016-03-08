@@ -84,7 +84,7 @@ class LogEntry {
                 return false;
             }
         }
-        elseif($citizen -> isCitizenInState() == 1){
+        else{
             if ($action == 0){ //Schueler ist nicht im Staat und betritt ihn
                 $pdo = new PDO_MYSQL();
                 $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, :action, 1)",
