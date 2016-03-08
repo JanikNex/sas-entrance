@@ -1,9 +1,19 @@
-        {include file="base.tpl"}
-        <div class="content">
-            You do NOT have enough privileges to view this page
-            <img src="http://brainrow.com/wp-content/uploads/2006/10/NoRights.jpg" alt="Nein!" />
-            <a link="http://brainrow.com/wp-content/uploads/2006/10/NoRights.jpg">.</a>
-        </div>
-        {include file="header.tpl" args=$header}
-    </body>
-</html>
+{include file="newbase.tpl" args=$header}
+        <main>
+            <div class="container">
+                <div class="row">
+                    <div class="col s12 m6 offset-m3">
+                        <div class="card">
+                            <div class="card-image">
+                                <img src="http://brainrow.com/wp-content/uploads/2006/10/NoRights.jpg">
+                                <span class="card-title">:/</span>
+                            </div>
+                            <div class="card-content">
+                                <p>Tut mir leid. Aber das ist wohl so :/</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+{include file="newEnd.tpl"}
