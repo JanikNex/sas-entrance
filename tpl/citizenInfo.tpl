@@ -6,9 +6,11 @@
                         <div class="card-panel">
                             <h5>Schüler</h5>
                             <p><b>Name:</b> {$page.citizen.firstname} {$page.citizen.lastname}</p>
-                            <p><b>Geburtstag:</b> {$page.citizen.birthday}</p>
+                            <p><b>Geburtstag:</b> {$page.citizen.birthdayNice}</p>
                             <p><b>Barcode:</b> {$page.citizen.barcode}</p>
                             <div id="bcTarget"></div>
+                            {loop $page.times}<p><b>Zeit am {$date}:</b> {$time}</p>{/loop}
+                            <p><b>Gesamt:</b> {$page.timeTotal}</p>
                         </div>
                     </div>
                     <div class="col s12 offset-m1 m6">
@@ -19,13 +21,13 @@
                                     {if $action == 0}
                                         <i class="material-icons circle green">navigate_before</i>
                                         <span class="title">Staat betreten</span>
-                                        <p>{$timestamp}<br>
+                                        <p>{$timestamp}<br/>
                                             <img src="barcode-scan.svg" height="16px" /> {$scanner}
                                         </p>
                                     {else}
                                         <i class="material-icons circle red">navigate_next</i>
                                         <span class="title">Staat verlassen</span>
-                                        <p>{$timestamp} | Im Staat: {$timeSinceLast}<br>
+                                        <p>{$timestamp}<br/>Im Staat: {$timeSinceLast}<br/>
                                             <img src="barcode-scan.svg" height="16px" /> {$scanner}
                                         </p>
                                     {/if}

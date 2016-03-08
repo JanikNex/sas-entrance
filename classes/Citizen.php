@@ -135,11 +135,12 @@ class Citizen {
             "firstname" => $this->firstname,
             "lastname" => $this->lastname,
             "classlevel" => $this->classlevel,
-            "birthday" => date("d. M Y", strtotime($this->birthday))." (".Util::getAge($this->birthday).")",
+            "birthday" => $this->birthday,
+            "birthdayNice" => date("d. M Y", strtotime($this->birthday))." (".Util::getAge($this->birthday).")",
             "barcode" => $this->barcode,
             "inState" => $this->isCitizenInState(),
-            "timeToday" => gmdate("H:i:s",$this->getTimePerDay(date("Y-m-d"))),
-            "timeProject" => gmdate("H:i:s",$this->getTimePerProject())
+            "timeToday" => $this->getTimePerDay(date("Y-m-d")) != 0 ? gmdate("H\h i\m s\s",$this->getTimePerDay(date("Y-m-d"))) : "<i>Nicht anwesend</i>",
+            "timeProject" =>$this->getTimePerProject() != 0 ? gmdate("H\h i\m s\s",$this->getTimePerProject()) : "<i>Nicht anwesend</i>"
         ];
     }
 

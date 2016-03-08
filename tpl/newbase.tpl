@@ -25,7 +25,8 @@
         </ul>
         <nav>
             <div class="nav-wrapper indigo">
-                <a href="#!" class="brand-logo" style="padding-left: 250px;">Sas Entrance - {$args.title}</a>
+                <a href="#!" class="brand-logo hide-on-med-and-down" style="padding-left: 250px;">Sas Entrance - {$args.title}</a>
+                <a href="#!" class="brand-logo hide-on-large-only" style="">Sas - {$args.title}</a>
                 <ul class="right hide-on-med-and-down">
                     <!-- Dropdown Trigger -->
                     {if $args.editor == 1}
@@ -75,7 +76,7 @@
                                     <ul>
                                         {if $args.perm.citizen_view == 1}<li><a href="citizen.php">Alle Schüler</a></li>{/if}
                                         {if $args.perm.citizen_info_difference == 1}<li><a href="citizen.php?action=badcitizen">Böse Schüler</a></li>{/if}
-                                        {if $args.perm.citizen_present_list == 1}<li><a href="#!">zZ im Staat</a></li>{/if}
+                                        {if $args.perm.citizen_present_list == 1}<li><a href="citizen.php?action=listInState">zZ im Staat</a></li>{/if}
                                     </ul>
                                 </div>
                             </li>
@@ -90,7 +91,7 @@
                                 <a class="collapsible-header">Infobildschirm<i class="mdi-navigation-arrow-drop-down"></i></a>
                                 <div class="collapsible-body">
                                     <ul>
-                                        <li><a href="#!">Anzahl zZ im Staat</a></li>
+                                        <li><a href="counter.html">Anzahl zZ im Staat</a></li>
                                     </ul>
                                 </div>
                             </li>

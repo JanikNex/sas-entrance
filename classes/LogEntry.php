@@ -183,7 +183,7 @@ class LogEntry {
             "uID" => $this->uID,
             "cID" => $this->cID,
             "lID" => $this->lID,
-            "timeSinceLast" => gmdate("H:i:s", $this->timeBetweenTwoEntries()),
+            "timeSinceLast" => $this->timeBetweenTwoEntries() != 0 ? gmdate("H\h i\m s\s", $this->timeBetweenTwoEntries()) : "Nicht anwesend",
             "timestamp" => date("d. M Y - H:i", strtotime($this->timestamp)),
             "success" => $this->success
         ];

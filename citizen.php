@@ -105,11 +105,44 @@ if($action == "new") {
             $pgdata["page"]["logs"][$i] = $itsLogs[$i]->asArray();
         }
 
+        $days = \Entrance\LogEntry::getProjectDays();
+        for($i = 0; $i < sizeof($days); $i++) {
+            $pgdata["page"]["times"][$i]["date"] = $days[$i];
+            $pgdata["page"]["times"][$i]["time"] = $citizenToView->getTimePerDay($days[$i]) != 0 ? gmdate("H\h i\m s\s",$citizenToView->getTimePerDay($days[$i])) : "<i>Nicht anwesend</i>";
+        }
+
+        $pgdata["page"]["timeTotal"] = $citizenToView->getTimePerProject() != 0 ? gmdate("H\h i\m s\s", $citizenToView->getTimePerProject()) : "<i>Nicht anwesend</i>";
+
         $dwoo->output("tpl/citizenInfo.tpl", $pgdata);
         exit;
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+    }
+} elseif($action == "listInState") {
+    if($user->isActionAllowed(PERM_CITIZEN_PRESENT_LIST)) {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler im Staat", $user);
+        $citizens = \Entrance\Citizen::getAllCitizenInState();
+        for ($i = 0; $i < sizeof($citizens); $i++) {
+            $pgdata["page"]["items"][$i] = $citizens[$i]->asArray();
+        }
+
+        $dwoo->output("tpl/citizenList.tpl", $pgdata);
+        exit;
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user);
+        $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+    }
+} elseif($action == "counter") {
+    if($user->isActionAllowed(PERM_CITIZEN_PRESENT_NUMBER)) {
+        header('Content-Type: text/html; charset=utf-8'); // sorgt für die korrekte Kodierung
+        header('Cache-Control: must-revalidate, pre-check=0, no-store, no-cache, max-age=0, post-check=0'); // ist mal wieder wichtig wegen IE
+
+        echo \Entrance\Citizen::getCurrentCitizenCount();
+        exit;
+    } else {
+        echo "NO!";
+        exit();
     }
 }
 
