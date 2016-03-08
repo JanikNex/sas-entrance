@@ -10,6 +10,8 @@
  */
 namespace Entrance;
 
+ use DateTime;
+
  class Util {
 
      /**
@@ -93,5 +95,16 @@ namespace Entrance;
              ],
              "perm" => $user->getPermAsArray()
          ];
+     }
+
+     /**
+      * @param $bithdayDate timestamp
+      * @return int
+      */
+     public static function getAge($bithdayDate) {
+         $date = new DateTime($bithdayDate);
+         $now = new DateTime();
+         $interval = $now->diff($date);
+         return $interval->y;
      }
  }

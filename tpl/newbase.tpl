@@ -15,6 +15,7 @@
         <!--Import jQuery before materialize.js-->
         <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
         <script type="text/javascript" src="libs/materialize/js/materialize.min.js"></script>
+        <script type="text/javascript" src="libs/jquery-barcode.min.js"></script>
 
         <!-- Dropdown Structure -->
         <ul id="dropdown1" class="dropdown-content">
@@ -73,7 +74,7 @@
                                 <div class="collapsible-body">
                                     <ul>
                                         {if $args.perm.citizen_view == 1}<li><a href="citizen.php">Alle Schüler</a></li>{/if}
-                                        {if $args.perm.citizen_info_difference == 1}<li><a href="#!">Böse Schüler</a></li>{/if}
+                                        {if $args.perm.citizen_info_difference == 1}<li><a href="citizen.php?action=badcitizen">Böse Schüler</a></li>{/if}
                                         {if $args.perm.citizen_present_list == 1}<li><a href="#!">zZ im Staat</a></li>{/if}
                                     </ul>
                                 </div>

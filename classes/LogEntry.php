@@ -31,23 +31,32 @@ class LogEntry {
     }
 
     /**
-     * @param int $limit
      * @return LogEntry[]
      */
-    public static function getAllLogs($limit = 18446744073709551610) {
+    public static function getAllLogs() {
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT lID FROM entrance_logs ORDER BY lID LIMIT :limit");
-        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Logs::fromLID");
+        $stmt = $pdo->queryMulti("SELECT lID FROM entrance_logs ORDER BY lID");
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\LogEntry::fromLID");
+    }
+
+        /**
+         * @param int $cID
+         * @return LogEntry[]
+         */
+    public static function getAllLogsPerCID($cID) {
+        $pdo = new PDO_MYSQL();
+        $stmt = $pdo->queryMulti("SELECT lID FROM entrance_logs WHERE cID = :cid ORDER BY lID DESC", [":cid" => $cID]);
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\LogEntry::fromLID");
     }
 
     /**
-     * @param $lID
+     * @param int $lID
      * @return LogEntry
      */
     public static function fromLID($lID) {
         $pdo = new PDO_MYSQL();
         $res = $pdo->query("SELECT * FROM entrance_logs WHERE lID = :lid", [":lid" => $lID]);
-        return new LogEntry($lID, $res -> cID, $res -> timestamp, $res -> action, $res -> success);
+        return new LogEntry($lID, $res -> cID, $res->uID, $res -> timestamp, $res -> action, $res -> success);
     }
 
 
@@ -140,7 +149,7 @@ class LogEntry {
         $pdo = new PDO_MYSQL();
         $timeOld = $pdo -> query("SELECT * FROM entrance_logs WHERE cID = :cID AND success = 1 AND lID < :lID ORDER BY lID DESC LIMIT 1",
             [":cID" => $this -> cID, ":lID" => $this -> lID]) -> timestamp;
-        return $this -> timestamp - $timeOld;
+        return strtotime($this -> timestamp) - strtotime($timeOld);
     }
 
     /**
@@ -150,8 +159,8 @@ class LogEntry {
      */
     public static function allLogsPerDay($cID, $date){
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT lID FROM entrance_logs WHERE cID = :cid AND succes = 1 AND action = 1 AND DATE(`timestamp`)= :date", [":cid" => $cID, ":date" => $date]);
-        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Logs::fromLID");
+        $stmt = $pdo->queryMulti("SELECT lID FROM entrance_logs WHERE cID = :cid AND success = 1 AND action = 1 AND DATE(`timestamp`)= :date", [":cid" => $cID, ":date" => $date]);
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\LogEntry::fromLID");
     }
 
     /**
@@ -165,6 +174,19 @@ class LogEntry {
             array_push($dates, $res->dates);
         }
         return $dates;
+    }
+
+    public function asArray() {
+        return [
+            "action" => $this->action,
+            "scanner" => User::fromUID($this->uID)->getPrefixAsHtml().User::fromUID($this->uID)->getUName(),
+            "uID" => $this->uID,
+            "cID" => $this->cID,
+            "lID" => $this->lID,
+            "timeSinceLast" => gmdate("H:i:s", $this->timeBetweenTwoEntries()),
+            "timestamp" => date("d. M Y - H:i", strtotime($this->timestamp)),
+            "success" => $this->success
+        ];
     }
 
     /**

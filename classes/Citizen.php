@@ -89,7 +89,7 @@ class Citizen {
         $citizens = self::getAllCitizen();
         $citizenInState = [];
         foreach($citizens as $citizen){
-            if($citizen -> isCitizenInState() == 1)
+            if($citizen -> isCitizenInState() == 0)
                 array_push($citizenInState, $citizen);
         }
         return $citizenInState;
@@ -111,7 +111,7 @@ class Citizen {
         $badCitizens = [];
         foreach($citizens as $citizen){
             foreach($days as $day){
-                if($citizen -> timePerDay($day) <= 21600){
+                if($citizen -> getTimePerDay($day) <= 21600){
                     array_push($badCitizens, $citizen);
                     break;
                 }
@@ -135,9 +135,11 @@ class Citizen {
             "firstname" => $this->firstname,
             "lastname" => $this->lastname,
             "classlevel" => $this->classlevel,
-            "birthday" => $this->birthday,
+            "birthday" => date("d. M Y", strtotime($this->birthday))." (".Util::getAge($this->birthday).")",
             "barcode" => $this->barcode,
-            "inState" => $this->isCitizenInState()
+            "inState" => $this->isCitizenInState(),
+            "timeToday" => gmdate("H:i:s",$this->getTimePerDay(date("Y-m-d"))),
+            "timeProject" => gmdate("H:i:s",$this->getTimePerProject())
         ];
     }
 
@@ -164,16 +166,16 @@ class Citizen {
      * @param $date date
      * @return int
      */
-    public function timePerDay($date){
+    public function getTimePerDay($date){
         $entries = LogEntry::allLogsPerDay($this->cID, $date);
         $time = 0;
         foreach($entries as $entry){
             $time += $entry -> timeBetweenTwoEntries();
         }
-        if($this -> isCitizenInState() == 1){
+        if($this -> isCitizenInState() == 0 && $date == date("Y-m-d")){
             $pdo = new PDO_MYSQL();
-            $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid AND success = 1 ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
-            $time += time() - $res -> timestamp;
+            $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid AND action = 0 AND success = 1 ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
+            $time += time() - strtotime($res -> timestamp);
         }
         return $time;
     }
@@ -181,11 +183,14 @@ class Citizen {
     /**
      * @return int
      */
-    public function timePerProject(){
-        $time = $this->timePerDay("2016-07-11");
-        $time += $this->timePerDay("2016-07-12");
-        $time += $this->timePerDay("2016-07-13");
-        $time += $this->timePerDay("2016-07-14");
+    public function getTimePerProject(){
+        /*$time = $this->getTimePerDay("2016-07-11");
+        $time += $this->getTimePerDay("2016-07-12");
+        $time += $this->getTimePerDay("2016-07-13");
+        $time += $this->getTimePerDay("2016-07-14");*/
+        $time = 0;
+        foreach(LogEntry::getProjectDays() as $day)
+            $time += $this->getTimePerDay($day);
         return $time;
     }
 

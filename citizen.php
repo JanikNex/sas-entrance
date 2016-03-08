@@ -15,6 +15,7 @@ require_once 'classes/User.php';
 require_once 'classes/Permissions.php';
 require_once 'classes/Util.php';
 require_once 'classes/Citizen.php';
+require_once 'classes/LogEntry.php';
 
 $user = \Entrance\Util::checkSession();
 $pdo = new \Entrance\PDO_MYSQL();
@@ -74,6 +75,37 @@ if($action == "new") {
         $userToDelete = \Entrance\User::fromUID($cID);
         $userToDelete->delete();
         \Entrance\Util::forwardTo("citizen.php");
+        exit;
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user);
+        $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+    }
+} elseif($action == "badcitizen") {
+    if($user->isActionAllowed(PERM_CITIZEN_INFO_DIFFERENCE)) {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Böse Schüler", $user);
+        $citizens = \Entrance\Citizen::getAllBadCitizen();
+        for ($i = 0; $i < sizeof($citizens); $i++) {
+            $pgdata["page"]["items"][$i] = $citizens[$i]->asArray();
+        }
+
+        $dwoo->output("tpl/citizenList.tpl", $pgdata);
+        exit;
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user);
+        $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+    }
+} elseif($action == "citizeninfo") {
+    if($user->isActionAllowed(PERM_CITIZEN_INFO_SPECIFIC) and is_numeric($cID)) {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Schülerinfo", $user);
+        $citizenToView = \Entrance\Citizen::fromCID($cID);
+        $pgdata["page"]["citizen"] = $citizenToView->asArray();
+
+        $itsLogs = \Entrance\LogEntry::getAllLogsPerCID($cID);
+        for ($i = 0; $i < sizeof($itsLogs); $i++) {
+            $pgdata["page"]["logs"][$i] = $itsLogs[$i]->asArray();
+        }
+
+        $dwoo->output("tpl/citizenInfo.tpl", $pgdata);
         exit;
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user);

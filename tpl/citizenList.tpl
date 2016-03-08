@@ -12,13 +12,14 @@
                             <li class="collection-item avatar">
                                 <i class="material-icons circle {if $inState == 0}green{elseif $inState == 1}red{else}grey{/if}">person</i>
                                 <span class="title">{$firstname} {$lastname}</span>
-                                <p>Klassenstufe {$classlevel}
+                                <p>Klassenstufe {$classlevel}<br/>
+                                    Zeit heute: {$timeToday} | Zeit gesamt: {$timeProject}
                                 </p>
                                 <span class="secondary-content">
                                     <a href="citizen.php?action=edit&cID={$id}">
                                         <i class="material-icons grey-text text-darken-1">create</i>
                                     </a>
-                                    <a href="citizen.php?action=viewLog&cID={$id}">
+                                    <a href="citizen.php?action=citizeninfo&cID={$id}">
                                         <i class="material-icons grey-text text-darken-1">reorder</i>
                                     </a>
                                     <a href="citizen.php?action=del&cID={$id}">
