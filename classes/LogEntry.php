@@ -10,19 +10,21 @@ namespace Entrance;
 use PDO;
 
 class LogEntry {
-    private $lID, $cID, $timestamp, $action, $success;
+    private $lID, $cID, $uID,  $timestamp, $action, $success;
 
     /**
      * LogEntry constructor.
      * @param $lID
      * @param $cID
+     * @param $uID
      * @param $timestamp
      * @param $action
      * @param $success
      */
-    public function __construct($lID, $cID, $timestamp, $action, $success) {
+    public function __construct($lID, $cID, $uID, $timestamp, $action, $success) {
         $this->lID = $lID;
         $this->cID = $cID;
+        $this->uID = $uID;
         $this->timestamp = $timestamp;
         $this->action = $action;
         $this->success = $success;
@@ -51,23 +53,24 @@ class LogEntry {
 
     /**
      * @param $citizen Citizen
+     * @param $user User
      * @param $action int
      * @return bool
      */
-    public static function createLogEntry($citizen, $action) {
+    public static function createLogEntry($citizen,$user, $action) {
         $pdo = new PDO_MYSQL();
         $date = time();
         if ($citizen -> isCitizenInState() == 0){
             if ($action == 1){ //Schueler ist im Staat und verlaesst ihn
                 $pdo = new PDO_MYSQL();
-                $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, :action, 1)",
-                    [":cID" => $citizen -> getCID(), ":timestamp" => $date, ":action" => $action]);
+                $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, :action, 1)",
+                    [":cID" => $citizen -> getCID(), ":uID" => $user -> getUID(), ":timestamp" => $date, ":action" => $action]);
                 return true;
             }
             if ($action == 0){ //Schueler ist im Staat und betritt ihn -> Error
                 $pdo = new PDO_MYSQL();
-                $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, :action, 0)",
-                    [":cID" => $citizen -> getCID(), ":timestamp" => $date, ":action" => $action]);
+                $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, :action, 0)",
+                    [":cID" => $citizen -> getCID(), ":uID" => $user -> getUID(), ":timestamp" => $date, ":action" => $action]);
                 Error::createError($citizen -> getCID(), 1);
                 return false;
             }
@@ -75,14 +78,14 @@ class LogEntry {
         elseif($citizen -> isCitizenInState() == 1){
             if ($action == 0){ //Schueler ist nicht im Staat und betritt ihn
                 $pdo = new PDO_MYSQL();
-                $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, :action, 1)",
-                    [":cID" => $citizen -> getCID(), ":timestamp" => $date, ":action" => $action]);
+                $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, :action, 1)",
+                    [":cID" => $citizen -> getCID(), ":uID" => $user -> getUID(), ":timestamp" => $date, ":action" => $action]);
                 return true;
             }
             if ($action == 1){ //Schueler ist nicht im Staat und verlaesst ihn -> Error
                 $pdo = new PDO_MYSQL();
-                $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, :action, 0)",
-                    [":cID" => $citizen -> getCID(), ":timestamp" => $date, ":action" => $action]);
+                $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, :action, 0)",
+                    [":cID" => $citizen -> getCID(), ":uID" => $user -> getUID(), ":timestamp" => $date, ":action" => $action]);
                 Error::createError($citizen -> getCID(), 2);
                 return false;
             }
@@ -92,27 +95,28 @@ class LogEntry {
 
     /**
      * @param $citizen Citizen
+     * @param $user User
      * @return bool
      */
-    public static function forceErrorCorrect($citizen){
+    public static function forceErrorCorrect($citizen, $user){
         $pdo = new PDO_MYSQL();
         $date = time();
         if ($citizen -> isCitizenInState() == 1){
             $pdo = new PDO_MYSQL();
-            $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, 0, 0)",
-                [":cID" => $citizen -> getCID(), ":timestamp" => $date]);
+            $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 0, 0)",
+                [":cID" => $citizen -> getCID(), ":uID" => $user -> getUID(), ":timestamp" => $date]);
             self::invalidateLogEntryBeforeEntry($citizen -> getCID(), self::getLastEntry($citizen -> getCID()));
             Error::correctError($citizen -> getCID());
-            self::createLogEntry($citizen, 1);
+            self::createLogEntry($citizen, $user, 1);
             return true;
         }
         elseif($citizen -> isCitizenInState() == 0){
             $pdo = new PDO_MYSQL();
-            $pdo->query("INSERT INTO entrance_logs(cID,`timestamp`, `action`, success) VALUES (:cID, :timestamp, 1, 0)",
-                [":cID" => $citizen -> getCID(), ":timestamp" => $date]);
+            $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 1, 0)",
+                [":cID" => $citizen -> getCID(), ":uID" => $user -> getUID(), ":timestamp" => $date]);
             self::invalidateLogEntryBeforeEntry($citizen -> getCID(), self::getLastEntry($citizen -> getCID()));
             Error::correctError($citizen -> getCID());
-            self::createLogEntry($citizen, 0);
+            self::createLogEntry($citizen, $user, 0);
             return true;
         }
     }
