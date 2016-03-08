@@ -76,6 +76,15 @@ class Citizen {
     /**
      * @return Citizen[]
      */
+    public static function getAllStudents() {
+        $pdo = new PDO_MYSQL();
+        $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE classlevel != 14 AND classlevel != 15 ORDER BY cID");
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+    }
+
+    /**
+     * @return Citizen[]
+     */
     public static function getAllCitizenInState() {
         $citizens = self::getAllCitizen();
         $citizenInState = [];
@@ -97,7 +106,7 @@ class Citizen {
      * @return Citizen[]
      */
     public static function getAllBadCitizen() {
-        $citizens = self::getAllCitizen();
+        $citizens = self::getAllStudents();
         $days = LogEntry::getProjectDays();
         $badCitizens = [];
         foreach($citizens as $citizen){
