@@ -6,9 +6,6 @@
  * Time: 00:41
  */
 
-error_reporting(E_ALL);
-ini_set("diplay_errors", "on");
-
 require_once 'classes/PDO_MYSQL.php'; //DB Anbindung
 require_once 'libs/dwoo/lib/Dwoo/Autoloader.php'; //Dwoo Laden
 require_once 'classes/User.php';

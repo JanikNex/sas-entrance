@@ -17,12 +17,12 @@
                                 </p>
                                 <span class="secondary-content">
                                     <a href="citizen.php?action=edit&cID={$id}">
-                                        <i class="material-icons grey-text text-darken-1">create</i>
+                                        <i class="material-icons grey-text text-darken-1" style="margin: 0px 5px;">create</i>
                                     </a>
-                                    <a href="citizen.php?action=citizeninfo&cID={$id}">
+                                    <a href="citizen.php?action=citizeninfo&cID={$id}" style="margin: 0px 5px;">
                                         <i class="material-icons grey-text text-darken-1">reorder</i>
                                     </a>
-                                    <a href="citizen.php?action=del&cID={$id}">
+                                    <a href="citizen.php?action=del&cID={$id}" style="margin: 0px 5px;">
                                         <i class="material-icons grey-text text-darken-1">delete</i>
                                     </a>
                                 </span>

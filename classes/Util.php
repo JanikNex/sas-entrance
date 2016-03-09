@@ -77,11 +77,12 @@ namespace Entrance;
      /**
       * @param $title String
       * @param $user \Entrance\User
+      * @param bool $backable
       * @param bool $editor
       * @param string $undoUrl
       * @return array
       */
-     public static function getEditorPageDataStub($title, $user, $editor = false, $undoUrl = "") {
+     public static function getEditorPageDataStub($title, $user, $backable = false, $editor = false, $undoUrl = "") {
          return [
              "header" => [
                  "title" => $title,
@@ -91,7 +92,8 @@ namespace Entrance;
                  "level" => $user->getUPrefix(),
                  "perm" => $user->getPermAsArray(),
                  "editor" => $editor ? 1:0,
-                 "undoUrl" => $undoUrl
+                 "undoUrl" => $undoUrl,
+                 "backable" => $backable ? 1:0
              ],
              "perm" => $user->getPermAsArray()
          ];

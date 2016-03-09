@@ -27,7 +27,7 @@ $cID    = $_GET['cID'];
 
 if($action == "new") {
     if ($user->isActionAllowed(PERM_CITIZEN_CREATE)) {
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user, true, "citizen.php");
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user, false, true, "citizen.php");
         $dwoo->output("tpl/citizenNew.tpl", $pgdata);
         exit; //To not show the list
     } else {
@@ -37,7 +37,7 @@ if($action == "new") {
 } elseif($action == "edit" and is_numeric($cID)) {
     if ($user->isActionAllowed(PERM_CITIZEN_EDIT)) {
         $citizenToEdit = \Entrance\Citizen::fromCID($cID);
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user, true, "citizen.php");
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user, false, true, "citizen.php");
         $pgdata["edit"] = $citizenToEdit->asArray();
         $dwoo->output("tpl/citizenEdit.tpl", $pgdata);
         exit; //To not show the list
@@ -96,7 +96,7 @@ if($action == "new") {
     }
 } elseif($action == "citizeninfo") {
     if($user->isActionAllowed(PERM_CITIZEN_INFO_SPECIFIC) and is_numeric($cID)) {
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Schülerinfo", $user);
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Schülerinfo", $user, true, false, "citizen.php");
         $citizenToView = \Entrance\Citizen::fromCID($cID);
         $pgdata["page"]["citizen"] = $citizenToView->asArray();
 
