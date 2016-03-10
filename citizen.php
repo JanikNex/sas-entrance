@@ -116,12 +116,12 @@ if($action == "new") {
         $dwoo->output("tpl/citizenInfo.tpl", $pgdata);
         exit;
     } else {
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user);
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Personen", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
     }
 } elseif($action == "listInState") {
     if($user->isActionAllowed(PERM_CITIZEN_PRESENT_LIST)) {
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler im Staat", $user);
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Personen im Staat", $user);
         $citizens = \Entrance\Citizen::getAllCitizenInState();
         for ($i = 0; $i < sizeof($citizens); $i++) {
             $pgdata["page"]["items"][$i] = $citizens[$i]->asArray();
@@ -144,10 +144,32 @@ if($action == "new") {
         echo "NO!";
         exit();
     }
+} elseif($action == "counterVisitors") {
+    if($user->isActionAllowed(PERM_CITIZEN_PRESENT_NUMBER)) {
+        header('Content-Type: text/html; charset=utf-8'); // sorgt für die korrekte Kodierung
+        header('Cache-Control: must-revalidate, pre-check=0, no-store, no-cache, max-age=0, post-check=0'); // ist mal wieder wichtig wegen IE
+
+        echo \Entrance\Citizen::getCurrentVisitorCount();
+        exit;
+    } else {
+        echo "NO!";
+        exit();
+    }
+} elseif($action == "counterStudents") {
+    if($user->isActionAllowed(PERM_CITIZEN_PRESENT_NUMBER)) {
+        header('Content-Type: text/html; charset=utf-8'); // sorgt für die korrekte Kodierung
+        header('Cache-Control: must-revalidate, pre-check=0, no-store, no-cache, max-age=0, post-check=0'); // ist mal wieder wichtig wegen IE
+
+        echo \Entrance\Citizen::getCurrentStudentCount();
+        exit;
+    } else {
+        echo "NO!";
+        exit();
+    }
 }
 
 if($user->isActionAllowed(PERM_CITIZEN_VIEW)) {
-    $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user);
+    $pgdata = \Entrance\Util::getEditorPageDataStub("Person", $user);
     $citizens = \Entrance\Citizen::getAllCitizen();
     for ($i = 0; $i < sizeof($citizens); $i++) {
         $pgdata["page"]["items"][$i] = $citizens[$i]->asArray();
@@ -155,6 +177,6 @@ if($user->isActionAllowed(PERM_CITIZEN_VIEW)) {
 
     $dwoo->output("tpl/citizenList.tpl", $pgdata);
 } else {
-    $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user);
+    $pgdata = \Entrance\Util::getEditorPageDataStub("Person", $user);
     $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
 }
