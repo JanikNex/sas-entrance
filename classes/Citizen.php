@@ -78,7 +78,7 @@ class Citizen {
      */
     public static function getAllStudents() {
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE classlevel != 14 AND classlevel != 15 ORDER BY cID");
+        $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE classlevel < 14 ORDER BY cID");
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
     }
 
@@ -96,10 +96,50 @@ class Citizen {
     }
 
     /**
+     * @return Citizen[]
+     */
+    public static function getAllVisitorsInState() {
+        $citizens = self::getAllCitizen();
+        $citizenInState = [];
+        foreach($citizens as $citizen){
+            if($citizen -> isCitizenInState() == 0 && $citizen -> getClasslevel() == 15)
+                array_push($citizenInState, $citizen);
+        }
+        return $citizenInState;
+    }
+
+    /**
+     * @return Citizen[]
+     */
+    public static function getAllStudentsInState() {
+        $citizens = self::getAllCitizen();
+        $citizenInState = [];
+        foreach($citizens as $citizen){
+            if($citizen -> isCitizenInState() == 0 && $citizen -> getClasslevel() < 14)
+                array_push($citizenInState, $citizen);
+        }
+        return $citizenInState;
+    }
+
+    /**
      * @return int
      */
     public static function getCurrentCitizenCount() {
         return sizeof(self::getAllCitizenInState());
+    }
+
+    /**
+     * @return int
+     */
+    public static function getCurrentStudentCount() {
+        return sizeof(self::getAllStudentsInState());
+    }
+
+    /**
+     * @return int
+     */
+    public static function getCurrentVisitorCount() {
+        return sizeof(self::getAllVisitorsInState());
     }
 
     /**
