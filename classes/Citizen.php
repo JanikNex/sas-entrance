@@ -246,10 +246,6 @@ class Citizen {
      * @return int
      */
     public function getTimePerProject(){
-        /*$time = $this->getTimePerDay("2016-07-11");
-        $time += $this->getTimePerDay("2016-07-12");
-        $time += $this->getTimePerDay("2016-07-13");
-        $time += $this->getTimePerDay("2016-07-14");*/
         $time = 0;
         foreach(LogEntry::getProjectDays() as $day)
             $time += $this->getTimePerDay($day);
