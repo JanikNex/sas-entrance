@@ -91,7 +91,9 @@
                                 <a class="collapsible-header">Infobildschirm<i class="mdi-navigation-arrow-drop-down"></i></a>
                                 <div class="collapsible-body">
                                     <ul>
-                                        <li><a href="counter.html">Anzahl zZ im Staat</a></li>
+                                        <li><a href="counter.html">Anzahl gesamt</a></li>
+                                        <li><a href="#!">Anzahl Besucher</a></li>
+                                        <li><a href="#!">Anzahl Schüler</a></li>
                                     </ul>
                                 </div>
                             </li>
