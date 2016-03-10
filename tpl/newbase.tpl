@@ -72,10 +72,10 @@
                     <li class="no-padding">
                         <ul class="collapsible collapsible-accordion">
                             <li>
-                                <a class="collapsible-header">Schüler<i class="mdi-navigation-arrow-drop-down"></i></a>
+                                <a class="collapsible-header">Personen<i class="mdi-navigation-arrow-drop-down"></i></a>
                                 <div class="collapsible-body">
                                     <ul>
-                                        {if $args.perm.citizen_view == 1}<li><a href="citizen.php">Alle Schüler</a></li>{/if}
+                                        {if $args.perm.citizen_view == 1}<li><a href="citizen.php">Alle Personen</a></li>{/if}
                                         {if $args.perm.citizen_info_difference == 1}<li><a href="citizen.php?action=badcitizen">Böse Schüler</a></li>{/if}
                                         {if $args.perm.citizen_present_list == 1}<li><a href="citizen.php?action=listInState">zZ im Staat</a></li>{/if}
                                     </ul>
@@ -92,7 +92,9 @@
                                 <a class="collapsible-header">Infobildschirm<i class="mdi-navigation-arrow-drop-down"></i></a>
                                 <div class="collapsible-body">
                                     <ul>
-                                        <li><a href="counter.html">Anzahl zZ im Staat</a></li>
+                                        <li><a href="counter.html">Anzahl gesamt</a></li>
+                                        <li><a href="#!">Anzahl Besucher</a></li>
+                                        <li><a href="#!">Anzahl Schüler</a></li>
                                     </ul>
                                 </div>
                             </li>
@@ -109,7 +111,7 @@
                                     <ul>
                                         {if $args.perm.users_view == 1}<li><a href="users.php">Benutzerkonten</a></li>{/if}
                                         {if $args.perm.admin_database == 1}<li><a href="adminer-4.2.4-mysql.php">Adminer (Datenbank)</a></li>{/if}
-                                        {if $args.perm.admin_errors == 1}<li><a href="errors.php">Fehlerkorrektur</a></li>{/if}
+                                        {if $args.perm.admin_errors == 1}<li><a href="errors.php">Fehlerliste</a></li>{/if}
                                     </ul>
                                 </div>
                             </li>

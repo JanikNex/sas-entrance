@@ -29,6 +29,7 @@
                                 <option {if $edit.classlevel == 12}selected {/if}value="12">Stufe 12</option>
                                 <option {if $edit.classlevel == 14}selected {/if}value="14">Lehrer</option>
                                 <option {if $edit.classlevel == 15}selected {/if}value="15">Visum</option>
+                                <option {if $edit.classlevel == 16}selected {/if}value="16">Kurier</option>
                             </select>
                             <label for="selInt">Klassenstufe</label>
                         </div>
