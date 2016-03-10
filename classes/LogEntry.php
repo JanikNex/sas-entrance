@@ -67,14 +67,10 @@ class LogEntry {
      * @return bool
      */
     public static function createLogEntry($citizen, $user, $action) {
-        echo "->createLogEntry";
         if(self::getEntrySuccessStatus(self::getLastEntry($citizen -> getCID()))) {
-            echo "->IF=true";
             if ($citizen->getClasslevel() != 16) {
-                echo "->IF!=16";
                 return self::createLogEntryNormal($citizen, $user, $action);
             } else {
-                echo "->IF==16";
                 return self::createLogEntryCourrier($citizen, $user, $action);
             }
         } else return false;
@@ -221,6 +217,7 @@ class LogEntry {
             [":cID" => $this -> cID, ":lID" => $this -> lID]) -> timestamp;
         return strtotime($this -> timestamp) - strtotime($timeOld);
     }
+
 
     /**
      * @param $cID int
