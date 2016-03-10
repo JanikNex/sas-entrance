@@ -29,6 +29,9 @@
                 <a href="#!" class="brand-logo hide-on-large-only" style="">Sas - {$args.title}</a>
                 <ul class="right">
                     <!-- Dropdown Trigger -->
+                    {if $args.switchmode == 1}
+                        <li><a href="{$args.switchmodeTo}"><i class="material-icons">cached</i></a></li>
+                    {/if}
                     {if $args.editor == 1}
                     <li><a href="{$args.undoUrl}"><i class="material-icons">clear</i></a></li>
                     <li><a href="javascript:{}" onclick="document.getElementById('form').submit();"><i class="material-icons">done</i></a></li>
@@ -58,8 +61,8 @@
                                 <a class="collapsible-header">Ein/Ausbuchen<i class="mdi-navigation-arrow-drop-down"></i></a>
                                 <div class="collapsible-body">
                                     <ul>
-                                        {if $args.perm.citizen_login == 1}<li><a href="#!">Einbuchen</a></li>{/if}
-                                        {if $args.perm.citizen_logout == 1}<li><a href="#!">Ausbuchen</a></li>{/if}
+                                        {if $args.perm.citizen_login == 1}<li><a href="check.php?action=checkIn">Einbuchen</a></li>{/if}
+                                        {if $args.perm.citizen_logout == 1}<li><a href="check.php?action=checkOut">Ausbuchen</a></li>{/if}
                                         {if $args.perm.citizen_correcterrors == 1}<li><a href="#!">Fehler</a></li>{/if}
                                     </ul>
                                 </div>

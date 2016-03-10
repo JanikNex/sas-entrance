@@ -111,7 +111,7 @@ if($action == "new") {
             $pgdata["page"]["times"][$i]["time"] = $citizenToView->getTimePerDay($days[$i]) != 0 ? gmdate("H\h i\m s\s",$citizenToView->getTimePerDay($days[$i])) : "<i>Nicht anwesend</i>";
         }
 
-        $pgdata["page"]["timeTotal"] = $citizenToView->getTimePerProject() != 0 ? gmdate("H\h i\m s\s", $citizenToView->getTimePerProject()) : "<i>Nicht anwesend</i>";
+        $pgdata["page"]["timeTotal"] = $citizenToView->getTimePerProject() != 0 ? \Entrance\Util::seconds_to_time($citizenToView->getTimePerProject()) : "<i>Nicht anwesend</i>";
 
         $dwoo->output("tpl/citizenInfo.tpl", $pgdata);
         exit;

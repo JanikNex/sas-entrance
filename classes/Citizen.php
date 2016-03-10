@@ -180,9 +180,30 @@ class Citizen {
             "barcode" => $this->barcode,
             "inState" => $this->isCitizenInState(),
             "timeToday" => $this->getTimePerDay(date("Y-m-d")) != 0 ? gmdate("H\h i\m s\s",$this->getTimePerDay(date("Y-m-d"))) : "<i>Nicht anwesend</i>",
-            "timeProject" =>$this->getTimePerProject() != 0 ? gmdate("H\h i\m s\s",$this->getTimePerProject()) : "<i>Nicht anwesend</i>"
+            "timeProject" =>$this->getTimePerProject() != 0 ? Util::seconds_to_time($this->getTimePerProject()) : "<i>Nicht anwesend</i>"
         ];
     }
+
+    /**
+     * Tries to check the citizen in, returns true on success, false on failure
+     *
+     * @param $user User
+     * @return bool
+     */
+    public function tryCheckIn($user) {
+        return LogEntry::createLogEntry($this, $user, 0);
+    }
+
+    /**
+     * Tries to check the citizen out, returns true on success, false on failure
+     *
+     * @param $user User
+     * @return bool
+     */
+    public function tryCheckOut($user) {
+        return LogEntry::createLogEntry($this, $user, 1);
+    }
+
 
     /**
      * @return bool

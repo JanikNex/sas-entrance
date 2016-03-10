@@ -68,7 +68,7 @@ class LogEntry {
      */
     public static function createLogEntry($citizen,$user, $action) {
         $pdo = new PDO_MYSQL();
-        $date = time();
+        $date = date("Y-m-d H:i:s");
         if(self::getEntrySuccessStatus(self::getLastEntry($citizen -> getCID()))) {
             if ($citizen->isCitizenInState() == 0) { // Schueler ist im Staat
                 if ($citizen->getClasslevel() != 16) { //Person ist kein Kurier

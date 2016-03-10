@@ -4,27 +4,33 @@
                 <div class="row">
                     <div class="col s12 m6">
                         <div class="card-panel row">
-                            <form action="check.php?action=checkInScan">
-                                <div class="input-field col s10">
+                            <form action="check.php?action=checkInScan" method="post">
+                                <div class="input-field col s11">
                                     <img src="barcode-scan.svg" class="prefix" height="32px"/>
                                     <label for="barcode">Hier scannen</label>
-                                    <input id="barcode" required type="text" name="barcode" length="13"/>
+                                    <input id="barcode" required type="text" name="barcode" length="13" autofocus/>
                                 </div>
-                                <button class="btn waves-effect waves-light indigo col offset-s1 s1" style="margin-top:15px;" type="submit" name="action">
+                                <button class="btn-flat waves-effect waves-light col s1" style="margin-top:15px;" type="submit" name="action">
                                     <i class="material-icons right">send</i>
                                 </button>
                             </form>
-                            <div class="col s12">{$page.status}</div>
+                            <div class="col s12">
+                                {if $page.scan.success == 1}
+                                    <p class="green-text"><img src="checkOk.png" height="16px"> Scan Erfolgreich.</p>
+                                {elseif $page.scan.success == 2}
+                                    <p class="red-text"><img src="checkFail.png" height="16px"> Scan Fehlgeschlagen.</p>
+                                {/if}
+                            </div>
                         </div>
                     </div>
-                    <div class="col s12 m5">
+                    <div class="col s12 offset-m1 m5">
                         <div class="card-panel">
                             <h5>Schüler</h5>
                             <p><b>Name:</b> {$page.citizen.firstname} {$page.citizen.lastname}</p>
                             <p><b>Geburtstag:</b> {$page.citizen.birthdayNice}</p>
                         </div>
                     </div>
-                    <div class="col s12 offset-m1 m6">
+                    <div class="col s12 offset-m7 m5">
                         <div class="card-panel">
                             <ul class="collection">
                                 {loop $page.logs}
