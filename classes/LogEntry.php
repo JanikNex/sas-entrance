@@ -152,10 +152,20 @@ class LogEntry {
      * @return bool
      */
     public static function forceErrorCorrect($citizen, $user){
+        if(!self::getEntrySuccessStatus(self::getLastEntry($citizen -> getCID()))) {
+                return self::forceErrorCorrectNormal($citizen, $user);
+        } else return false;
+    }
+
+    /**
+     * @param $citizen Citizen
+     * @param $user User
+     * @return bool
+     */
+    public static function forceErrorCorrectNormal($citizen, $user){
         $pdo = new PDO_MYSQL();
-        $date = time();
+        $date = date("Y-m-d H:i:s");
         if ($citizen -> isCitizenInState() == 1){
-            $pdo = new PDO_MYSQL();
             $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 0, 0)",
                 [":cID" => $citizen -> getCID(), ":uID" => $user -> getUID(), ":timestamp" => $date]);
             self::invalidateLogEntryBeforeEntry($citizen -> getCID(), self::getLastEntry($citizen -> getCID()));
@@ -164,7 +174,6 @@ class LogEntry {
             return true;
         }
         elseif($citizen -> isCitizenInState() == 0){
-            $pdo = new PDO_MYSQL();
             $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 1, 0)",
                 [":cID" => $citizen -> getCID(), ":uID" => $user -> getUID(), ":timestamp" => $date]);
             self::invalidateLogEntryBeforeEntry($citizen -> getCID(), self::getLastEntry($citizen -> getCID()));
@@ -173,6 +182,7 @@ class LogEntry {
             return true;
         }
     }
+
 
     /**
      * @param $cID Citizen
