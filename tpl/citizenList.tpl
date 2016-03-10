@@ -1,7 +1,7 @@
 {include file="newbase.tpl" args=$header}
 <main>
             <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
-                <a href="?action=new" class="btn-floating btn-large green tooltipped"  data-position="left" data-delay="50" data-tooltip="Neuen Schüler anlegen">
+                <a href="?action=new" class="btn-floating btn-large green tooltipped"  data-position="left" data-delay="50" data-tooltip="Neue Person anlegen">
                 <i class="large material-icons">add</i>
                 </a>
             </div>

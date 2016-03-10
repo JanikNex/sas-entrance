@@ -29,6 +29,7 @@
                                 <option value="12">Stufe 12</option>
                                 <option value="14">Lehrer</option>
                                 <option value="15">Visum</option>
+                                <option value="16">Kurier</option>
                             </select>
                             <label for="selInt">Klassenstufe</label>
                         </div>

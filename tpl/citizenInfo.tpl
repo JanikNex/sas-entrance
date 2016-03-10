@@ -4,7 +4,7 @@
                 <div class="row">
                     <div class="col s12 m5">
                         <div class="card-panel">
-                            <h5>Schüler</h5>
+                            <h5>Person</h5>
                             <p><b>Name:</b> {$page.citizen.firstname} {$page.citizen.lastname}</p>
                             <p><b>Geburtstag:</b> {$page.citizen.birthdayNice}</p>
                             <p><b>Barcode:</b> {$page.citizen.barcode}</p>
