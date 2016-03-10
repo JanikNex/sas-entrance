@@ -28,6 +28,7 @@
                             <h5>Schüler</h5>
                             <p><b>Name:</b> {$page.citizen.firstname} {$page.citizen.lastname}</p>
                             <p><b>Geburtstag:</b> {$page.citizen.birthdayNice}</p>
+                            <p><b>Klassenstufe:</b> {$page.citizen.classlevel}</p>
                         </div>
                     </div>
                     <div class="col s12 offset-m7 m5">

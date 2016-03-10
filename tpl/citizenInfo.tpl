@@ -7,6 +7,7 @@
                             <h5>Person</h5>
                             <p><b>Name:</b> {$page.citizen.firstname} {$page.citizen.lastname}</p>
                             <p><b>Geburtstag:</b> {$page.citizen.birthdayNice}</p>
+                            <p><b>Klassenstufe:</b> {$page.citizen.classlevel}</p>
                             <p><b>Barcode:</b> {$page.citizen.barcode}</p>
                             <div id="bcTarget"></div>
                             {loop $page.times}<p><b>Zeit am {$date}:</b> {$time}</p>{/loop}
