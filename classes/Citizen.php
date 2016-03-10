@@ -229,15 +229,22 @@ class Citizen {
      * @return int
      */
     public function getTimePerDay($date){
+        $pdo = new PDO_MYSQL();
         $entries = LogEntry::allLogsPerDay($this->cID, $date);
         $time = 0;
         foreach($entries as $entry){
             $time += $entry -> timeBetweenTwoEntries();
         }
-        if($this -> isCitizenInState() == 0 && $date == date("Y-m-d")){
-            $pdo = new PDO_MYSQL();
-            $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid AND action = 0 AND success = 1 ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
-            $time += time() - strtotime($res -> timestamp);
+        if($this -> getClasslevel() != 16){
+            if($this -> isCitizenInState() == 0 && $date == date("Y-m-d")) {
+                $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid AND action = 0 AND success = 1 ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
+                $time += time() - strtotime($res->timestamp);
+            }
+        }elseif($this -> getClasslevel() == 16){
+            if($this -> isCitizenInState() == 1 && $date == date("Y-m-d")) {
+                $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid AND action = 1 AND success = 1 ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
+                $time += time() - strtotime($res->timestamp);
+            }
         }
         return $time;
     }
