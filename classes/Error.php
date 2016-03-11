@@ -69,6 +69,10 @@ class Error{
             [":cID" => $cID, ":timestamp" => $date, ":errorcode" => $errorcode]);
     }
 
+    public function delete(){
+        $pdo = new PDO_MYSQL();
+        return $pdo->query("DELETE FROM entrance_error WHERE eID = :eid", [":eid" => $this->eID]);
+    }
     /**
      * @param $cID Citizen
      */
