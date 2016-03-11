@@ -153,7 +153,11 @@ class LogEntry {
      */
     public static function forceErrorCorrect($citizen, $user){
         if(Citizen::isCitizenLocked($citizen)) {
+            if(self::getLastTwoEntrySuccessStatus(self::getLastEntry($citizen -> getCID())))
+                return self::forceErrorCorrectAfterKick($citizen,$user);
+            else{
                 return self::forceErrorCorrectNormal($citizen, $user);
+            }
         } else return false;
     }
 
@@ -183,10 +187,23 @@ class LogEntry {
         }
     }
 
+    /**
+     * @param $citizen Citizen
+     * @param $user
+     * @return bool
+     */
+    public static function forceErrorCorrectAfterKick($citizen, $user){
+            if($citizen -> isCitizenInState() == 1){
+                Error::correctError($citizen -> getCID());
+                self::createLogEntry($citizen, $user, 0);
+                return true;
+            }
+        return false;
+    }
 
     /**
-     * @param $cID Citizen
-     * @param $lID LogEntry
+     * @param $cID int
+     * @param $lID int
      */
     public static function invalidateLogEntryBeforeEntry($cID, $lID){
         $pdo = new PDO_MYSQL();
@@ -196,7 +213,7 @@ class LogEntry {
     }
 
     /**
-     * @param $cID Citizen
+     * @param $cID int
      * @return int
      */
     public static function getLastEntry($cID){
@@ -217,6 +234,26 @@ class LogEntry {
             elseif ($res == 0) return false;
             else return true;
         } else return true;
+    }
+
+    /**
+     * @param $lID LogEntry
+     * @return bool
+     */
+    public static function getLastTwoEntrySuccessStatus($lID){
+        $pdo = new PDO_MYSQL();
+        $cID = self::fromLID($lID) -> getCID();
+        $stmt = $pdo -> queryMulti("SELECT * FROM entrance_logs WHERE cID = :cID AND lID <= :lID ORDER BY lID DESC LIMIT 2",
+            [":cID" => $cID, ":lID" => $lID]);
+        $entries = $stmt -> fetchAll(PDO::FETCH_FUNC, "\\Entrance\\LogEntry::fromLID");
+        if(sizeof($entries) == 2){
+            if(self::getEntrySuccessStatus($entries[1]) && self::getEntrySuccessStatus($entries[2])){
+                return true;
+            }
+        }else{
+            return false;
+        }
+
     }
     /**
      * @return int
@@ -280,6 +317,7 @@ class LogEntry {
             $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 1, 0)",
                 [":cID" => $citizen -> getCID(), ":uID" => $user -> getUID(), ":timestamp" => $date]);
             Error::createError($citizen -> getCID(), 3);
+            self::invalidateLogEntryBeforeEntry($citizen -> getCID(), self::getLastEntry($citizen -> getCID()));
             return true;
         }
     }
