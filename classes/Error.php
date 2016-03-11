@@ -74,7 +74,12 @@ class Error{
      */
     public static function correctError($cID){
         $pdo = new PDO_MYSQL();
-        $pdo -> query("UPDATE entrance_error SET active = 0 WHERE cID = :cID", [":eID" => $cID]);
+        $pdo -> query("UPDATE entrance_error SET active = 0 WHERE cID = :cID", [":cID" => $cID]);
+    }
+
+    public function correctThisError(){
+        $pdo = new PDO_MYSQL();
+        $pdo -> query("UPDATE entrance_error SET active = 0 WHERE eID = :eID", [":eID" => $this -> eID]);
     }
 
     public function asArray() {
