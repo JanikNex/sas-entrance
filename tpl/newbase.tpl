@@ -115,6 +115,7 @@
                                         {if $args.perm.users_view == 1}<li><a href="users.php">Benutzerkonten</a></li>{/if}
                                         {if $args.perm.admin_database == 1}<li><a href="adminer-4.2.4-mysql.php">Adminer (Datenbank)</a></li>{/if}
                                         {if $args.perm.admin_errors == 1}<li><a href="errors.php">Fehlerliste</a></li>{/if}
+                                        {if $args.perm.admin_kickall == 1}<li><a href="citizen.php?action=kickall">Alle Rausschmeißen</a></li>{/if}
                                     </ul>
                                 </div>
                             </li>

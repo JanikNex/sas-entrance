@@ -39,13 +39,12 @@ class Error{
     }
 
     /**
-     * @param int $limit
      * @return Error[]
      */
-    public static function getAllErrors($limit = 18446744073709551610){
+    public static function getAllErrors(){
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT eID FROM entrance_error ORDER BY eID LIMIT :limit");
-        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Errors::fromEID");
+        $stmt = $pdo->queryMulti("SELECT eID FROM entrance_error ORDER BY eID");
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Error::fromEID");
     }
 
     /**
@@ -55,7 +54,7 @@ class Error{
     public static function getErrorsByCitizen($cID){
         $pdo = new PDO_MYSQL();
         $stmt = $pdo->queryMulti("SELECT eID FROM entrance_error WHERE cID = :cid ORDER BY eID", [":cid" => $cID]);
-        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Errors::fromEID");
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Error::fromEID");
     }
 
     /**
@@ -93,9 +92,11 @@ class Error{
         return[
             "eID" => $this -> eID,
             "cID" => $this -> cID,
+            "citizenName" => Citizen::fromCID($this->cID)->getFirstname()." ".Citizen::fromCID($this->cID)->getLastname(),
+            "citizenClassLevel" => Citizen::fromCID($this->cID)->getClasslevel(),
             "errorStatus" => $this -> active,
-            "timestamp" => $this -> timestamp,
-            "errorcode" => $this -> errorcode
+            "timestamp" => date("d. M Y - H:i", strtotime($this->timestamp)),
+            "errorCode" => $this -> errorcode
         ];
     }
     /**
