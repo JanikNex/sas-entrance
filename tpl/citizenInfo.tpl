@@ -22,13 +22,18 @@
                                     {if $action == 0}
                                         <i class="material-icons circle green">navigate_before</i>
                                         <span class="title">Staat betreten</span>
+                                        {if $classlevel == 16}
+                                            <p>{$timestamp}<br/>Im Staat: {$timeSinceLast}<br/>
+                                        {/if}
                                         <p>{$timestamp}<br/>
                                             <img src="barcode-scan.svg" height="16px" /> {$scanner}
                                         </p>
                                     {else}
                                         <i class="material-icons circle red">navigate_next</i>
                                         <span class="title">Staat verlassen</span>
-                                        <p>{$timestamp}<br/>Im Staat: {$timeSinceLast}<br/>
+                                        {if $classlevel != 16}
+                                            <p>{$timestamp}<br/>Im Staat: {$timeSinceLast}<br/>
+                                        {/if}
                                             <img src="barcode-scan.svg" height="16px" /> {$scanner}
                                         </p>
                                     {/if}
