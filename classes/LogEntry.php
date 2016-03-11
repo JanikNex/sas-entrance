@@ -193,12 +193,21 @@ class LogEntry {
      * @return bool
      */
     public static function forceErrorCorrectAfterKick($citizen, $user){
-            if($citizen -> isCitizenInState() == 1){
-                Error::correctError($citizen -> getCID());
+        if(!$citizen ->isCourrier()) {
+            if ($citizen->isCitizenInState() == 1) {
+                Error::correctError($citizen->getCID());
                 self::createLogEntry($citizen, $user, 0);
                 return true;
             }
-        return false;
+            return false;
+        }elseif($citizen -> isCourrier()){
+            if ($citizen->isCitizenInState() == 0) {
+                Error::correctError($citizen->getCID());
+                self::createLogEntry($citizen, $user, 1);
+                return true;
+            }
+            return false;
+        }
     }
 
     /**
@@ -237,7 +246,7 @@ class LogEntry {
     }
 
     /**
-     * @param $lID LogEntry
+     * @param $lID int
      * @return bool
      */
     public static function getLastTwoEntrySuccessStatus($lID){
@@ -313,8 +322,16 @@ class LogEntry {
     public static function kickCitizenOutOfState($citizen, $user){
         $pdo = new PDO_MYSQL();
         $date = date("Y-m-d H:i:s");
-        if ($citizen -> isCitizenInState() == 0){
-            $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 1, 0)",
+        if(!$citizen -> isCourrier())
+            if ($citizen -> isCitizenInState() == 0){
+                $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 1, 0)",
+                    [":cID" => $citizen -> getCID(), ":uID" => $user -> getUID(), ":timestamp" => $date]);
+                Error::createError($citizen -> getCID(), 3);
+                self::invalidateLogEntryBeforeEntry($citizen -> getCID(), self::getLastEntry($citizen -> getCID()));
+                return true;
+            }
+        elseif($citizen -> isCourrier()){
+            $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 0, 0)",
                 [":cID" => $citizen -> getCID(), ":uID" => $user -> getUID(), ":timestamp" => $date]);
             Error::createError($citizen -> getCID(), 3);
             self::invalidateLogEntryBeforeEntry($citizen -> getCID(), self::getLastEntry($citizen -> getCID()));

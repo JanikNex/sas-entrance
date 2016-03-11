@@ -69,12 +69,15 @@ class Error{
             [":cID" => $cID, ":timestamp" => $date, ":errorcode" => $errorcode]);
     }
 
+    /**
+     * @return mixed
+     */
     public function delete(){
         $pdo = new PDO_MYSQL();
         return $pdo->query("DELETE FROM entrance_error WHERE eID = :eid", [":eid" => $this->eID]);
     }
     /**
-     * @param $cID Citizen
+     * @param $cID int
      */
     public static function correctError($cID){
         $pdo = new PDO_MYSQL();
