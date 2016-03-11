@@ -69,9 +69,22 @@ class Error{
             [":cID" => $cID, ":timestamp" => $date, ":errorcode" => $errorcode]);
     }
 
+    /**
+     * @param $cID Citizen
+     */
     public static function correctError($cID){
         $pdo = new PDO_MYSQL();
         $pdo -> query("UPDATE entrance_error SET active = 0 WHERE cID = :cID", [":eID" => $cID]);
+    }
+
+    public function asArray() {
+        return[
+            "eID" => $this -> eID,
+            "cID" => $this -> cID,
+            "errorStatus" => $this -> active,
+            "timestamp" => $this -> timestamp,
+            "errorcode" => $this -> errorcode
+        ];
     }
     /**
      * @return mixed
