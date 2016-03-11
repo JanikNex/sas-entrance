@@ -257,6 +257,33 @@ class LogEntry {
         return $dates;
     }
 
+    /**
+     * Checks all Citizens in State out!
+     */
+    public static function kickAllCitizensOutOfState($user){
+        $citizens = Citizen::getAllCitizenInState();
+        foreach($citizens as $citizen){
+            self::kickCitizenOutOfState($citizen, $user);
+        }
+    }
+
+
+    /**
+     * @param $citizen Citizen
+     * @param $user User
+     * @return bool
+     */
+    public static function kickCitizenOutOfState($citizen, $user){
+        $pdo = new PDO_MYSQL();
+        $date = date("Y-m-d H:i:s");
+        if ($citizen -> isCitizenInState() == 0){
+            $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 1, 0)",
+                [":cID" => $citizen -> getCID(), ":uID" => $user -> getUID(), ":timestamp" => $date]);
+            Error::createError($citizen -> getCID(), 3);
+            return true;
+        }
+    }
+
     public function asArray() {
         return [
             "action" => $this->action,
