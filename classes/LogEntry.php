@@ -308,8 +308,12 @@ class LogEntry {
      */
     public static function kickAllCitizensOutOfState($user){
         $citizens = Citizen::getAllCitizenInState();
+        $courriers = Citizen::getAllCourriersOutOfState();
         foreach($citizens as $citizen){
             self::kickCitizenOutOfState($citizen, $user);
+        }
+        foreach($courriers as $courrier) {
+            self::kickCitizenOutOfState($courrier, $user);
         }
     }
 

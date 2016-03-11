@@ -122,6 +122,18 @@ class Citizen {
     }
 
     /**
+     * @return Citizen[]
+     */
+    public static function getAllCourriersOutOfState(){
+        $citizens = self::getAllCitizen();
+        $courrierOutOfState = [];
+        foreach($citizens as $citizen){
+            if($citizen -> isCitizenInState() == 1 && $citizen -> isCourrier())
+                array_push($courrierOutOfState, $citizen);
+        }
+        return $courrierOutOfState;
+    }
+    /**
      * @return int
      */
     public static function getCurrentCitizenCount() {
@@ -142,6 +154,12 @@ class Citizen {
         return sizeof(self::getAllVisitorsInState());
     }
 
+    /**
+     * @return int
+     */
+    public static function getCurrentCourrierCount(){
+        return sizeof(self::getAllCourriersOutOfState());
+    }
     /**
      * @return Citizen[]
      */
