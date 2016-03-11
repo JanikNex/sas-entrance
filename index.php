@@ -6,4 +6,8 @@
  * Time: 21:37
  */
 
+require_once "classes/Util.php";
+
 echo phpinfo();
+
+\Entrance\Util::forwardTo("logon.php");

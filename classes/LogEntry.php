@@ -353,30 +353,79 @@ class LogEntry {
     }
 
     /**
-     * @return mixed
+     * @return int
      */
-    public function getUID() {
+    public function getLID() {
+        return $this->lID;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCID() {
         return $this->cID;
     }
 
     /**
-     * @return mixed
+     * @param int $cID
+     */
+    public function setCID($cID) {
+        $this->cID = $cID;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUID() {
+        return $this->uID;
+    }
+
+    /**
+     * @param int $uID
+     */
+    public function setUID($uID) {
+        $this->uID = $uID;
+    }
+
+    /**
+     * @return timestamp
      */
     public function getTimestamp() {
         return $this->timestamp;
     }
 
     /**
-     * @return mixed
+     * @param timestamp $timestamp
+     */
+    public function setTimestamp($timestamp) {
+        $this->timestamp = $timestamp;
+    }
+
+    /**
+     * @return int
      */
     public function getAction() {
         return $this->action;
     }
 
     /**
-     * @return mixed
+     * @param int $action
+     */
+    public function setAction($action) {
+        $this->action = $action;
+    }
+
+    /**
+     * @return int
      */
     public function getSuccess() {
         return $this->success;
+    }
+
+    /**
+     * @param int $success
+     */
+    public function setSuccess($success) {
+        $this->success = $success;
     }
 }
