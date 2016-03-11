@@ -179,6 +179,7 @@ class Citizen {
             "birthdayNice" => date("d. M Y", strtotime($this->birthday))." (".Util::getAge($this->birthday).")",
             "barcode" => $this->barcode,
             "inState" => $this->isCitizenInState(),
+            "lockStatus" => self::isCitizenLocked($this),
             "timeToday" => $this->getTimePerDay(date("Y-m-d")) != 0 ? gmdate("H\h i\m s\s",$this->getTimePerDay(date("Y-m-d"))) : "<i>Nicht anwesend</i>",
             "timeProject" =>$this->getTimePerProject() != 0 ? Util::seconds_to_time($this->getTimePerProject()) : "<i>Nicht anwesend</i>"
         ];
@@ -222,6 +223,14 @@ class Citizen {
         if(!isset($res->action)) return 2; //noch nie im Staat gewesen bzw. kein LogEintrag vorhanden
         elseif($res -> action == 0) return 0; //Schueler ist drin
         elseif($res -> action == 1) return 1; //Schueler ist nicht drin
+    }
+
+    /**
+     * @param $citizen Citizen
+     * @return bool
+     */
+    public static function isCitizenLocked($citizen) {
+        return !LogEntry::getEntrySuccessStatus(LogEntry::getLastEntry($citizen -> getCID()));
     }
 
     /**

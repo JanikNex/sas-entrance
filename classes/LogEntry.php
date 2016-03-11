@@ -67,7 +67,7 @@ class LogEntry {
      * @return bool
      */
     public static function createLogEntry($citizen, $user, $action) {
-        if(self::getEntrySuccessStatus(self::getLastEntry($citizen -> getCID()))) {
+        if(!Citizen::isCitizenLocked($citizen)) {
             if ($citizen->getClasslevel() != 16) {
                 return self::createLogEntryNormal($citizen, $user, $action);
             } else {
@@ -152,7 +152,7 @@ class LogEntry {
      * @return bool
      */
     public static function forceErrorCorrect($citizen, $user){
-        if(!self::getEntrySuccessStatus(self::getLastEntry($citizen -> getCID()))) {
+        if(Citizen::isCitizenLocked($citizen)) {
                 return self::forceErrorCorrectNormal($citizen, $user);
         } else return false;
     }
