@@ -244,12 +244,12 @@ class Citizen {
         foreach($entries as $entry){
             $time += $entry -> timeBetweenTwoEntries();
         }
-        if($this -> getClasslevel() != 16){
+        if(!$this -> isCourrier()){
             if($this -> isCitizenInState() == 0 && $date == date("Y-m-d")) {
                 $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid AND action = 0 AND success = 1 ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
                 $time += time() - strtotime($res->timestamp);
             }
-        }elseif($this -> getClasslevel() == 16){
+        }elseif($this -> isCourrier()){
             if($this -> isCitizenInState() == 1 && $date == date("Y-m-d")) {
                 $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid AND action = 1 AND success = 1 ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
                 $time += time() - strtotime($res->timestamp);
@@ -258,6 +258,13 @@ class Citizen {
         return $time;
     }
 
+    public function isCourrier(){
+        if($this->getClasslevel() == 16) {
+            return true;
+        }else{
+            return false;
+        }
+    }
     /**
      * @return int
      */

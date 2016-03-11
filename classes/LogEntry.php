@@ -68,7 +68,7 @@ class LogEntry {
      */
     public static function createLogEntry($citizen, $user, $action) {
         if(!Citizen::isCitizenLocked($citizen)) {
-            if ($citizen->getClasslevel() != 16) {
+            if (!$citizen -> isCourrier()) {
                 return self::createLogEntryNormal($citizen, $user, $action);
             } else {
                 return self::createLogEntryCourrier($citizen, $user, $action);
@@ -236,7 +236,11 @@ class LogEntry {
      */
     public static function allLogsPerDay($cID, $date){
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT lID FROM entrance_logs WHERE cID = :cid AND success = 1 AND action = 1 AND DATE(`timestamp`)= :date", [":cid" => $cID, ":date" => $date]);
+        if(Citizen::fromCID($cID) -> isCourrier()){
+            $stmt = $pdo->queryMulti("SELECT lID FROM entrance_logs WHERE cID = :cid AND success = 1 AND action = 0 AND DATE(`timestamp`)= :date", [":cid" => $cID, ":date" => $date]);
+        }else{
+            $stmt = $pdo->queryMulti("SELECT lID FROM entrance_logs WHERE cID = :cid AND success = 1 AND action = 1 AND DATE(`timestamp`)= :date", [":cid" => $cID, ":date" => $date]);
+        }
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\LogEntry::fromLID");
     }
 
