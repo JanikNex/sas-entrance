@@ -4,7 +4,7 @@
                 <div class="row">
                     <div class="col s12 m6">
                         <div class="card-panel row">
-                            <form action="check.php?action=checkInScan" method="post">
+                            <form action="check.php?action=checkOutScan" method="post">
                                 <div class="input-field col s11">
                                     <img src="barcode-scan.svg" class="prefix" height="32px"/>
                                     <label for="barcode">Hier scannen</label>
@@ -16,7 +16,7 @@
                             </form>
                             <div class="col s12">
                                 {if $page.scan.success == 1}
-                                    <p class="green-text"><img src="checkOk.png" height="16px"> Scan Erfolgreich.</p>
+                                    <p class="lime-text"><img src="checkOk.png" height="16px"> Scan Erfolgreich.</p>
                                 {elseif $page.scan.success == 2}
                                     <p class="red-text"><img src="checkFail.png" height="16px"> Scan Fehlgeschlagen. Achtung, Person ist jetzt geperrt. Bitte nicht an (Y/J)an(n)i(c)k wenden, wir warn's nicht!</p>
                                 {/if}
@@ -50,18 +50,18 @@
                                                 Im Staat: {$timeSinceLast}<br/>
                                             {/if}
                                             <img src="barcode-scan.svg" height="16px" /> {$scanner}
-                                        </p>
-                                    {else}
-                                        <i class="material-icons circle red">navigate_next</i>
+                                            </p>
+                                        {else}
+                                            <i class="material-icons circle red">navigate_next</i>
                                         <span class="title">Staat verlassen</span>
                                         <p>{$timestamp}<br/>
                                             {if $_.page.citizen.classlevel != 16}
                                                 Im Staat: {$timeSinceLast}<br/>
                                             {/if}
                                             <img src="barcode-scan.svg" height="16px" /> {$scanner}
-                                        </p>
+                                            </p>
                                     {/if}
-                                        <i class="material-icons secondary-content{if $success == 0} red-text{/if}">{if $success == 1}done{else}priority_high{/if}</i>
+                                    <i class="material-icons secondary-content{if $success == 0} red-text{/if}">{if $success == 1}done{else}priority_high{/if}</i>
                                 </li>
                                 {/loop}
                             </ul>
