@@ -7,7 +7,12 @@
                             <h5>Person</h5>
                             <p><b>Name:</b> {$page.citizen.firstname} {$page.citizen.lastname}</p>
                             <p><b>Geburtstag:</b> {$page.citizen.birthdayNice}</p>
-                            <p><b>Klassenstufe:</b> {$page.citizen.classlevel}</p>
+                            <p><b>Klassenstufe:</b>
+                                {if $page.citizen.classlevel<=13}{$page.citizen.classlevel}
+                                {elseif $page.citizen.classlevel==14}Lehrer
+                                {elseif $page.citizen.classlevel==15}Visum
+                                {else}Kurier{/if}
+                            </p>
                             <p><b>Barcode:</b> {$page.citizen.barcode}</p>
                             <div id="bcTarget"></div>
                             {loop $page.times}<p><b>Zeit am {$date}:</b> {$time}</p>{/loop}
@@ -22,17 +27,18 @@
                                     {if $action == 0}
                                         <i class="material-icons circle green">navigate_before</i>
                                         <span class="title">Staat betreten</span>
-                                        {if $classlevel == 16}
-                                            <p>{$timestamp}<br/>Im Staat: {$timeSinceLast}<br/>
-                                        {/if}
                                         <p>{$timestamp}<br/>
+                                        {if $_.page.citizen.classlevel == 16}
+                                            Im Staat: {$timeSinceLast}<br/>
+                                        {/if}
                                             <img src="barcode-scan.svg" height="16px" /> {$scanner}
                                         </p>
                                     {else}
                                         <i class="material-icons circle red">navigate_next</i>
                                         <span class="title">Staat verlassen</span>
-                                        {if $classlevel != 16}
-                                            <p>{$timestamp}<br/>Im Staat: {$timeSinceLast}<br/>
+                                        <p>{$timestamp}<br/>
+                                        {if $_.page.citizen.classlevel != 16}
+                                            Im Staat: {$timeSinceLast}<br/>
                                         {/if}
                                             <img src="barcode-scan.svg" height="16px" /> {$scanner}
                                         </p>

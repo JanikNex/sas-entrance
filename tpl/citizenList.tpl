@@ -12,7 +12,11 @@
                             <li class="collection-item avatar">
                                 <i class="material-icons circle {if $inState == 0}green{elseif $inState == 1}red{else}grey{/if}">person</i>
                                 <span class="title">{$firstname} {$lastname}</span>
-                                <p>Klassenstufe {$classlevel}<br/>
+                                <p> {if $locked == 1}<span class="red-text"><b>!</b> Person gesperrt</span><br/>{/if}
+                                    {if $classlevel<=13}Klassenstufe {$classlevel}
+                                    {elseif $classlevel==14}Lehrer
+                                    {elseif $classlevel==15}Visum
+                                    {else}Kurier{/if}<br/>
                                     Zeit heute: {$timeToday} | Zeit gesamt: {$timeProject}
                                 </p>
                                 <span class="secondary-content">
