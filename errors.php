@@ -52,6 +52,47 @@ if($action == "correctThis" and is_numeric($eID)) {
             $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
             exit;
         }
+} elseif($action == "autoCorrect") {
+    if($user->isActionAllowed(PERM_CITIZEN_CORRECT_ERRORS) or $user->isActionAllowed(PERM_ADMIN_ERRORS)) {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Fehler beheben", $user);
+        $citizen = \Entrance\Citizen::fromBarcode($_POST["barcode"]);
+
+        if($citizen->forceErrorCorrect($user)) {
+            $pgdata["page"]["scan"]["success"] = 1;
+            $pgdata["page"]["citizen"] = $citizen->asArray();
+            $itsLogs = \Entrance\LogEntry::getAllLogsPerCID($citizen->getCID());
+            for ($i = 0; $i < sizeof($itsLogs); $i++) {
+                $pgdata["page"]["logs"][$i] = $itsLogs[$i]->asArray();
+                if($i >= 1) break;
+            }
+        } else {
+            $pgdata["page"]["scan"]["success"] = 2;
+            $pgdata["page"]["citizen"] = $citizen->asArray();
+            $itsLogs = \Entrance\LogEntry::getAllLogsPerCID($citizen->getCID());
+            for ($i = 0; $i < sizeof($itsLogs); $i++) {
+                $pgdata["page"]["logs"][$i] = $itsLogs[$i]->asArray();
+                if ($i >= 1) break;
+            }
+        }
+        $dwoo->output("tpl/errorCorrect.tpl", $pgdata);
+
+        exit; //To not show the list
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Fehler beim Fehler", $user);
+        $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
+    }
+} elseif($action == "correct") {
+    if($user->isActionAllowed(PERM_ADMIN_ERRORS)) {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Fehler beheben", $user);
+
+        $dwoo->output("tpl/errorCorrect.tpl", $pgdata);
+        exit; //To not show the list
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Fehler beim Fehler", $user);
+        $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
+    }
 } elseif($action == "del" and is_numeric($eID)) {
     if($user->isActionAllowed(PERM_ADMIN_ERRORS)) {
         $errorToDelete = \Entrance\Error::fromEID($eID);

@@ -168,7 +168,7 @@ class LogEntry {
         $pdo = new PDO_MYSQL();
         $toUpdate = $pdo -> query("SELECT * FROM entrance_logs WHERE cID = :cID AND success = 1 AND lID < :lID ORDER BY lID DESC LIMIT 1",
                 [":cID" => $this->cID, ":lID" => $this->lID]) -> lID;
-        $pdo -> query("UPDATE entrance_logs SET success = 0 WHERE lID = :lID", [":lID" => $toUpdate]);
+        $pdo -> query("UPDATE entrance_logs SET success = 0, `timestamp` = `timestamp` WHERE lID = :lID", [":lID" => $toUpdate]);
     }
 
     /**
@@ -194,9 +194,8 @@ class LogEntry {
         $stmt = $pdo -> queryMulti("SELECT * FROM entrance_logs WHERE cID = :cID AND lID <= :lID ORDER BY lID DESC LIMIT 2",
             [":cID" => $this->cID, ":lID" => $this->lID]);
         $entries = $stmt -> fetchAll(PDO::FETCH_FUNC, "\\Entrance\\LogEntry::fromLID");
-
         if(sizeof($entries) == 2){
-            return $entries[1]->getEntrySuccessStatus() && $entries[2]->getEntrySuccessStatus();
+            return $entries[0]->getEntrySuccessStatus() && $entries[1]->getEntrySuccessStatus();
         }else{
             return false;
         }

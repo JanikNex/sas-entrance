@@ -4,7 +4,7 @@
                 <div class="row">
                     <div class="col s12 m6">
                         <div class="card-panel row">
-                            <form action="check.php?action=checkInScan" method="post">
+                            <form action="errors.php?action=autoCorrect" method="post">
                                 <div class="input-field col s11">
                                     <img src="barcode-scan.svg" class="prefix" height="32px"/>
                                     <label for="barcode">Hier scannen</label>
@@ -16,18 +16,9 @@
                             </form>
                             <div class="col s12">
                                 {if $page.scan.success == 1}
-                                    <p class="green-text"><img src="checkOk.png" height="16px"> Scan Erfolgreich.</p>
+                                    <p class="green-text"><img src="checkOk.png" height="16px"> Scan Erfolgreich. Fehler behoben</p>
                                 {elseif $page.scan.success == 2}
-                                    <p class="red-text"><img src="checkFail.png" height="16px"> Scan Fehlgeschlagen. Achtung, Person ist jetzt geperrt. Bitte nicht an (Y/J)an(n)i(c)k wenden, wir warn's nicht!<br/>
-                                    [{$page.error.errorCode}]:
-                                    {if $page.error.errorCode == 1}Error@CheckIn | AlreadyCheckedIn {/if}
-                                    {if $page.error.errorCode == 2}Error@CheckOut | AlreadyCheckedOut {/if}
-                                    {if $page.error.errorCode == 3}Error@CheckOut | NoCheckOutYesterday {/if}
-                                    {if $page.error.errorCode == 4}Error@CheckIn | CitizenLocked {/if}
-                                    {if $page.error.errorCode == 5}Error@CheckOut | CitizenLocked {/if}
-                                    {if $page.error.errorCode == 6}Error@CheckIn | CitizenWanted {/if}
-                                    {if $page.error.errorCode == 7}Error@CheckOut | CitizenWanted {/if}
-                                    </p>
+                                    <p class="red-text"><img src="checkFail.png" height="16px"> Scan Fehlgeschlagen. <i>Jetzt</i> habt ihr ein Problem.</p>
                                 {/if}
                             </div>
                         </div>

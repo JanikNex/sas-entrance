@@ -63,7 +63,7 @@
                                     <ul>
                                         {if $args.perm.citizen_login == 1}<li><a href="check.php?action=checkIn">Einbuchen</a></li>{/if}
                                         {if $args.perm.citizen_logout == 1}<li><a href="check.php?action=checkOut">Ausbuchen</a></li>{/if}
-                                        {if $args.perm.citizen_correcterrors == 1}<li><a href="#!">Fehler</a></li>{/if}
+                                        {if $args.perm.citizen_correcterrors == 1}<li><a href="errors.php?action=correct">Fehler</a></li>{/if}
                                     </ul>
                                 </div>
                             </li>
