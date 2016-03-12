@@ -27,7 +27,7 @@ $action = $_GET['action'];
 $eID    = $_GET['eID'];
 
 if($action == "correctThis" and is_numeric($eID)) {
-    if ($user->isActionAllowed(PERM_CITIZEN_CORRECT_ERRORS) or $user->isActionAllowed(PERM_ADMIN_ERRORS)) {
+    if ($user->isActionAllowed(PERM_ADMIN_ERRORS)) {
 
         $errorToCorrect = \Entrance\Error::fromEID($eID);
         $errorToCorrect->correctThisError();
@@ -40,7 +40,7 @@ if($action == "correctThis" and is_numeric($eID)) {
         exit;
     }
 } elseif($action == "correctAll" and is_numeric($eID)) {
-        if ($user->isActionAllowed(PERM_CITIZEN_CORRECT_ERRORS) or $user->isActionAllowed(PERM_ADMIN_ERRORS)) {
+        if ($user->isActionAllowed(PERM_ADMIN_ERRORS)) {
 
             $errorToCorrect = \Entrance\Error::fromEID($eID);
             \Entrance\Error::correctError($errorToCorrect->getCID());
@@ -84,7 +84,7 @@ if($action == "correctThis" and is_numeric($eID)) {
     }
 
 } elseif($action == "correct") {
-    if($user->isActionAllowed(PERM_ADMIN_ERRORS)) {
+    if($user->isActionAllowed(PERM_CITIZEN_CORRECT_ERRORS) or $user->isActionAllowed(PERM_ADMIN_ERRORS)) {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Fehler beheben", $user);
 
         $dwoo->output("tpl/errorCorrect.tpl", $pgdata);
@@ -95,7 +95,7 @@ if($action == "correctThis" and is_numeric($eID)) {
         exit;
     }
 } elseif($action == "ignore") {
-    if($user->isActionAllowed(PERM_ADMIN_ERRORS)) {
+    if($user->isActionAllowed(PERM_CITIZEN_IGNORE_ERRORS) or $user->isActionAllowed(PERM_ADMIN_ERRORS)) {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Fehler ignorieren", $user);
 
         $dwoo->output("tpl/errorIgnore.tpl", $pgdata);
