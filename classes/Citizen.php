@@ -32,7 +32,9 @@ class Citizen {
     }
 
     /**
-     * @param $cID
+     * Creates a new Citizen Object from data from the db, using the provided cID
+     *
+     * @param int $cID
      * @return Citizen
      */
     public static function fromCID($cID) {
@@ -42,7 +44,10 @@ class Citizen {
     }
 
     /**
-     * @param $barcode
+     *
+     * Creates a new Citizen Object from data from the db, using the provided barcode
+     *
+     * @param string $barcode
      * @return Citizen
      */
     public static function fromBarcode($barcode) {
@@ -52,11 +57,13 @@ class Citizen {
     }
 
     /**
-     * @param $firstname
-     * @param $lastname
-     * @param $classlevel
-     * @param $birthday
-     * @param $barcode
+     * Creates a new Citizen in the db with the provided data
+     *
+     * @param string $firstname
+     * @param string $lastname
+     * @param int $classlevel
+     * @param date $birthday
+     * @param string $barcode
      */
     public static function createCitizen($firstname, $lastname, $classlevel, $birthday, $barcode) {
         $pdo = new PDO_MYSQL();
@@ -65,6 +72,9 @@ class Citizen {
     }
 
     /**
+     * Returns all Citizen in the db
+     * Todo provide Sorting by
+     *
      * @return Citizen[]
      */
     public static function getAllCitizen() {
@@ -74,6 +84,9 @@ class Citizen {
     }
 
     /**
+     * Returns all Citizen in the db; Filter: Students
+     * Todo provide Sorting by
+     *
      * @return Citizen[]
      */
     public static function getAllStudents() {
@@ -83,6 +96,8 @@ class Citizen {
     }
 
     /**
+     * Returns all Citizen, which are currently in the State
+     *
      * @return Citizen[]
      */
     public static function getAllCitizenInState() {
@@ -96,6 +111,8 @@ class Citizen {
     }
 
     /**
+     * Returns all Visitors currently in the State
+     *
      * @return Citizen[]
      */
     public static function getAllVisitorsInState() {
@@ -109,6 +126,8 @@ class Citizen {
     }
 
     /**
+     * Returns all Students currently in the state
+     *
      * @return Citizen[]
      */
     public static function getAllStudentsInState() {
@@ -122,6 +141,8 @@ class Citizen {
     }
 
     /**
+     * Returns all Courriers, which are on a tour
+     *
      * @return Citizen[]
      */
     public static function getAllCourriersOutOfState(){
@@ -134,6 +155,8 @@ class Citizen {
         return $courrierOutOfState;
     }
     /**
+     * Count of @see getAllCitizenInState()
+     *
      * @return int
      */
     public static function getCurrentCitizenCount() {
@@ -141,6 +164,8 @@ class Citizen {
     }
 
     /**
+     * Count of @see getAllStudentsInState()
+     *
      * @return int
      */
     public static function getCurrentStudentCount() {
@@ -148,6 +173,8 @@ class Citizen {
     }
 
     /**
+     * Count of @see getAllVisitorsInState()
+     *
      * @return int
      */
     public static function getCurrentVisitorCount() {
@@ -155,12 +182,16 @@ class Citizen {
     }
 
     /**
+     * Count of @see getAllCourrierOutOfState()
+     *
      * @return int
      */
     public static function getCurrentCourrierCount(){
         return sizeof(self::getAllCourriersOutOfState());
     }
     /**
+     * Returns all "bad" citizen
+     *
      * @return Citizen[]
      */
     public static function getAllBadCitizen() {
@@ -178,6 +209,9 @@ class Citizen {
         return $badCitizens;
     }
 
+    /**
+     * Saves all changes made to this object into the db
+     */
     public function saveChanges() {
         $pdo = new PDO_MYSQL();
         $pdo->query("UPDATE entrance_citizen SET firstname = :firstname, lastname = :lastname, classlevel = :classlevel, birthday = :birthday, barcode = :barcode WHERE cID = :cid",
@@ -185,6 +219,8 @@ class Citizen {
     }
 
     /**
+     * Converts the object into an array
+     *
      * @return array
      */
     public function asArray() {
@@ -197,7 +233,7 @@ class Citizen {
             "birthdayNice" => date("d. M Y", strtotime($this->birthday))." (".Util::getAge($this->birthday).")",
             "barcode" => $this->barcode,
             "inState" => $this->isCitizenInState(),
-            "locked" => self::isCitizenLocked($this) ? 1:0,
+            "locked" => $this->isCitizenLocked() ? 1:0,
             "timeToday" => $this->getTimePerDay(date("Y-m-d")) != 0 ? gmdate("H\h i\m s\s",$this->getTimePerDay(date("Y-m-d"))) : "<i>Nicht anwesend</i>",
             "timeProject" =>$this->getTimePerProject() != 0 ? Util::seconds_to_time($this->getTimePerProject()) : "<i>Nicht anwesend</i>"
         ];
@@ -225,6 +261,8 @@ class Citizen {
 
 
     /**
+     * Removes the citizen from the db
+     *
      * @return bool
      */
     public function delete() {
@@ -233,6 +271,8 @@ class Citizen {
     }
 
     /**
+     * Returns 0 if the citizin is in the state, 1 if it is out of the state and 2 if the status is invalid(no log Entry found)
+     *
      * @return int
      */
     public function isCitizenInState() {
@@ -244,15 +284,21 @@ class Citizen {
     }
 
     /**
-     * @param $citizen Citizen
+     * Returns true if the citizen is in a locked state
+     *
      * @return bool
      */
-    public static function isCitizenLocked($citizen) {
-        return !LogEntry::getEntrySuccessStatus(LogEntry::getLastEntry($citizen -> getCID()));
+    public function isCitizenLocked() {
+        $last = $this->getLastEntry();
+        if($last instanceof LogEntry) {
+            return !$last->getEntrySuccessStatus();
+        } else return false;
     }
 
     /**
-     * @param $date date
+     * Returns the time this citizen spend in state for a specific date in seconds
+     *
+     * @param date $date
      * @return int
      */
     public function getTimePerDay($date){
@@ -276,14 +322,124 @@ class Citizen {
         return $time;
     }
 
-    public function isCourrier(){
-        if($this->getClasslevel() == 16) {
+    /**
+     * Returns the latest Entry on record for this citizen
+     *
+     * @return LogEntry
+     */
+    public function getLastEntry(){
+        $pdo = new PDO_MYSQL();
+        return LogEntry::fromLID($pdo -> query("SELECT * FROM entrance_logs WHERE cID = :cID ORDER BY lID DESC LIMIT 1",
+            [":cID" => $this->cID]) -> lID);
+    }
+
+    /**
+     * @see kickAllCitizensOutOfState()
+     *
+     * @param $user User
+     * @return bool
+     */
+    public function kickCitizenOutOfState($user){
+        $pdo = new PDO_MYSQL();
+        $date = date("Y-m-d H:i:s");
+        if (!$this->isCourrier()) {
+            if ($this->isCitizenInState() == 0) {
+                $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 1, 0)",
+                    [":cID" => $this->cID, ":uID" => $user->getUID(), ":timestamp" => $date]);
+                Error::createError($this->cID, 3);
+                $this->getLastEntry()->invalidateLogEntryBeforeEntry();
+                return true;
+            }
+        } elseif ($this->isCourrier()) {
+            $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 0, 0)",
+                [":cID" => $this->cID, ":uID" => $user->getUID(), ":timestamp" => $date]);
+            Error::createError($this->cID, 3);
+            $this->getLastEntry()->invalidateLogEntryBeforeEntry();
             return true;
-        }else{
+        }
+    }
+
+
+    /**
+     * (nie) mehr Janik's Baustelle
+     *
+     * @param $user User
+     * @return bool
+     */
+    public function forceErrorCorrect($user){
+        if($this->isCitizenLocked()) {
+            if($this->getLastEntry()->getLastTwoEntrySuccessStatus())
+                return self::forceErrorCorrectAfterKick($user);
+            else{
+                return self::forceErrorCorrectNormal($user);
+            }
+        } else return false;
+    }
+
+    /**
+     * @see forceErrorCorrect()
+     *
+     * @param $user User
+     * @return bool
+     */
+    private function forceErrorCorrectNormal($user){
+        $pdo = new PDO_MYSQL();
+        $date = date("Y-m-d H:i:s");
+        if ($this -> isCitizenInState() == 1){
+            $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 0, 0)",
+                [":cID" => $this->cID, ":uID" => $user -> getUID(), ":timestamp" => $date]);
+            $this->getLastEntry()->invalidateLogEntryBeforeEntry();
+            Error::correctError($this->cID);
+            LogEntry::createLogEntry($this, $user, 1);
+            return true;
+        }
+        elseif($this -> isCitizenInState() == 0){
+            $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 1, 0)",
+                [":cID" => $this->cID, ":uID" => $user -> getUID(), ":timestamp" => $date]);
+            $this->getLastEntry()->invalidateLogEntryBeforeEntry();
+            Error::correctError($this->cID);
+            LogEntry::createLogEntry($this, $user, 0);
+            return true;
+        }
+    }
+
+
+    /**
+     * @see forceErrorCorrect()
+     *
+     * @param $user
+     * @return bool
+     */
+    private function forceErrorCorrectAfterKick($user){
+        if(!$this->isCourrier()) {
+            if ($this->isCitizenInState() == 1) {
+                Error::correctError($this->getCID());
+                LogEntry::createLogEntry($this, $user, 0);
+                return true;
+            }
+            return false;
+        }elseif($this -> isCourrier()){
+            if ($this->isCitizenInState() == 0) {
+                Error::correctError($this->getCID());
+                LogEntry::createLogEntry($this, $user, 1);
+                return true;
+            }
             return false;
         }
     }
+
     /**
+     * Returns true if the citizen is a courrier
+     *
+     * @return bool
+     */
+    public function isCourrier() {
+        if($this->getClasslevel() == 16) return true;
+        else return false;
+    }
+    /**
+     * Returns the time the citizen spend in state for the whole project in seconds
+     *
      * @return int
      */
     public function getTimePerProject(){
