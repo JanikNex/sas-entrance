@@ -48,6 +48,7 @@ if($action == "checkInScan") {
                 $pgdata["page"]["logs"][$i] = $itsLogs[$i]->asArray();
                 if($i >= 1) break;
             }
+            $pgdata["page"]["error"] = $citizen->getLastError()->asArray();
         }
 
         $dwoo->output("tpl/checkIn.tpl", $pgdata);
@@ -78,6 +79,7 @@ if($action == "checkInScan") {
                 $pgdata["page"]["logs"][$i] = $itsLogs[$i]->asArray();
                 if($i >= 1) break;
             }
+            $pgdata["page"]["error"] = $citizen->getLastError()->asArray();
         }
 
         $dwoo->output("tpl/checkOut.tpl", $pgdata);

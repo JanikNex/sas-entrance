@@ -18,7 +18,16 @@
                                 {if $page.scan.success == 1}
                                     <p class="lime-text"><img src="checkOk.png" height="16px"> Scan Erfolgreich.</p>
                                 {elseif $page.scan.success == 2}
-                                    <p class="red-text"><img src="checkFail.png" height="16px"> Scan Fehlgeschlagen. Achtung, Person ist jetzt geperrt. Bitte nicht an (Y/J)an(n)i(c)k wenden, wir warn's nicht!</p>
+                                    <p class="red-text"><img src="checkFail.png" height="16px"> Scan Fehlgeschlagen. Achtung, Person ist jetzt geperrt. Bitte nicht an (Y/J)an(n)i(c)k wenden, wir warn's nicht!<br/>
+                                    [{$errorCode}]:
+                                    {if $errorCode == 1}Error@CheckIn | AlreadyCheckedIn {/if}
+                                    {if $errorCode == 2}Error@CheckOut | AlreadyCheckedOut {/if}
+                                    {if $errorCode == 3}Error@CheckOut | NoCheckOutYesterday {/if}
+                                    {if $errorCode == 4}Error@CheckIn | CitizenLocked {/if}
+                                    {if $errorCode == 5}Error@CheckOut | CitizenLocked {/if}
+                                    {if $errorCode == 6}Error@CheckIn | CitizenWanted {/if}
+                                    {if $errorCode == 7}Error@CheckOut | CitizenWanted {/if}
+                                    </p>
                                 {/if}
                             </div>
                         </div>

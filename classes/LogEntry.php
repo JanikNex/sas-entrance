@@ -31,6 +31,23 @@ class LogEntry {
     }
 
     /**
+     * Creates a new LogEntry object from data from the db, using the provided lID
+     *
+     * @param int $lID
+     * @return LogEntry | bool
+     */
+    public static function fromLID($lID) {
+        $pdo = new PDO_MYSQL();
+        $res = $pdo->query("SELECT * FROM entrance_logs WHERE lID = :lid", [":lid" => $lID]);
+        if(isset($res->cID))
+            return new LogEntry($lID, $res -> cID, $res->uID, $res -> timestamp, $res -> action, $res -> success);
+        else return false;
+    }
+
+    /**
+     * Returns all logs found in the db
+     * Todo Sorting options / filtering options
+     *
      * @return LogEntry[]
      */
     public static function getAllLogs() {
@@ -39,35 +56,29 @@ class LogEntry {
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\LogEntry::fromLID");
     }
 
-        /**
-         * @param int $cID
-         * @return LogEntry[]
-         */
+    /**
+     * @see getAllLogs(), but for a specifc cID only
+     *
+     * @param int $cID
+     * @return LogEntry[]
+     */
     public static function getAllLogsPerCID($cID) {
         $pdo = new PDO_MYSQL();
         $stmt = $pdo->queryMulti("SELECT lID FROM entrance_logs WHERE cID = :cid ORDER BY lID DESC", [":cid" => $cID]);
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\LogEntry::fromLID");
     }
 
-    /**
-     * @param int $lID
-     * @return LogEntry
-     */
-    public static function fromLID($lID) {
-        $pdo = new PDO_MYSQL();
-        $res = $pdo->query("SELECT * FROM entrance_logs WHERE lID = :lid", [":lid" => $lID]);
-        return new LogEntry($lID, $res -> cID, $res->uID, $res -> timestamp, $res -> action, $res -> success);
-    }
-
 
     /**
-     * @param $citizen Citizen
-     * @param $user User
-     * @param $action int
+     * Creates a new LogEntry in the db, by the data provided
+     *
+     * @param Citizen $citizen
+     * @param User $user
+     * @param int $action
      * @return bool
      */
     public static function createLogEntry($citizen, $user, $action) {
-        if(!Citizen::isCitizenLocked($citizen)) {
+        if(!$citizen->isCitizenLocked()) {
             if (!$citizen -> isCourrier()) {
                 return self::createLogEntryNormal($citizen, $user, $action);
             } else {
@@ -77,12 +88,14 @@ class LogEntry {
     }
 
     /**
+     * @see createLogEntry()
+     *
      * @param $citizen Citizen
      * @param $user User
      * @param $action int
      * @return bool
      */
-    public static function createLogEntryCourrier($citizen, $user, $action) {
+    private static function createLogEntryCourrier($citizen, $user, $action) {
         $pdo = new PDO_MYSQL();
         $date = date("Y-m-d H:i:s");
 
@@ -112,12 +125,14 @@ class LogEntry {
     }
 
     /**
+     * @see createLogEntry()
+     *
      * @param $citizen Citizen
      * @param $user User
      * @param $action int
      * @return bool
      */
-    public static function createLogEntryNormal($citizen, $user, $action) {
+    private static function createLogEntryNormal($citizen, $user, $action) {
         $pdo = new PDO_MYSQL();
         $date = date("Y-m-d H:i:s");
 
@@ -147,124 +162,48 @@ class LogEntry {
     }
 
     /**
-     * @param $citizen Citizen
-     * @param $user User
-     * @return bool
+     * nicht mehr Janik's Baustelle
      */
-    public static function forceErrorCorrect($citizen, $user){
-        if(Citizen::isCitizenLocked($citizen)) {
-            if(self::getLastTwoEntrySuccessStatus(self::getLastEntry($citizen -> getCID())))
-                return self::forceErrorCorrectAfterKick($citizen,$user);
-            else{
-                return self::forceErrorCorrectNormal($citizen, $user);
-            }
-        } else return false;
-    }
-
-    /**
-     * @param $citizen Citizen
-     * @param $user User
-     * @return bool
-     */
-    public static function forceErrorCorrectNormal($citizen, $user){
-        $pdo = new PDO_MYSQL();
-        $date = date("Y-m-d H:i:s");
-        if ($citizen -> isCitizenInState() == 1){
-            $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 0, 0)",
-                [":cID" => $citizen -> getCID(), ":uID" => $user -> getUID(), ":timestamp" => $date]);
-            self::invalidateLogEntryBeforeEntry($citizen -> getCID(), self::getLastEntry($citizen -> getCID()));
-            Error::correctError($citizen -> getCID());
-            self::createLogEntry($citizen, $user, 1);
-            return true;
-        }
-        elseif($citizen -> isCitizenInState() == 0){
-            $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 1, 0)",
-                [":cID" => $citizen -> getCID(), ":uID" => $user -> getUID(), ":timestamp" => $date]);
-            self::invalidateLogEntryBeforeEntry($citizen -> getCID(), self::getLastEntry($citizen -> getCID()));
-            Error::correctError($citizen -> getCID());
-            self::createLogEntry($citizen, $user, 0);
-            return true;
-        }
-    }
-
-    /**
-     * @param $citizen Citizen
-     * @param $user
-     * @return bool
-     */
-    public static function forceErrorCorrectAfterKick($citizen, $user){
-        if(!$citizen ->isCourrier()) {
-            if ($citizen->isCitizenInState() == 1) {
-                Error::correctError($citizen->getCID());
-                self::createLogEntry($citizen, $user, 0);
-                return true;
-            }
-            return false;
-        }elseif($citizen -> isCourrier()){
-            if ($citizen->isCitizenInState() == 0) {
-                Error::correctError($citizen->getCID());
-                self::createLogEntry($citizen, $user, 1);
-                return true;
-            }
-            return false;
-        }
-    }
-
-    /**
-     * @param $cID int
-     * @param $lID int
-     */
-    public static function invalidateLogEntryBeforeEntry($cID, $lID){
+    public function invalidateLogEntryBeforeEntry(){
         $pdo = new PDO_MYSQL();
         $toUpdate = $pdo -> query("SELECT * FROM entrance_logs WHERE cID = :cID AND success = 1 AND lID < :lID ORDER BY lID DESC LIMIT 1",
-                [":cID" => $cID, ":lID" => $lID]) -> lID;
-        $pdo -> query("UPDATE entrance_logs SET success = 0 WHERE lID = :lID", [":lID" => $toUpdate]);
+                [":cID" => $this->cID, ":lID" => $this->lID]) -> lID;
+        $pdo -> query("UPDATE entrance_logs SET success = 0, `timestamp` = `timestamp` WHERE lID = :lID", [":lID" => $toUpdate]);
     }
 
     /**
-     * @param $cID int
-     * @return int
-     */
-    public static function getLastEntry($cID){
-        $pdo = new PDO_MYSQL();
-        return $pdo -> query("SELECT * FROM entrance_logs WHERE cID = :cID ORDER BY lID DESC LIMIT 1",
-            [":cID" => $cID]) -> lID;
-    }
-
-    /**
-     * @param $lID LogEntry
+     * Returns true if the last entry was a success
+     *
      * @return bool
      */
-    public static function getEntrySuccessStatus($lID){
-        if(isset($lID) and $lID != null) {
-            $pdo = new PDO_MYSQL();
-            $res = $pdo->query("SELECT * FROM entrance_logs WHERE lID = :lID ", [":lID" => $lID])->success;
-            if ($res == 1) return true;
-            elseif ($res == 0) return false;
-            else return true;
-        } else return true;
+    public function getEntrySuccessStatus(){
+        $pdo = new PDO_MYSQL();
+        $res = $pdo->query("SELECT * FROM entrance_logs WHERE lID = :lID ", [":lID" => $this->lID])->success;
+        if ($res == 1) return true;
+        elseif ($res == 0) return false;
+        else return true;
     }
 
     /**
-     * @param $lID int
+     * Returns true if the last TWO Entries are a success
+     *
      * @return bool
      */
-    public static function getLastTwoEntrySuccessStatus($lID){
+    public function getLastTwoEntrySuccessStatus(){
         $pdo = new PDO_MYSQL();
-        $cID = self::fromLID($lID) -> getCID();
         $stmt = $pdo -> queryMulti("SELECT * FROM entrance_logs WHERE cID = :cID AND lID <= :lID ORDER BY lID DESC LIMIT 2",
-            [":cID" => $cID, ":lID" => $lID]);
+            [":cID" => $this->cID, ":lID" => $this->lID]);
         $entries = $stmt -> fetchAll(PDO::FETCH_FUNC, "\\Entrance\\LogEntry::fromLID");
         if(sizeof($entries) == 2){
-            if(self::getEntrySuccessStatus($entries[1]) && self::getEntrySuccessStatus($entries[2])){
-                return true;
-            }
+            return $entries[0]->getEntrySuccessStatus() && $entries[1]->getEntrySuccessStatus();
         }else{
             return false;
         }
 
     }
     /**
+     * Returns the time between two entries in seconds
+     *
      * @return int
      */
     public function timeBetweenTwoEntries(){
@@ -276,6 +215,8 @@ class LogEntry {
 
 
     /**
+     * Returns all logs on a day, for a specific Citizen
+     *
      * @param $cID int
      * @param $date timestamp
      * @return LogEntry[]
@@ -291,6 +232,8 @@ class LogEntry {
     }
 
     /**
+     * Returns all days our project is on
+     *
      * @return String[]
      */
     public static function getProjectDays(){
@@ -304,42 +247,20 @@ class LogEntry {
     }
 
     /**
-     * Checks all Citizens in State out!
+     * Checks out all Citizens in State!
+     * @see kickCitizenOutOfState()
+     *
+     * @param User $user
      */
     public static function kickAllCitizensOutOfState($user){
         $citizens = Citizen::getAllCitizenInState();
         $courriers = Citizen::getAllCourriersOutOfState();
+
         foreach($citizens as $citizen){
-            self::kickCitizenOutOfState($citizen, $user);
+            $citizen->kickCitizenOutOfState($user);
         }
         foreach($courriers as $courrier) {
-            self::kickCitizenOutOfState($courrier, $user);
-        }
-    }
-
-
-    /**
-     * @param $citizen Citizen
-     * @param $user User
-     * @return bool
-     */
-    public static function kickCitizenOutOfState($citizen, $user){
-        $pdo = new PDO_MYSQL();
-        $date = date("Y-m-d H:i:s");
-        if(!$citizen -> isCourrier())
-            if ($citizen -> isCitizenInState() == 0){
-                $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 1, 0)",
-                    [":cID" => $citizen -> getCID(), ":uID" => $user -> getUID(), ":timestamp" => $date]);
-                Error::createError($citizen -> getCID(), 3);
-                self::invalidateLogEntryBeforeEntry($citizen -> getCID(), self::getLastEntry($citizen -> getCID()));
-                return true;
-            }
-        elseif($citizen -> isCourrier()){
-            $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 0, 0)",
-                [":cID" => $citizen -> getCID(), ":uID" => $user -> getUID(), ":timestamp" => $date]);
-            Error::createError($citizen -> getCID(), 3);
-            self::invalidateLogEntryBeforeEntry($citizen -> getCID(), self::getLastEntry($citizen -> getCID()));
-            return true;
+            $courrier->kickCitizenOutOfState($user);
         }
     }
 
