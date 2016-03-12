@@ -439,9 +439,16 @@ class Citizen {
      */
     public function forceErrorCorrectIgnore($user){
         if($this -> isCitizenLocked()) {
-            LogEntry::ignoreLastLogEntry($this, $user);
-            Error::correctError($this->cID);
-            return true;
+            if(!$this -> getLastEntry() -> getLastTwoEntrySuccessStatus()) {
+                LogEntry::ignoreLastLogEntry($this, $user);
+                Error::correctError($this->cID);
+                return true;
+            }else{
+                LogEntry::ignoreLastLogEntry($this, $user);
+                $this -> getLastEntry() -> validateLogEntry();
+                Error::correctError($this->cID);
+                return true;
+            }
         }
         return false;
     }

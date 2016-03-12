@@ -177,7 +177,10 @@ class LogEntry {
             [":cID" => $this->cID, ":lID" => $this->lID]) -> lID;
         $pdo -> query("UPDATE entrance_logs SET success = 1, `timestamp` = `timestamp` WHERE lID = :lID", [":lID" => $toUpdate]);
     }
-
+    public function validateLogEntry(){
+        $pdo = new PDO_MYSQL();
+        $pdo -> query("UPDATE entrance_logs SET success = 1, `timestamp` = `timestamp` WHERE lID = :lID", [":lID" => $this -> getLID()]);
+    }
     /**
      * Sets Action = 2 which means that the Entry before will be ignored
      * @param $citizen Citizen
