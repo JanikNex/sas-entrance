@@ -34,7 +34,7 @@
                     </div>
                     <div class="col s12 offset-m1 m5">
                         <div class="card-panel">
-                            <h5>Schüler</h5>
+                            <h5>Person</h5>
                             {if $locked == 1}<p class="red-text"><b>!</b> Person gesperrt</p><br/>{/if}
                             <p><b>Name:</b> {$page.citizen.firstname} {$page.citizen.lastname}</p>
                             <p><b>Geburtstag:</b> {$page.citizen.birthdayNice}</p>
