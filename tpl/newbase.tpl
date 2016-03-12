@@ -64,7 +64,7 @@
                                         {if $args.perm.citizen_login == 1}<li><a href="check.php?action=checkIn">Einbuchen</a></li>{/if}
                                         {if $args.perm.citizen_logout == 1}<li><a href="check.php?action=checkOut">Ausbuchen</a></li>{/if}
                                         {if $args.perm.citizen_correcterrors == 1}<li><a href="errors.php?action=correct">Fehler korrigieren</a></li>{/if}
-                                        {if $args.perm.citizen_ignorerrors == 1}<li><a href="errors.php?action=ignore">Fehler ignorieren</a></li>{/if}
+                                        {if $args.perm.citizen_ignoreerrors == 1}<li><a href="errors.php?action=ignore">Fehler ignorieren</a></li>{/if}
                                     </ul>
                                 </div>
                             </li>

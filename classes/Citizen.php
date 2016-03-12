@@ -433,10 +433,15 @@ class Citizen {
         }
     }
 
+    /**
+     * @param $user User
+     * @return bool
+     */
     public function forceErrorCorrectIgnore($user){
         if($this -> isCitizenLocked()) {
             LogEntry::ignoreLastLogEntry($this, $user);
             Error::correctError($this->cID);
+            return true;
         }
         return false;
     }

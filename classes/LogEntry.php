@@ -186,8 +186,7 @@ class LogEntry {
     public static function ignoreLastLogEntry($citizen, $user){
         $pdo = new PDO_MYSQL();
         $toUpdate = $citizen -> getLastEntry();
-        $uID = $user -> getUID();
-        $pdo -> query("UPDATE entrance_logs SET `action` = 2 AND uID = :uID, `timestamp` = `timestamp` WHERE lID = :lID", [":lID" => $toUpdate, ":uID" => $uID]);
+        $pdo->query("UPDATE entrance_logs SET `action` = 2, uID = :uID, `timestamp` = `timestamp` WHERE lID = :lID", [":lID" => $toUpdate->getLID(), ":uID" => $user -> getUID()]);
     }
     /**
      * Returns true if the last entry was a success
@@ -290,7 +289,7 @@ class LogEntry {
             "cID" => $this->cID,
             "lID" => $this->lID,
             "timeSinceLast" => $this->timeBetweenTwoEntries() != 0 ? gmdate("H\h i\m s\s", $this->timeBetweenTwoEntries()) : "Nicht anwesend",
-            "timestamp" => date("d. M Y - H:i", strtotime($this->timestamp)),
+            "timestamp" => date("d. M Y - H:i:s", strtotime($this->timestamp)),
             "success" => $this->success
         ];
     }

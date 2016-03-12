@@ -60,6 +60,12 @@
                                             {/if}
                                             <img src="barcode-scan.svg" height="16px" /> {$scanner}
                                         </p>
+                                    {elseif $action == 2}
+                                        <i class="material-icons circle grey">code</i>
+                                        <span class="title">Ignoriert</span>
+                                        <p>{$timestamp}<br/>
+                                            <img src="barcode-scan.svg" height="16px" /> {$scanner}
+                                        </p>
                                     {else}
                                         <i class="material-icons circle red">navigate_next</i>
                                         <span class="title">Staat verlassen</span>

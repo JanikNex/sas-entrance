@@ -19,14 +19,14 @@
                                     <p class="lime-text"><img src="checkOk.png" height="16px"> Scan Erfolgreich.</p>
                                 {elseif $page.scan.success == 2}
                                     <p class="red-text"><img src="checkFail.png" height="16px"> Scan Fehlgeschlagen. Achtung, Person ist jetzt geperrt. Bitte nicht an (Y/J)an(n)i(c)k wenden, wir warn's nicht!<br/>
-                                    [{$errorCode}]:
-                                    {if $errorCode == 1}Error@CheckIn | AlreadyCheckedIn {/if}
-                                    {if $errorCode == 2}Error@CheckOut | AlreadyCheckedOut {/if}
-                                    {if $errorCode == 3}Error@CheckOut | NoCheckOutYesterday {/if}
-                                    {if $errorCode == 4}Error@CheckIn | CitizenLocked {/if}
-                                    {if $errorCode == 5}Error@CheckOut | CitizenLocked {/if}
-                                    {if $errorCode == 6}Error@CheckIn | CitizenWanted {/if}
-                                    {if $errorCode == 7}Error@CheckOut | CitizenWanted {/if}
+                                    [{$page.error.errorCode}]:
+                                    {if $page.error.errorCode == 1}Error@CheckIn | AlreadyCheckedIn {/if}
+                                    {if $page.error.errorCode == 2}Error@CheckOut | AlreadyCheckedOut {/if}
+                                    {if $page.error.errorCode == 3}Error@CheckOut | NoCheckOutYesterday {/if}
+                                    {if $page.error.errorCode == 4}Error@CheckIn | CitizenLocked {/if}
+                                    {if $page.error.errorCode == 5}Error@CheckOut | CitizenLocked {/if}
+                                    {if $page.error.errorCode == 6}Error@CheckIn | CitizenWanted {/if}
+                                    {if $page.error.errorCode == 7}Error@CheckOut | CitizenWanted {/if}
                                     </p>
                                 {/if}
                             </div>
@@ -59,16 +59,22 @@
                                                 Im Staat: {$timeSinceLast}<br/>
                                             {/if}
                                             <img src="barcode-scan.svg" height="16px" /> {$scanner}
-                                            </p>
-                                        {else}
-                                            <i class="material-icons circle red">navigate_next</i>
+                                        </p>
+                                    {elseif $action == 2}
+                                        <i class="material-icons circle grey">code</i>
+                                        <span class="title">Ignoriert</span>
+                                        <p>{$timestamp}<br/>
+                                            <img src="barcode-scan.svg" height="16px" /> {$scanner}
+                                        </p>
+                                    {else}
+                                        <i class="material-icons circle red">navigate_next</i>
                                         <span class="title">Staat verlassen</span>
                                         <p>{$timestamp}<br/>
                                             {if $_.page.citizen.classlevel != 16}
                                                 Im Staat: {$timeSinceLast}<br/>
                                             {/if}
                                             <img src="barcode-scan.svg" height="16px" /> {$scanner}
-                                            </p>
+                                        </p>
                                     {/if}
                                     <i class="material-icons secondary-content{if $success == 0} red-text{/if}">{if $success == 1}done{else}priority_high{/if}</i>
                                 </li>
