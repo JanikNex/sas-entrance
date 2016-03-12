@@ -21,6 +21,7 @@ define("PERM_USER_EDIT_PERMISSIONS", "users.perms");
 define("PERM_CITIZEN_LOGIN", "citizen.login");
 define("PERM_CITIZEN_LOGOUT", "citizen.logout");
 define("PERM_CITIZEN_CORRECT_ERRORS", "citizen.correcterrors");
+define("PERM_CITIZEN_IGNORE_ERRORS", "citizen.ignoreerrors");
 define("PERM_CITIZEN_PRESENT_NUMBER", "citizen.present.number");
 define("PERM_CITIZEN_PRESENT_LIST", "citizen.present.list");
 define("PERM_CITIZEN_INFO_SPECIFIC", "citizen.info.specific");

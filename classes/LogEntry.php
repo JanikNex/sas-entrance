@@ -171,6 +171,24 @@ class LogEntry {
         $pdo -> query("UPDATE entrance_logs SET success = 0, `timestamp` = `timestamp` WHERE lID = :lID", [":lID" => $toUpdate]);
     }
 
+    public function validateLogEntryBeforeEntry(){
+        $pdo = new PDO_MYSQL();
+        $toUpdate = $pdo -> query("SELECT * FROM entrance_logs WHERE cID = :cID AND success = 0 AND lID < :lID ORDER BY lID DESC LIMIT 1",
+            [":cID" => $this->cID, ":lID" => $this->lID]) -> lID;
+        $pdo -> query("UPDATE entrance_logs SET success = 1, `timestamp` = `timestamp` WHERE lID = :lID", [":lID" => $toUpdate]);
+    }
+
+    /**
+     * Sets Action = 2 which means that the Entry before will be ignored
+     * @param $citizen Citizen
+     * @param $user User
+     */
+    public static function ignoreLastLogEntry($citizen, $user){
+        $pdo = new PDO_MYSQL();
+        $toUpdate = $citizen -> getLastEntry();
+        $uID = $user -> getUID();
+        $pdo -> query("UPDATE entrance_logs SET `action` = 2 AND uID = :uID, `timestamp` = `timestamp` WHERE lID = :lID", [":lID" => $toUpdate, ":uID" => $uID]);
+    }
     /**
      * Returns true if the last entry was a success
      *
@@ -191,7 +209,7 @@ class LogEntry {
      */
     public function getLastTwoEntrySuccessStatus(){
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo -> queryMulti("SELECT * FROM entrance_logs WHERE cID = :cID AND lID <= :lID ORDER BY lID DESC LIMIT 2",
+        $stmt = $pdo -> queryMulti("SELECT * FROM entrance_logs WHERE cID = :cID AND lID <= :lID AND action != 2 ORDER BY lID DESC LIMIT 2",
             [":cID" => $this->cID, ":lID" => $this->lID]);
         $entries = $stmt -> fetchAll(PDO::FETCH_FUNC, "\\Entrance\\LogEntry::fromLID");
         if(sizeof($entries) == 2){
@@ -208,7 +226,7 @@ class LogEntry {
      */
     public function timeBetweenTwoEntries(){
         $pdo = new PDO_MYSQL();
-        $timeOld = $pdo -> query("SELECT * FROM entrance_logs WHERE cID = :cID AND success = 1 AND lID < :lID ORDER BY lID DESC LIMIT 1",
+        $timeOld = $pdo -> query("SELECT * FROM entrance_logs WHERE cID = :cID AND success = 1 AND action != 2 AND lID < :lID ORDER BY lID DESC LIMIT 1",
             [":cID" => $this -> cID, ":lID" => $this -> lID]) -> timestamp;
         return strtotime($this -> timestamp) - strtotime($timeOld);
     }

@@ -277,7 +277,7 @@ class Citizen {
      */
     public function isCitizenInState() {
         $pdo = new PDO_MYSQL();
-        $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid AND success = 1 ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
+        $res = $pdo->query("SELECT * FROM entrance_logs WHERE cID = :cid AND success = 1 AND `action` != 2 ORDER BY `timestamp` DESC LIMIT 1", [":cid" => $this->cID]);
         if(!isset($res->action)) return 2; //noch nie im Staat gewesen bzw. kein LogEintrag vorhanden
         elseif($res -> action == 0) return 0; //Schueler ist drin
         elseif($res -> action == 1) return 1; //Schueler ist nicht drin
@@ -329,7 +329,7 @@ class Citizen {
      */
     public function getLastEntry(){
         $pdo = new PDO_MYSQL();
-        return LogEntry::fromLID($pdo -> query("SELECT * FROM entrance_logs WHERE cID = :cID ORDER BY lID DESC LIMIT 1",
+        return LogEntry::fromLID($pdo -> query("SELECT * FROM entrance_logs WHERE cID = :cID AND `action` != 2 ORDER BY lID DESC LIMIT 1",
             [":cID" => $this->cID]) -> lID);
     }
 
@@ -433,6 +433,13 @@ class Citizen {
         }
     }
 
+    public function forceErrorCorrectIgnore($user){
+        if($this -> isCitizenLocked()) {
+            LogEntry::ignoreLastLogEntry($this, $user);
+            Error::correctError($this->cID);
+        }
+        return false;
+    }
     /**
      * Returns true if the citizen is a courrier
      *
