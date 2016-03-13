@@ -14,6 +14,8 @@
                                     {if $errorCode == 5}Error@CheckOut | CitizenLocked {/if}
                                     {if $errorCode == 6}Error@CheckIn | CitizenWanted {/if}
                                     {if $errorCode == 7}Error@CheckOut | CitizenWanted {/if}
+                                    {if $errorCode == 8}Error@CheckIn | NoCitizenFound {/if}
+                                    {if $errorCode == 9}Error@CheckOut | NoCitizenFound {/if}
                                     @Citizen: [#{$cID}]{$citizenName}</span>
                                 <p>
                                     {$timestamp}

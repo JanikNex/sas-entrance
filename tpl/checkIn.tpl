@@ -27,6 +27,8 @@
                                     {if $page.error.errorCode == 5}Error@CheckOut | CitizenLocked {/if}
                                     {if $page.error.errorCode == 6}Error@CheckIn | CitizenWanted {/if}
                                     {if $page.error.errorCode == 7}Error@CheckOut | CitizenWanted {/if}
+                                    {if $page.error.errorCode == 8}Error@CheckIn | NoCitizenFound {/if}
+                                    {if $page.error.errorCode == 9}Error@CheckOut | NoCitizenFound {/if}
                                     </p>
                                 {/if}
                             </div>

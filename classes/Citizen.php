@@ -72,6 +72,26 @@ class Citizen {
     }
 
     /**
+     * @param string $barcode
+     * @return bool
+     */
+    public static function doesBarcodeExist($barcode) {
+        $pdo = new PDO_MYSQL();
+        $res = $pdo->query("SELECT * FROM entrance_citizen WHERE barcode = :bc", [":bc" => $barcode]);
+        return isset($res->firstname);
+    }
+
+    /**
+     * @param int $cID
+     * @return bool
+     */
+    public static function doesCitizenExist($cID) {
+        $pdo = new PDO_MYSQL();
+        $res = $pdo->query("SELECT * FROM entrance_citizen WHERE cID = :cid", [":cid" => $cID]);
+        return isset($res->firstname);
+    }
+
+    /**
      * Returns all Citizen in the db
      * Todo provide Sorting by
      *
