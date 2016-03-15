@@ -138,30 +138,19 @@ if($action == "new") {
     if($user->isActionAllowed(PERM_CITIZEN_PRESENT_NUMBER)) {
         header('Content-Type: text/html; charset=utf-8'); // sorgt für die korrekte Kodierung
         header('Cache-Control: must-revalidate, pre-check=0, no-store, no-cache, max-age=0, post-check=0'); // ist mal wieder wichtig wegen IE
-
-        echo \Entrance\Citizen::getCurrentCitizenCount();
-        exit;
-    } else {
-        echo "NO!";
-        exit();
-    }
-} elseif($action == "counterVisitors") {
-    if($user->isActionAllowed(PERM_CITIZEN_PRESENT_NUMBER)) {
-        header('Content-Type: text/html; charset=utf-8'); // sorgt für die korrekte Kodierung
-        header('Cache-Control: must-revalidate, pre-check=0, no-store, no-cache, max-age=0, post-check=0'); // ist mal wieder wichtig wegen IE
-
-        echo \Entrance\Citizen::getCurrentVisitorCount();
-        exit;
-    } else {
-        echo "NO!";
-        exit();
-    }
-} elseif($action == "counterStudents") {
-    if($user->isActionAllowed(PERM_CITIZEN_PRESENT_NUMBER)) {
-        header('Content-Type: text/html; charset=utf-8'); // sorgt für die korrekte Kodierung
-        header('Cache-Control: must-revalidate, pre-check=0, no-store, no-cache, max-age=0, post-check=0'); // ist mal wieder wichtig wegen IE
-
-        echo \Entrance\Citizen::getCurrentStudentCount();
+        switch($_GET['type']) {
+            case "all":
+                echo \Entrance\Citizen::getCurrentCitizenCount();
+                break;
+            case "visit":
+                echo \Entrance\Citizen::getCurrentVisitorCount();
+                break;
+            case "student":
+                echo \Entrance\Citizen::getCurrentStudentCount();
+                break;
+            default:
+                echo \Entrance\Citizen::getCurrentCitizenCount();
+        }
         exit;
     } else {
         echo "NO!";

@@ -18,7 +18,7 @@
     </head>
     <body>
         <!--Import jQuery before materialize.js-->
-        <script type="text/javascript" src="libs/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="libs/jquery-2.2.1.min.js"></script>
         <script type="text/javascript" src="libs/materialize/js/materialize.min.js"></script>
         <script type="text/javascript" src="libs/jquery-barcode.min.js"></script>
 
@@ -101,9 +101,9 @@
                                 <a class="collapsible-header">Infobildschirm<i class="mdi-navigation-arrow-drop-down"></i></a>
                                 <div class="collapsible-body">
                                     <ul>
-                                        <li><a href="counter.html">Anzahl gesamt</a></li>
-                                        <li><a href="#!">Anzahl Besucher</a></li>
-                                        <li><a href="#!">Anzahl Schüler</a></li>
+                                        <li><a href="counter.php?type=all">Anzahl gesamt</a></li>
+                                        <li><a href="counter.php?type=visit">Anzahl Besucher</a></li>
+                                        <li><a href="counter.php?type=student">Anzahl Schüler</a></li>
                                     </ul>
                                 </div>
                             </li>

@@ -39,7 +39,7 @@
                 <div class="row center">
                         <h1 class="center">Aktuell sind</h1>
                         <div id="count" class="odometer" style="text-align: right; font-size: 35vh;"></div>
-                    <h1 class="center">Personen im Staat</h1>
+                    <h1 class="center"><?php if($_GET['type'] == "all") echo "Personen"; elseif($_GET['type'] == "visit") echo "Besucher"; else echo "Bürger";?> im Staat</h1>
                 </div>
             </div>
         </main>
@@ -84,7 +84,7 @@
                 alert("Kann keine XMLHTTP-Instanz erzeugen");
                 return false;
             } else {
-                var url = "citizen.php?action=counter";
+                var url = "citizen.php?action=counter&type=<?php echo $_GET['type'];?>";
                 // Request öffnen
                 request.open('post', url, true);
                 // Request senden
@@ -101,7 +101,6 @@
                 // wenn der readyState 4 und der request.status 200 ist, dann ist alles korrekt gelaufen
                 case 4:
                     if (request.status != 200) {
-                        alert("Der Request wurde abgeschlossen, ist aber nicht OK\nFehler:"+request.status);
                     } else {
                         var content = request.responseText;
                         // den Inhalt des Requests in das <div> schreiben
