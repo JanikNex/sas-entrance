@@ -196,10 +196,12 @@ if($action == "new") {
 
 if($user->isActionAllowed(PERM_CITIZEN_VIEW)) {
     $pgdata = \Entrance\Util::getEditorPageDataStub("Person", $user);
-    $citizens = \Entrance\Citizen::getAllCitizen();
+    $citizens = \Entrance\Citizen::getAllCitizen($_GET["sort"], $_GET["filter"]);
     for ($i = 0; $i < sizeof($citizens); $i++) {
         $pgdata["page"]["items"][$i] = $citizens[$i]->asArray();
     }
+    if(isset($_GET["sort"])) $pgdata["page"]["sort"] = $_GET["sort"]; else $pgdata["page"]["sort"] = "ascName";
+    if(isset($_GET["filter"])) $pgdata["page"]["filter"] = $_GET["filter"]; else $pgdata["page"]["filter"] = "Alle";
 
     $dwoo->output("tpl/citizenList.tpl", $pgdata);
 } else {

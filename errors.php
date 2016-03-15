@@ -150,10 +150,13 @@ if($action == "correctThis" and is_numeric($eID)) {
 
 if($user->isActionAllowed(PERM_ADMIN_ERRORS)) {
     $pgdata = \Entrance\Util::getEditorPageDataStub("Fehler", $user);
-    $errors = \Entrance\Error::getAllErrors();
+    $errors = \Entrance\Error::getAllErrors($_GET["sort"], $_GET["filter"]);
     for ($i = 0; $i < sizeof($errors); $i++) {
         $pgdata["page"]["items"][$i] = $errors[$i]->asArray();
     }
+    if(isset($_GET["sort"])) $pgdata["page"]["sort"] = $_GET["sort"]; else $pgdata["page"]["sort"] = "ascName";
+    if(isset($_GET["filter"])) $pgdata["page"]["filter"] = $_GET["filter"]; else $pgdata["page"]["filter"] = "Alle";
+
 
     $dwoo->output("tpl/errorList.tpl", $pgdata);
 } else {

@@ -10,6 +10,31 @@ namespace Entrance;
 
 use PDO;
 
+const CSORTING = [
+    "ascName"  => " ORDER BY lastname ASC",
+    "ascID"    => " ORDER BY cID ASC",
+    "descName" => " ORDER BY lastname DESC",
+    "descID"   => " ORDER BY cID DESC",
+    "" => ""
+];
+
+const CFILTERING = [
+    ""          => "",
+    "Alle"      => "",
+    "Stufe05"   => " WHERE classLevel = 5 ",
+    "Stufe06"   => " WHERE classLevel = 6 ",
+    "Stufe07"   => " WHERE classLevel = 7 ",
+    "Stufe08"   => " WHERE classLevel = 8 ",
+    "Stufe09"   => " WHERE classLevel = 9 ",
+    "Stufe10"   => " WHERE classLevel = 10 ",
+    "Stufe11"   => " WHERE classLevel = 11 ",
+    "Stufe12"   => " WHERE classLevel = 12 ",
+    "Visum"     => " WHERE classLevel = 15 ",
+    "Lehrer"    => " WHERE classLevel = 14 ",
+    "Kurier"    => " WHERE classLevel = 16 "
+];
+
+
 class Citizen {
     private $cID, $firstname, $lastname, $classlevel, $birthday, $barcode;
 
@@ -95,12 +120,25 @@ class Citizen {
      * Returns all Citizen in the db
      * Todo provide Sorting by
      *
+     * @param string $sort
+     * @param string $filter
      * @return Citizen[]
      */
-    public static function getAllCitizen() {
+    public static function getAllCitizen($sort = "", $filter = "") {
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen ORDER BY cID");
-        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+        if($filter != "Gesperrt") {
+            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen " . CFILTERING[$filter] . CSORTING[$sort]);
+            return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+        } else {
+            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen " . CSORTING[$sort]);
+            $array = $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+            $r_citizen = [];
+            foreach($array as $citizen) {
+                if($citizen->isCitizenLocked())
+                    array_push($r_citizen, $citizen);
+            }
+            return $r_citizen;
+        }
     }
 
     /**

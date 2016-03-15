@@ -9,6 +9,28 @@
 namespace Entrance;
 use PDO;
 
+const ESORTING = [
+    "ascID"    => " ORDER BY eID ASC",
+    "ascDate"  => " ORDER BY `timestamp` ASC",
+    "descDate" => " ORDER BY `timestamp` DESC",
+    "descID"   => " ORDER BY eID DESC",
+    "" => ""
+];
+
+const EFILTERING = [
+    ""          => "",
+    "Alle"      => "",
+    "INAlreadyCheckedIn"     => " WHERE errorcode = 1 ",
+    "OUTAlreadyCheckedOut"   => " WHERE errorcode = 2 ",
+    "OUTNoCheckOutYesterday" => " WHERE errorcode = 3 ",
+    "INCitizenLocked"        => " WHERE errorcode = 4 ",
+    "OUTCitizenLocked"       => " WHERE errorcode = 5 ",
+    "INCitizenWanted"        => " WHERE errorcode = 6 ",
+    "OUTCitizenWanted"       => " WHERE errorcode = 7 ",
+    "INNoCitizenFound"       => " WHERE errorcode = 8 ",
+    "OUTNoCitizenFound"      => " WHERE errorcode = 9 ",
+];
+
 class Error{
     private $eID, $cID, $timestamp, $errorcode, $active;
 
@@ -39,11 +61,13 @@ class Error{
     }
 
     /**
+     * @param string $sort
+     * @param string $filter
      * @return Error[]
      */
-    public static function getAllErrors(){
+    public static function getAllErrors($sort = "", $filter = ""){
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT eID FROM entrance_error ORDER BY eID");
+        $stmt = $pdo->queryMulti("SELECT eID FROM entrance_error ORDER BY eID ".EFILTERING[$filter].ESORTING[$sort]);
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Error::fromEID");
     }
 

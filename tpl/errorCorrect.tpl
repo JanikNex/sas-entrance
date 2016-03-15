@@ -6,7 +6,7 @@
                         <div class="card-panel row">
                             <form action="errors.php?action=autoCorrect" method="post">
                                 <div class="input-field col s11">
-                                    <img src="barcode-scan.svg" class="prefix" height="32px"/>
+                                    <i class="prefix mdi mdi-barcode-scan"></i>
                                     <label for="barcode">Hier scannen</label>
                                     <input id="barcode" required type="text" name="barcode" length="13" autofocus/>
                                 </div>

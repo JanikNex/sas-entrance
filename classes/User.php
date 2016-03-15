@@ -10,6 +10,22 @@ namespace Entrance;
 
 use PDO;
 
+const USORTING = [
+    "ascName"  => " ORDER BY username ASC",
+    "ascID"    => " ORDER BY uID ASC",
+    "descName" => " ORDER BY username DESC",
+    "descID"   => " ORDER BY uID DESC",
+    "" => ""
+];
+
+const UFILTERING = [
+    "" => "",
+    "Alle" => "",
+    "Admin"  => " WHERE lvl = 2 ",
+    "Orga"   => " WHERE lvl = 1 ",
+    "User"   => " WHERE lvl = 0 "
+];
+
 class User {
     private $uID;
     private $uName;
@@ -262,11 +278,13 @@ class User {
     /**
      * Returns all users as a array of Userobjects from db
      *
-     * @return \Entrance\User[]
+     * @param string $sort
+     * @param string $filter
+     * @return User[]
      */
-    public static function getAllUsers() {
+    public static function getAllUsers($sort = "", $filter = "") {
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT uID FROM entrance_user ORDER BY uID");
+        $stmt = $pdo->queryMulti('SELECT uID FROM entrance_user '.UFILTERING[$filter].' '.USORTING[$sort]);
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\User::fromUID");
     }
 

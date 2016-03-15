@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+
+  "name": "Entrance",
+  "description": "SaS Entrance",
+  "version": "0.5.1b",
+  "icons": [
+    {
+      "src": "img/splashicon/Schlopolis.png",
+      "sizes": "132x132",
+      "type": "image/png",
+      "density": "1.0"
+    }
+  ],
+  "start_url": "logon.php",
+  "display": "standalone",
+  "orientation": "portrait",
+  "default-locale": "de",
+  "developer": "Yannick F&#233;lix, Janik Rapp",
+  "theme_color": "#3F51B5",
+  "background_color": "#3F51B5",
+  "chrome": { "navigation": true }
+}
