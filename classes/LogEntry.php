@@ -183,7 +183,7 @@ class LogEntry {
      */
     public function validateLogEntry(){
         $pdo = new PDO_MYSQL();
-        $pdo -> query("UPDATE entrance_logs SET success = 1, `timestamp` = `timestamp` WHERE lID = :lID", [":lID" => $this -> lID]);#
+        $pdo -> query("UPDATE entrance_logs SET success = 1, `timestamp` = `timestamp` WHERE lID = :lID", [":lID" => $this -> lID]);
     }
     /**
      * Sets Action = 2 which means that the Entry before will be ignored

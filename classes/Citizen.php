@@ -162,7 +162,7 @@ class Citizen {
         $citizens = self::getAllCitizen();
         $citizenInState = [];
         foreach($citizens as $citizen){
-            if($citizen -> isCitizenInState() == 0)
+            if($citizen -> isCitizenInState() == 0 && !$citizen -> isCourrier())
                 array_push($citizenInState, $citizen);
         }
         return $citizenInState;
