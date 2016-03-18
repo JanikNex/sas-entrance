@@ -29,7 +29,7 @@
                                         <span class="title">Staat betreten</span>
                                         <p>{$timestamp}<br/>
                                         {if $_.page.citizen.classlevel == 16}
-                                            Im Staat: {$timeSinceLast}<br/>
+                                            Außerhalb des Staates: {$timeSinceLast}<br/>
                                         {/if}
                                             <img src="barcode-scan.svg" height="16px" /> {$scanner}
                                         </p>
