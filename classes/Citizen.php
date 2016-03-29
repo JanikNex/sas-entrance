@@ -519,6 +519,17 @@ class Citizen {
         if($this->getClasslevel() == 16) return true;
         else return false;
     }
+
+    /**
+     * Returns true if the citizen was over 6 hours in state today
+     *
+     * @return bool
+     */
+    public function hasCitizenEnoughTime(){
+        $date = date("Y-m-d");
+        return !$this -> getTimePerDay($date) <= 21600;
+    }
+
     /**
      * Returns the time the citizen spend in state for the whole project in seconds
      *
