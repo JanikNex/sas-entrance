@@ -22,8 +22,7 @@ define("PERM_USER_EDIT",   "users.edit");
 define("PERM_USER_CREATE", "users.create");
 define("PERM_USER_VIEW", "users.view");
 define("PERM_USER_EDIT_PERMISSIONS", "users.perms");
-define("PERM_USER_GUARD_ACTIVATE", "users.guard.activate");
-define("PERM_USER_GUARD_DEACTIVATE", "users.guard.deactivate");
+define("PERM_USER_GUARDCONTROL", "users.guardcontrol");
 
 define("PERM_CITIZEN_LOGIN", "citizen.login");
 define("PERM_CITIZEN_LOGOUT", "citizen.logout");
