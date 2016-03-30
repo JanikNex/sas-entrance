@@ -527,7 +527,11 @@ class Citizen {
      */
     public function hasCitizenEnoughTime(){
         $date = date("Y-m-d");
-        return !$this -> getTimePerDay($date) <= 21600;
+        if ($this -> getClasslevel() < 13){
+            return !$this -> getTimePerDay($date) <= 21600;
+        }else{
+            return true;
+        }
     }
 
     /**
