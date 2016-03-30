@@ -160,9 +160,15 @@ class User {
                 return '<span>[User]</span>';
                 break;
             case 1:
-                return '<span class="orange-text">[Orga]</span>';
+                return '<span class="green-text">[Grenzer]</span>';
                 break;
             case 2:
+                return '<span class="blue-text">[Polizei]</span>';
+                break;
+            case 3:
+                return '<span class="orange-text">[Orga]</span>';
+                break;
+            case 4:
                 return '<span class="red-text">[Admin]</span>';
                 break;
             default:
@@ -177,7 +183,7 @@ class User {
      * @return bool
      */
     public function isActionAllowed($permission) {
-        if($this->uPrefix != 2) {
+        if($this->uPrefix != 4) {
             $pdo = new PDO_MYSQL();
             $res = $pdo->query("SELECT * FROM entrance_user_rights WHERE uID = :uid AND permission = :key", [":uid" => $this->uID, ":key" => $permission]);
             if($res->active == 1) return true;

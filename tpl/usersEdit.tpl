@@ -12,8 +12,10 @@
                     <select id="type" title="Type" name="lvl">
                         <option value="" disabled selected>Wähle einen Level</option>
                         <option {if $edit.lvl == 0}selected{/if} {if $header.level < 0}disabled{/if} value="0">User</option>
-                        <option {if $edit.lvl == 1}selected{/if} {if $header.level < 1}disabled{/if} value="1">Orga</option>
-                        <option {if $edit.lvl == 2}selected{/if} {if $header.level < 2}disabled{/if} value="2">Admin</option>
+                        <option {if $edit.lvl == 1}selected{/if} {if $header.level < 1}disabled{/if} value="1">Grenzer</option>
+                        <option {if $edit.lvl == 2}selected{/if} {if $header.level < 2}disabled{/if} value="2">Polizei</option>
+                        <option {if $edit.lvl == 3}selected{/if} {if $header.level < 3}disabled{/if} value="3">Orga</option>
+                        <option {if $edit.lvl == 4}selected{/if} {if $header.level < 4}disabled{/if} value="4">Admin</option>
                     </select>
                     <label for="selInt">Level</label>
                 </div>
@@ -35,6 +37,24 @@
                 <div class="input-field col s6">
                     <label for="pw2">Passwort wiederholen</label>
                     <input id="pw2" type="password" name="passwd2" length="18446744073709551615"/>
+                </div>
+                <div class="col s12">
+                    <button class="btn waves-effect waves-light btn-flat" type="submit" name="action">SETZTEN
+                        <i class="material-icons left">done</i>
+                    </button>
+                </div>
+            </form>
+            <form method="post" action="users.php?action=postPreset&uID={$edit.id}">
+                <div class="input-field col s6">
+                    <select id="preset" title="Preset" name="preset">
+                        <option value="" disabled selected>Wähle eine Voreinstellung</option>
+                        <option {if $header.level < 3}disabled{/if} value="0">Garnichts</option>
+                        <option {if $header.level < 3}disabled{/if} value="1">Grenzer</option>
+                        <option {if $header.level < 3}disabled{/if} value="2">Polizei</option>
+                        <option {if $header.level < 4}disabled{/if} value="3">Orga</option>
+                        <option {if $header.level < 4}disabled{/if} value="4">Admin</option>
+                    </select>
+                    <label for="preset">Rechte Voreinstellung</label>
                 </div>
                 <div class="col s12">
                     <button class="btn waves-effect waves-light btn-flat" type="submit" name="action">SETZTEN
@@ -65,16 +85,16 @@
                         <tr><td>Person löschen      </td><td><div class="switch"><label>Off<input type="checkbox" id="cb08" {if $perm.citizen_del    == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh08" type="hidden" value="0" name="citizen.del"/>   </td></tr>
 
                         <tr><td><b>Personen Ein/Ausbuchen</b></td></tr>
-                        <tr><td>Personen einbuchen       </td><td><div class="switch"><label>Off<input type="checkbox" id="cb09" {if $perm.citizen_login           == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh09" type="hidden" value="0" name="citizen.login"/>         </td></tr>
-                        <tr><td>Personen ausbuchen       </td><td><div class="switch"><label>Off<input type="checkbox" id="cb10" {if $perm.citizen_logout          == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh10" type="hidden" value="0" name="citizen.logout"/>        </td></tr>
-                        <tr><td>Fehler korrigieren       </td><td><div class="switch"><label>Off<input type="checkbox" id="cb11" {if $perm.citizen_correcterrors   == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh11" type="hidden" value="0" name="citizen.correcterrors"/> </td></tr>
-                        <tr><td>Fehler ignorieren        </td><td><div class="switch"><label>Off<input type="checkbox" id="cb19" {if $perm.citizen_ignoreerrors   == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh19" type="hidden" value="0" name="citizen.ignoreerrors"/>   </td></tr>
-                        <tr><td>Grenzer Verwalten        </td><td><div class="switch"><label>Off<input type="checkbox" id="cb28" {if $perm.user_guardcountrol   == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh28" type="hidden" value="0" name="user.guardcontrol"/>        </td></tr>
+                        <tr><td>Personen einbuchen       </td><td><div class="switch"><label>Off<input type="checkbox" id="cb09" {if $perm.citizen_login         == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh09" type="hidden" value="0" name="citizen.login"/>         </td></tr>
+                        <tr><td>Personen ausbuchen       </td><td><div class="switch"><label>Off<input type="checkbox" id="cb10" {if $perm.citizen_logout        == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh10" type="hidden" value="0" name="citizen.logout"/>        </td></tr>
+                        <tr><td>Fehler korrigieren       </td><td><div class="switch"><label>Off<input type="checkbox" id="cb11" {if $perm.citizen_correcterrors == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh11" type="hidden" value="0" name="citizen.correcterrors"/> </td></tr>
+                        <tr><td>Fehler ignorieren        </td><td><div class="switch"><label>Off<input type="checkbox" id="cb19" {if $perm.citizen_ignoreerrors  == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh19" type="hidden" value="0" name="citizen.ignoreerrors"/>  </td></tr>
+                        <tr><td>Grenzer Verwalten        </td><td><div class="switch"><label>Off<input type="checkbox" id="cb28" {if $perm.users_guardcontrol    == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh28" type="hidden" value="0" name="users.guardcontrol"/>    </td></tr>
 
                         <tr><td><b>Personen Fahndung</b></td></tr>
-                        <tr><td>Fahndung hinzufügen       </td><td><div class="switch"><label>Off<input type="checkbox" id="cb24" {if $perm.tracing_add           == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh24" type="hidden" value="0" name="tracing.add"/>      </td></tr>
-                        <tr><td>Fahndung entfernen        </td><td><div class="switch"><label>Off<input type="checkbox" id="cb25" {if $perm.tracing_remove          == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh25" type="hidden" value="0" name="tracing.remove"/> </td></tr>
-                        <tr><td>Fahndungen anzeigen       </td><td><div class="switch"><label>Off<input type="checkbox" id="cb26" {if $perm.tracing_list   == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh26" type="hidden" value="0" name="tracing.list"/>            </td></tr>
+                        <tr><td>Fahndung hinzufügen       </td><td><div class="switch"><label>Off<input type="checkbox" id="cb24" {if $perm.citizen_tracing_add    == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh24" type="hidden" value="0" name="citizen.tracing.add"/>    </td></tr>
+                        <tr><td>Fahndung entfernen        </td><td><div class="switch"><label>Off<input type="checkbox" id="cb25" {if $perm.citizen_tracing_remove == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh25" type="hidden" value="0" name="citizen.tracing.remove"/> </td></tr>
+                        <tr><td>Fahndungen anzeigen       </td><td><div class="switch"><label>Off<input type="checkbox" id="cb26" {if $perm.citizen_tracing_list   == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh26" type="hidden" value="0" name="citizen.tracing.list"/>   </td></tr>
 
                         <tr><td><b>Personeninfos</b></td></tr>
                         <tr><td>Anwesende Personen ansehen(Zahl)  </td><td><div class="switch"><label>Off<input type="checkbox" id="cb12" {if $perm.citizen_present_number  == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh12" type="hidden" value="0" name="citizen.present.number"/>  </td></tr>
@@ -83,14 +103,14 @@
                         <tr><td>Böse Schüler ansehen              </td><td><div class="switch"><label>Off<input type="checkbox" id="cb15" {if $perm.citizen_info_difference == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh15" type="hidden" value="0" name="citizen.info.difference"/> </td></tr>
 
                         <tr><td><b>Sonstige</b></td></tr>
-                        <tr><td>Datenbank               </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb16" {if $perm.admin_database == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh16" type="hidden" value="0" name="admin.database"/>              </td></tr>
-                        <tr><td>Fehler ansehen          </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb17" {if $perm.admin_errors == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh17" type="hidden" value="0" name="admin.errors"/>                  </td></tr>
-                        <tr><td>Alle kicken             </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb18" {if $perm.admin_kickall == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh18" type="hidden" value="0" name="admin.kickall"/>                </td></tr>
-                        <tr><td>Staats Dashboard ansehen</td> <td><div class="switch"><label>Off<input type="checkbox" id="cb20" {if $perm.admin_state_dashboard == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh20" type="hidden" value="0" name="admin.state.dashboard"/></td></tr>
-                        <tr><td>Staat öffnen            </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb21" {if $perm.admin_state_open == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh21" type="hidden" value="0" name="admin.state.open"/>          </td></tr>
-                        <tr><td>Staat schließen         </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb22" {if $perm.admin_state_close == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh22" type="hidden" value="0" name="admin.state.close"/>        </td></tr>
-                        <tr><td>Daten exportieren       </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb23" {if $perm.admin_export == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh23" type="hidden" value="0" name="admin.export"/>                  </td></tr>
-                        <tr><td>Admins benachichtigen   </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb27" {if $perm.admin_notify == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh27" type="hidden" value="0" name="admin.notify"/>                  </td></tr>
+                        <tr><td>Datenbank               </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb16" {if $perm.admin_database        == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh16" type="hidden" value="0" name="admin.database"/>        </td></tr>
+                        <tr><td>Fehler ansehen          </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb17" {if $perm.admin_errors          == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh17" type="hidden" value="0" name="admin.errors"/>          </td></tr>
+                        <tr><td>Alle kicken             </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb18" {if $perm.admin_kickall         == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh18" type="hidden" value="0" name="admin.kickall"/>         </td></tr>
+                        <tr><td>Staats Dashboard ansehen</td> <td><div class="switch"><label>Off<input type="checkbox" id="cb20" {if $perm.admin_state_dashboard == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh20" type="hidden" value="0" name="admin.state.dashboard"/> </td></tr>
+                        <tr><td>Staat öffnen            </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb21" {if $perm.admin_state_open      == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh21" type="hidden" value="0" name="admin.state.open"/>      </td></tr>
+                        <tr><td>Staat schließen         </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb22" {if $perm.admin_state_close     == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh22" type="hidden" value="0" name="admin.state.close"/>     </td></tr>
+                        <tr><td>Daten exportieren       </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb23" {if $perm.admin_export          == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh23" type="hidden" value="0" name="admin.export"/>          </td></tr>
+                        <tr><td>Admins benachichtigen   </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb27" {if $perm.admin_notify          == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh27" type="hidden" value="0" name="admin.notify"/>          </td></tr>
                     </table>
                 </form>
             </div>

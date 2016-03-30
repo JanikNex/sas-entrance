@@ -49,7 +49,7 @@
             <ul class="collection col s12">
                 {loop $page.items}
                     <li class="collection-item avatar">
-                        <i class="material-icons circle {if $lvl == 2}red{elseif $lvl == 1}orange{else}grey{/if}">person</i>
+                        <i class="material-icons circle {if $lvl == 4}red{elseif $lvl == 3}orange{elseif $lvl == 2}blue{elseif $lvl == 1}green{else}grey{/if}">person</i>
                         <span class="title">{$usrname}</span>
                         <p>{$prefix} {$usrname} | {$email}
                         </p>
