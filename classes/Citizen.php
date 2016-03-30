@@ -426,9 +426,11 @@ class Citizen {
      */
     public function forceErrorCorrect($user){
         if($this->isCitizenLocked()) {
-            if(!$this->getLastEntry()->getLastTwoEntrySuccessStatus())
+            if (!$this->getLastEntry()->getLastTwoEntrySuccessStatus()){
+                echo "Kicked \n";
                 return self::forceErrorCorrectAfterKick($user);
-            else{
+            }else{
+                echo "Normal \n";
                 return self::forceErrorCorrectNormal($user);
             }
         } else return false;
@@ -528,7 +530,7 @@ class Citizen {
     public function hasCitizenEnoughTime(){
         $date = date("Y-m-d");
         if ($this -> getClasslevel() < 13){
-            return !$this -> getTimePerDay($date) <= 21600;
+            return ($this -> getTimePerDay($date)) >= 21600;
         }else{
             return true;
         }
