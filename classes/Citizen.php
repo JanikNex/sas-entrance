@@ -258,7 +258,7 @@ class Citizen {
         $badCitizens = [];
         foreach($citizens as $citizen){
             foreach($days as $day){
-                if($citizen -> getTimePerDay($day) <= 21600){
+                if(($citizen -> getTimePerDay($day) <= 21600) && ($citizen->getClasslevel()<13)){
                     array_push($badCitizens, $citizen);
                     break;
                 }
