@@ -75,8 +75,6 @@ if($action == "correctThis" and is_numeric($eID)) {
             }
         }
         $dwoo->output("tpl/errorCorrect.tpl", $pgdata);
-        $arr = get_defined_vars();
-        print_r($arr);
         exit; //To not show the list
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Fehler beim Fehler", $user);
