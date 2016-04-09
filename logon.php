@@ -26,7 +26,7 @@ if(isset($usrname)) {
         if($user->comparePWHash(md5($password))) {
             session_start();
             $_SESSION['uID'] = $user->getUID();
-            \Entrance\Util::forwardTo("users.php");
+            \Entrance\Util::forwardTo("index.php");
         } else {
             $dwoo->output("tpl/logon.tpl", ["err" => "2","usrname" => $usrname]);
         }

@@ -8,6 +8,15 @@
 
 require_once "classes/Util.php";
 
-echo phpinfo();
+require_once 'classes/PDO_MYSQL.php'; //DB Anbindung
+require_once 'libs/dwoo/lib/Dwoo/Autoloader.php'; //Dwoo Laden
+require_once 'classes/User.php';
+require_once 'classes/Permissions.php';
+require_once 'classes/Util.php';
 
-\Entrance\Util::forwardTo("logon.php");
+$user = \Entrance\Util::checkSession();
+$pdo = new \Entrance\PDO_MYSQL();
+Dwoo\Autoloader::register();
+$dwoo = new Dwoo\Core();
+
+$dwoo->output("tpl/index.tpl", \Entrance\Util::getEditorPageDataStub("Startseite", $user));
