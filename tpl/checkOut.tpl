@@ -30,6 +30,10 @@
                                     {if $page.error.errorCode == 8}Error@CheckIn | NoCitizenFound {/if}
                                     {if $page.error.errorCode == 9}Error@CheckOut | NoCitizenFound {/if}
                                     </p>
+                                {elseif $page.scan.success == 3}
+                                    <p class="red-text"><img src="checkFail.png" height="16px">Scan Fehlgeschlagen.<br/>
+                                        Schlopolis ist momentan <b>geschlossen</b>! Keine Buchungsvorgänge möglich.
+                                    </p>
                                 {/if}
                             </div>
                         </div>
