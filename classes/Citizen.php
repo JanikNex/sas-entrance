@@ -427,10 +427,8 @@ class Citizen {
     public function forceErrorCorrect($user){
         if($this->isCitizenLocked()) {
             if (!$this->getLastEntry()->getLastTwoEntrySuccessStatus()){
-                echo "Kicked \n";
                 return self::forceErrorCorrectAfterKick($user);
             }else{
-                echo "Normal \n";
                 return self::forceErrorCorrectNormal($user);
             }
         } else return false;
