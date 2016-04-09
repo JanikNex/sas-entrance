@@ -125,15 +125,48 @@ namespace Entrance;
          return $array["days"]." Tage ".$array["hours"]."h ".$array["minutes"]."m ".$array["seconds"]."s";
      }
 
+     /**
+      * Returns the global key value
+      * @param $key
+      * @return bool
+      */
      public static function getGlobal($key){
          $pdo = new PDO_MYSQL();
          $res = $pdo->query("SELECT * FROM `global` WHERE `key` = :key", [":key" => $key]);
          if($res->value == 1) return true;
          else return false;
      }
-     
+
+     /**
+      * Sets a global Key on a Value
+      * @param $key
+      * @param $value
+      */
      public static function setGlobal($key, $value) {
          $pdo = new PDO_MYSQL();
          $pdo->query("UPDATE `global` SET `value` = :state WHERE `key` = :key", [":state" => $value, ":key" => $key]);
+     }
+
+     /**
+      *Opens the state
+      */
+     public static function openState() {
+        self::setGlobal("state.opened", 1);
+     }
+
+     /**
+      *Closes the state
+      */
+     public static function closeState() {
+        self::setGlobal("state.opened", 0);
+     }
+
+     /**
+      * Returns wether the state is opened or not
+      * @return bool
+      */
+     public static function isStateOpen() {
+         if(self::getGlobal("state.opened") == 1) return true;
+         else return false;
      }
  }
