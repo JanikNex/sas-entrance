@@ -125,4 +125,15 @@ namespace Entrance;
          return $array["days"]." Tage ".$array["hours"]."h ".$array["minutes"]."m ".$array["seconds"]."s";
      }
 
+     public static function getGlobal($key){
+         $pdo = new PDO_MYSQL();
+         $res = $pdo->query("SELECT * FROM `global` WHERE `key` = :key", [":key" => $key]);
+         if($res->value == 1) return true;
+         else return false;
+     }
+     
+     public static function setGlobal($key, $value) {
+         $pdo = new PDO_MYSQL();
+         $pdo->query("UPDATE `global` SET `value` = :state WHERE `key` = :key", [":state" => $value, ":key" => $key]);
+     }
  }
