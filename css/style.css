@@ -7,4 +7,8 @@ header, main, footer {
 .collection-item .title {
   font-weight: bold; }
 
+.bolden {
+  font-weight: bold;
+}
+
 /*# sourceMappingURL=style.css.map */
