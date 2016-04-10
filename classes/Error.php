@@ -114,6 +114,38 @@ class Error{
         $pdo -> query("UPDATE entrance_error SET active = 0 WHERE eID = :eID", [":eID" => $this -> eID]);
     }
 
+    public static function getErrorCodeStringForErrorCode($errorcode) {
+        switch($errorcode) {
+            case 1: 
+                return "Error@CheckIn | AlreadyCheckedIn";
+                break;
+            case 2:
+                return "Error@CheckOut | AlreadyCheckedOut";
+                break;
+            case 3:
+                return "Error@CheckOut | NoCheckOutYesterday";
+                break;
+            case 4:
+                return "Error@CheckIn | CitizenLocked";
+                break;
+            case 5:
+                return "Error@CheckOut | CitizenLocked";
+                break;
+            case 6:
+                return "Error@CheckIn | CitizenWanted";
+                break;
+            case 7:
+                return "Error@CheckOut | CitizenWanted";
+                break;
+            case 8:
+                return "Error@CheckIn | NoCitizenFound";
+                break;
+            case 9:
+                return "Error@CheckOut | NoCitizenFound";
+                break;
+        }
+    }
+
     public function asArray() {
         return[
             "eID" => $this -> eID,
