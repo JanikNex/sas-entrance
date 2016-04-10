@@ -15,8 +15,10 @@
                             </p>
                             <p><b>Barcode:</b> {$page.citizen.barcode}</p>
                             <div id="bcTarget"></div>
-                            {loop $page.times}<p><b>Zeit am {$date}:</b> {$time}</p>{/loop}
-                            <p><b>Gesamt:</b> {$page.timeTotal}</p>
+                            {if $header.perm.citizen_info_difference == 1}
+                                {loop $page.times}<p><b>Zeit am {$date}:</b> {$time}</p>{/loop}
+                                <p><b>Gesamt:</b> {$page.timeTotal}</p>
+                            {/if}
                         </div>
                     </div>
                     <div class="col s12 offset-m1 m6">
