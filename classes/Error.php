@@ -90,9 +90,7 @@ class Error{
         $date = date("Y-m-d H:i:s");
         $pdo->query("INSERT INTO entrance_error(cID,`timestamp`, errorcode) VALUES (:cID, :timestamp, :errorcode)",
             [":cID" => $cID, ":timestamp" => $date, ":errorcode" => $errorcode]);
-        $msg = $cID.'';
-        $msg .= $date.'';
-        $msg .= $errorcode.'';
+        $msg = $date." - ".Citizen::fromCID($cID)->getFirstname()." ".Citizen::fromCID($cID)->getLastname()." hat Fehler Code ".$errorcode." verursacht...";
         Util::mailToAdmins($msg);
     }
 

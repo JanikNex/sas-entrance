@@ -178,7 +178,7 @@ namespace Entrance;
          $admins = User::getAllAdmins();
          $header = 'From: fakemail657@gmail.com' . "\r\n";
          foreach ($admins as $admin){
-             mail($admin->uEmail, $topic, $msg, $header);
+             mail($admin->getUEmail(), $topic, $msg, $header);
          }
      }
  }

@@ -19,11 +19,13 @@ const USORTING = [
 ];
 
 const UFILTERING = [
-    "" => "",
-    "Alle" => "",
-    "Admin"  => " WHERE lvl = 2 ",
-    "Orga"   => " WHERE lvl = 1 ",
-    "User"   => " WHERE lvl = 0 "
+    ""        => "",
+    "Alle"    => "",
+    "Admin"   => " WHERE lvl = 4 ",
+    "Orga"    => " WHERE lvl = 3 ",
+    "Polizei" => " WHERE lvl = 2 ",
+    "Grenzer" => " WHERE lvl = 1 ",
+    "User"    => " WHERE lvl = 0 "
 ];
 
 class User {
@@ -132,6 +134,15 @@ class User {
     public function getUName() {
         return $this->uName;
     }
+
+    /**
+     * @return string
+     */
+    public function getUEmail()
+    {
+        return $this->uEmail;
+    }
+    
 
     /**
      * Compares a md5() hash with the given Hash from db
@@ -296,7 +307,7 @@ class User {
 
     /**
      * Returns all Admins
-     * @return array
+     * @return User[]
      */
     public static function getAllAdmins() {
         $pdo = new PDO_MYSQL();
