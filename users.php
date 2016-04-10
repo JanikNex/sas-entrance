@@ -116,6 +116,7 @@ if($action == "new") {
                 $userToEdit->setPermission(PERM_DB_LOGIN, 0);
                 $userToEdit->setPermission(PERM_ADMIN_ERRORS, 0);
                 $userToEdit->setPermission(PERM_ADMIN_NOTIFY, 0);
+                $userToEdit->setPermission(PERM_ADMIN_NOTIFY_RECEIVE, 0);
                 $userToEdit->setPermission(PERM_ADMIN_KICKALL, 0);
                 $userToEdit->setPermission(PERM_ADMIN_EXPORT, 0);
                 $userToEdit->setPermission(PERM_ADMIN_STATE_CLOSE, 0);
@@ -151,6 +152,7 @@ if($action == "new") {
                 $userToEdit->setPermission(PERM_DB_LOGIN, 0);
                 $userToEdit->setPermission(PERM_ADMIN_ERRORS, 0);
                 $userToEdit->setPermission(PERM_ADMIN_NOTIFY, 0);
+                $userToEdit->setPermission(PERM_ADMIN_NOTIFY_RECEIVE, 0);
                 $userToEdit->setPermission(PERM_ADMIN_KICKALL, 0);
                 $userToEdit->setPermission(PERM_ADMIN_EXPORT, 0);
                 $userToEdit->setPermission(PERM_ADMIN_STATE_CLOSE, 0);
@@ -186,6 +188,7 @@ if($action == "new") {
                 $userToEdit->setPermission(PERM_DB_LOGIN, 0);
                 $userToEdit->setPermission(PERM_ADMIN_ERRORS, 0);
                 $userToEdit->setPermission(PERM_ADMIN_NOTIFY, 0);
+                $userToEdit->setPermission(PERM_ADMIN_NOTIFY_RECEIVE, 0);
                 $userToEdit->setPermission(PERM_ADMIN_KICKALL, 0);
                 $userToEdit->setPermission(PERM_ADMIN_EXPORT, 0);
                 $userToEdit->setPermission(PERM_ADMIN_STATE_CLOSE, 0);
@@ -221,6 +224,7 @@ if($action == "new") {
                 $userToEdit->setPermission(PERM_DB_LOGIN, 0);
                 $userToEdit->setPermission(PERM_ADMIN_ERRORS, 0);
                 $userToEdit->setPermission(PERM_ADMIN_NOTIFY, 0);
+                $userToEdit->setPermission(PERM_ADMIN_NOTIFY_RECEIVE, 0);
                 $userToEdit->setPermission(PERM_ADMIN_KICKALL, 0);
                 $userToEdit->setPermission(PERM_ADMIN_EXPORT, 0);
                 $userToEdit->setPermission(PERM_ADMIN_STATE_CLOSE, 1);
@@ -256,6 +260,7 @@ if($action == "new") {
                 $userToEdit->setPermission(PERM_DB_LOGIN, 1);
                 $userToEdit->setPermission(PERM_ADMIN_ERRORS, 1);
                 $userToEdit->setPermission(PERM_ADMIN_NOTIFY, 1);
+                $userToEdit->setPermission(PERM_ADMIN_NOTIFY_RECEIVE, 1);
                 $userToEdit->setPermission(PERM_ADMIN_KICKALL, 1);
                 $userToEdit->setPermission(PERM_ADMIN_EXPORT, 1);
                 $userToEdit->setPermission(PERM_ADMIN_STATE_CLOSE, 1);

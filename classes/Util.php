@@ -178,7 +178,9 @@ namespace Entrance;
          $admins = User::getAllAdmins();
          $header = 'From: fakemail657@gmail.com' . "\r\n";
          foreach ($admins as $admin){
-             mail($admin->getUEmail(), $topic, $msg, $header);
+             if($admin -> isActionAllowed(PERM_ADMIN_NOTIFY_RECEIVE)) {
+                 mail($admin->getUEmail(), $topic, $msg, $header);
+             }
          }
      }
  }

@@ -111,6 +111,7 @@
                         <tr><td>Staat schließen         </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb22" {if $perm.admin_state_close     == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh22" type="hidden" value="0" name="admin.state.close"/>     </td></tr>
                         <tr><td>Daten exportieren       </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb23" {if $perm.admin_export          == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh23" type="hidden" value="0" name="admin.export"/>          </td></tr>
                         <tr><td>Admins benachichtigen   </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb27" {if $perm.admin_notify          == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh27" type="hidden" value="0" name="admin.notify"/>          </td></tr>
+                        <tr><td>Mails erhalten          </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb29" {if $perm.admin_notify_receive  == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh29" type="hidden" value="0" name="admin.notify.receive"/>  </td></tr>
                     </table>
                 </form>
             </div>

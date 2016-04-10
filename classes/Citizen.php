@@ -354,6 +354,17 @@ class Citizen {
     }
 
     /**
+     * Returns wether this Citizen is Wanted
+     * @return bool
+     */
+    public function isCitizenWanted() {
+        $logs = TracingEntry::getAllLogsPerCID($this->getCID());
+        foreach ($logs as $entry){
+            if($entry->isActive()) return true;
+        }
+        return false;
+    }
+    /**
      * Returns the time this citizen spend in state for a specific date in seconds
      *
      * @param date $date

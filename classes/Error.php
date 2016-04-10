@@ -90,7 +90,7 @@ class Error{
         $date = date("Y-m-d H:i:s");
         $pdo->query("INSERT INTO entrance_error(cID,`timestamp`, errorcode) VALUES (:cID, :timestamp, :errorcode)",
             [":cID" => $cID, ":timestamp" => $date, ":errorcode" => $errorcode]);
-        $msg = $date." - ".Citizen::fromCID($cID)->getFirstname()." ".Citizen::fromCID($cID)->getLastname()." hat Fehler Code ".$errorcode." verursacht...";
+        $msg = $date." - ".Citizen::fromCID($cID)->getFirstname()." ".Citizen::fromCID($cID)->getLastname()." hat Fehler ".self::getErrorCodeStringForErrorCode($errorcode)." verursacht...";
         Util::mailToAdmins($msg);
     }
 
@@ -102,6 +102,7 @@ class Error{
         return $pdo->query("DELETE FROM entrance_error WHERE eID = :eid", [":eid" => $this->eID]);
     }
     /**
+     * Corrects all errors by cID
      * @param $cID int
      */
     public static function correctError($cID){
@@ -109,6 +110,9 @@ class Error{
         $pdo -> query("UPDATE entrance_error SET active = 0 WHERE cID = :cID", [":cID" => $cID]);
     }
 
+    /**
+     *Corrects a specific Error by eID
+     */
     public function correctThisError(){
         $pdo = new PDO_MYSQL();
         $pdo -> query("UPDATE entrance_error SET active = 0 WHERE eID = :eID", [":eID" => $this -> eID]);
