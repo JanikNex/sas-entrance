@@ -90,6 +90,7 @@ class Error{
         $date = date("Y-m-d H:i:s");
         $pdo->query("INSERT INTO entrance_error(cID,`timestamp`, errorcode) VALUES (:cID, :timestamp, :errorcode)",
             [":cID" => $cID, ":timestamp" => $date, ":errorcode" => $errorcode]);
+        Util::mailToAdmins($errorcode);
     }
 
     /**

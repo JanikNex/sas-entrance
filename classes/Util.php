@@ -133,8 +133,7 @@ namespace Entrance;
      public static function getGlobal($key){
          $pdo = new PDO_MYSQL();
          $res = $pdo->query("SELECT * FROM `global` WHERE `key` = :key", [":key" => $key]);
-         if($res->value == 1) return true;
-         else return false;
+         return $res->value;
      }
 
      /**
@@ -168,5 +167,13 @@ namespace Entrance;
      public static function isStateOpen() {
          if(self::getGlobal("state.opened") == 1) return true;
          else return false;
+     }
+
+     public static function mailToAdmins($msg){
+         $admins = User::getAllAdmins();
+         $header = 'From: jrappmz@gmail.com' . "\r\n";
+         foreach ($admins as $admin){
+             mail($admin->uEmail, 'SaSEntrance - Notification', $msg, $header);
+         }
      }
  }

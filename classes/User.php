@@ -95,7 +95,7 @@ class User {
     public function setUEmail($uEmail) {
         $this->uEmail = $uEmail;
     }
-
+    
     /**
      * @param string $uPassHash
      */
@@ -291,6 +291,16 @@ class User {
     public static function getAllUsers($sort = "", $filter = "") {
         $pdo = new PDO_MYSQL();
         $stmt = $pdo->queryMulti('SELECT uID FROM entrance_user '.UFILTERING[$filter].' '.USORTING[$sort]);
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\User::fromUID");
+    }
+
+    /**
+     * Returns all Admins
+     * @return array
+     */
+    public static function getAllAdmins() {
+        $pdo = new PDO_MYSQL();
+        $stmt = $pdo->queryMulti("SELECT uID FROM entrance_user WHERE lvl = 4 ORDER BY uID");
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\User::fromUID");
     }
 
