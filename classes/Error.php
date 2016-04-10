@@ -67,7 +67,8 @@ class Error{
      */
     public static function getAllErrors($sort = "", $filter = ""){
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT eID FROM entrance_error ORDER BY eID ".EFILTERING[$filter].ESORTING[$sort]);
+        $query = "SELECT eID FROM entrance_error ".EFILTERING[$filter].ESORTING[$sort];
+        $stmt = $pdo->queryMulti($query);
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Error::fromEID");
     }
 
@@ -120,7 +121,7 @@ class Error{
 
     public static function getErrorCodeStringForErrorCode($errorcode) {
         switch($errorcode) {
-            case 1: 
+            case 1:
                 return "Error@CheckIn | AlreadyCheckedIn";
                 break;
             case 2:
@@ -151,14 +152,15 @@ class Error{
     }
 
     public function asArray() {
-        return[
-            "eID" => $this -> eID,
-            "cID" => $this -> cID,
+        return [
+            "eID" => $this->eID,
+            "cID" => $this->cID,
             "citizenName" => Citizen::fromCID($this->cID)->getFirstname()." ".Citizen::fromCID($this->cID)->getLastname(),
             "citizenClassLevel" => Citizen::fromCID($this->cID)->getClasslevel(),
-            "errorStatus" => $this -> active,
+            "errorStatus" => $this->active,
             "timestamp" => date("d. M Y - H:i", strtotime($this->timestamp)),
-            "errorCode" => $this -> errorcode
+            "errorCode" => $this->errorcode,
+            "errorString" => self::getErrorCodeStringForErrorCode($this->errorcode)
         ];
     }
     /**

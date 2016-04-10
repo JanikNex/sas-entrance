@@ -91,7 +91,7 @@ $(document).ready(function(){
         return s;
     };
     updateSortnFilter();
-    update();
+    updateCaller();
 });
 
 function update() {
@@ -105,7 +105,7 @@ function update() {
             <a class="waves-effect waves-circle" href="users.php?action=edit&uID={{id}}">
             <i class="material-icons grey-text text-darken-1">create</i>
             </a>
-            <a class="waves-effect waves-circle waves-red modal-trigger" href="#modal{{id}}">
+            <a class="waves-effect waves-circle waves-red modal-trigger" onclick="$('#modal{{id}}').openModal();">
             <i class="material-icons grey-text text-darken-1">delete</i>
             </a>
             </span>
@@ -141,6 +141,7 @@ function update() {
             updateSearch();
         }
     });
+    $('.modal-trigger').leanModal();
 }
 
 function updateCaller(){

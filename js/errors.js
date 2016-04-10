@@ -4,7 +4,7 @@
 
 
 var oldData = "";
-var sort = "ascName";
+var sort = "descDate";
 var filter = "Alle";
 
 function setFilter(afilter) {
@@ -22,13 +22,13 @@ function setSort(asort) {
 function updateSortnFilter() {
     if(sort.startsWith("asc")) {
         thissort = sort.replace("asc","");
-        $("#sortCurr").html("<i class=\"mdi mdi-sort-ascending\"></i> "+thissort);
+        $("#currSort").html("<i class=\"mdi mdi-sort-ascending\"></i> "+thissort);
     }
     else {
         thissort = sort.replace("desc","");
-        $("#sortCurr").html("<i class=\"mdi mdi-sort-descending\"></i> "+thissort);
+        $("#currSort").html("<i class=\"mdi mdi-sort-descending\"></i> "+thissort);
     }
-    $("#filterCurr").html("<i class=\"mdi mdi-filter\"></i> "+filter);
+    $("#currFilter").html("<i class=\"mdi mdi-filter\"></i> "+filter);
 }
 
 function updateSearch() {
@@ -92,49 +92,49 @@ $(document).ready(function(){
         return s;
     };
     updateSortnFilter();
-    update();
+    updateCaller();
 });
 
 function update() {
     var listElemTmplt = `
             <li class="collection-item avatar">
-            <i class="material-icons circle {{color}}">person</i>
-            <span class="title">{{usrname}}</span>
-            <p>{{{prefix}}} {{usrname}} | {{email}}
-            </p>
-            <span class="secondary-content">
-            <a class="waves-effect waves-circle" href="users.php?action=edit&uID={{id}}">
-            <i class="material-icons grey-text text-darken-1">create</i>
-            </a>
-            <a class="waves-effect waves-circle waves-red modal-trigger" href="#modal{{id}}">
-            <i class="material-icons grey-text text-darken-1">delete</i>
-            </a>
-            </span>
-            <div id="modal{{id}}" class="modal">
-            <div class="modal-content black-text">
-            <h4>L&ouml;schen</h4>
-            <p>M&ouml;chtest Du den Benutzer "{{usrname}}" wirklich l&ouml;schen?</p>
-            </div>
-            <div class="modal-footer">
-            <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Abbrechen</a>
-            <a href="users.php?action=del&vID={{id}}" class="modal-action modal-close waves-effect waves-green btn-flat red-text">L&ouml;schen</a>
-            </div>
-            </div>
+                <i class="material-icons circle {{color}}">error_outline</i>
+                <span class="title">[{{errorCode}}]: {{errorString}}
+                    @Citizen: [#{{cID}}]{{citizenName}}</span>
+                <p>
+                    {{timestamp}}
+                </p>
+                <span class="secondary-content">
+                    <a class="waves-effect waves-circle" href="errors.php?action=correctThis&eID={{eID}}">
+                        <i class="material-icons grey-text text-darken-1" style="margin: 0px 5px;">done</i>
+                    </a>
+                    <a class="waves-effect waves-circle waves-red modal-trigger" onclick="$('#modal{{eID}}').openModal();" style="margin: 0px 5px;">
+                        <i class="material-icons grey-text text-darken-1">delete</i>
+                    </a>
+                </span>
+                <div id="modal{{eID}}" class="modal">
+                    <div class="modal-content black-text">
+                        <h4>L&ouml;schen</h4>
+                        <p>M&ouml;chtest Du den Fehler wirklich l&ouml;schen?<br/>Dies kann zu großen Problemen führen</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Abbrechen</a>
+                        <a href="errors.php?action=del&eID={{eID}}" class="modal-action modal-close waves-effect waves-green btn-flat red-text">L&ouml;schen</a>
+                    </div>
+                </div>
             </li>
         `;
     template = Handlebars.compile(listElemTmplt);
     finishedString = [];
     $.getJSON("getLists.php?action=errors&filter="+filter+"&sort="+sort, function (data) {
         if(!(JSON.stringify(oldData) == JSON.stringify(data))) {
-            $("ul#users").html("");
-            data["users"].forEach(function (element, index, array) {
-                if(element["lvl"] == 0) color = "grey";
-                else if(element["lvl"] == 1) color = "green";
-                else if(element["lvl"] == 2) color = "blue";
-                else if(element["lvl"] == 3) color = "orange";
-                else if(element["lvl"] == 4) color = "red";
-                html = template({id: element["id"], usrname: element["usrname"], email: element["email"], prefix: element["prefix"], color: color});
-                $("ul#users").append(html);
+            $("ul#errors").html("");
+            data["errors"].forEach(function (element, index, array) {
+                if(element["errorStatus"] == 0) color = "green";
+                else if(element["errorStatus"] == 1) color = "red";
+                else color = "grey";
+                html = template({eID: element["eID"], cID: element["cID"], errorCode: element["errorCode"], errorString: element["errorString"], citizenName: element["citizenName"], color: color, timestamp: element["timestamp"]});
+                $("ul#errors").append(html);
             });
             console.log("update");
             oldData = data;
@@ -142,6 +142,7 @@ function update() {
             updateSearch();
         }
     });
+    $('.modal-trigger').leanModal();
 }
 
 function updateCaller(){

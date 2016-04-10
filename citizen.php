@@ -16,6 +16,7 @@ require_once 'classes/Permissions.php';
 require_once 'classes/Util.php';
 require_once 'classes/Citizen.php';
 require_once 'classes/Error.php';
+require_once 'classes/TracingEntry.php';
 require_once 'classes/LogEntry.php';
 
 $user = \Entrance\Util::checkSession();

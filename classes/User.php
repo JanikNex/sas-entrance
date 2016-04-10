@@ -194,7 +194,7 @@ class User {
      * @return bool
      */
     public function isActionAllowed($permission) {
-        if($this->uPrefix != 4) {
+        if($this->uPrefix != 27) {
             $pdo = new PDO_MYSQL();
             $res = $pdo->query("SELECT * FROM entrance_user_rights WHERE uID = :uid AND permission = :key", [":uid" => $this->uID, ":key" => $permission]);
             if($res->active == 1) return true;

@@ -12,10 +12,11 @@ require_once 'classes/PDO_MYSQL.php'; //DB Anbindung
 require_once 'libs/dwoo/lib/Dwoo/Autoloader.php'; //Dwoo Laden
 require_once 'classes/User.php';
 require_once 'classes/Error.php';
+require_once 'classes/Citizen.php';
 require_once 'classes/Permissions.php';
 require_once 'classes/Util.php';
 
-$user = \Entrance\Util::checkSession();
+$error = \Entrance\Util::checkSession();
 $pdo = new \Entrance\PDO_MYSQL();
 Dwoo\Autoloader::register();
 $dwoo = new Dwoo\Core();
@@ -42,14 +43,14 @@ if($action == "users") {
 } elseif($action == "errors") {
     $toEncode = ["errors" => []];
     if(!isset($_GET["page"]))
-        $users = \Entrance\Error::getAllErrors($sort, $filter);
+        $errors = \Entrance\Error::getAllErrors($sort, $filter);
     else {
-        $users = \Entrance\Error::getAllErrors($sort, $filter);
+        $errors = \Entrance\Error::getAllErrors($sort, $filter);
         $toEncode["page"] = $_GET["page"];
         $toEncode["maxpage"] = 5;
     }
-    foreach($users as $user) {
-        array_push($toEncode["errors"], $user->asArray());
+    foreach($errors as $error) {
+        array_push($toEncode["errors"], $error->asArray());
     }
     $jsoncode = json_encode($toEncode);
     echo $jsoncode;

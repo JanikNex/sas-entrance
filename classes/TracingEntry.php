@@ -61,7 +61,7 @@ class TracingEntry {
      */
     public static function getAllLogsPerCID($cID) {
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT lID FROM entrance_tracing WHERE cID = :cid ORDER BY tID DESC", [":cid" => $cID]);
+        $stmt = $pdo->queryMulti("SELECT tID FROM entrance_tracing WHERE cID = :cid ORDER BY tID DESC", [":cid" => $cID]);
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\TracingEntry::fromTID");
     }
 
