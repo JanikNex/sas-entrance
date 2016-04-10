@@ -35,6 +35,7 @@ if($action == "new") {
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
     }
 } elseif($action == "edit" and is_numeric($cID)) {
     if ($user->isActionAllowed(PERM_CITIZEN_EDIT)) {
@@ -46,6 +47,7 @@ if($action == "new") {
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
     }
 } elseif($action == "postNew") {
     if ($user->isActionAllowed(PERM_CITIZEN_CREATE)) {
@@ -55,6 +57,7 @@ if($action == "new") {
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
     }
 } elseif($action == "postEdit" and is_numeric($cID)) {
     if($user->isActionAllowed(PERM_CITIZEN_EDIT)) {
@@ -71,6 +74,7 @@ if($action == "new") {
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
     }
 } elseif($action == "del" and is_numeric($cID)) {
     if($user->isActionAllowed(PERM_CITIZEN_DELETE)) {
@@ -81,6 +85,7 @@ if($action == "new") {
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
     }
 } elseif($action == "badcitizen") {
     if($user->isActionAllowed(PERM_CITIZEN_INFO_DIFFERENCE)) {
@@ -95,6 +100,7 @@ if($action == "new") {
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
     }
 } elseif($action == "citizeninfo") {
     if($user->isActionAllowed(PERM_CITIZEN_INFO_SPECIFIC) and is_numeric($cID)) {
@@ -120,6 +126,7 @@ if($action == "new") {
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Personen", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
     }
 } elseif($action == "listInState") {
     if($user->isActionAllowed(PERM_CITIZEN_PRESENT_LIST)) {
@@ -134,6 +141,7 @@ if($action == "new") {
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
     }
 } elseif($action == "counter") {
     if($user->isActionAllowed(PERM_CITIZEN_PRESENT_NUMBER)) {
