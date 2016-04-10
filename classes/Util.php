@@ -169,11 +169,16 @@ namespace Entrance;
          else return false;
      }
 
-     public static function mailToAdmins($msg){
+     /**
+      * Sends a mail to all Admins
+      * @param string $topic 
+      * @param $msg
+      */
+     public static function mailToAdmins($topic = "SaSEntrance - Notification", $msg){
          $admins = User::getAllAdmins();
-         $header = 'From: jrappmz@gmail.com' . "\r\n";
+         $header = 'From: fakemail657@gmail.com' . "\r\n";
          foreach ($admins as $admin){
-             mail($admin->uEmail, 'SaSEntrance - Notification', $msg, $header);
+             mail($admin->uEmail, $topic, $msg, $header);
          }
      }
  }
