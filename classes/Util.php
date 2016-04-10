@@ -171,10 +171,10 @@ namespace Entrance;
 
      /**
       * Sends a mail to all Admins
-      * @param string $topic 
+      * @param string $topic
       * @param $msg
       */
-     public static function mailToAdmins($topic = "SaSEntrance - Notification", $msg){
+     public static function mailToAdmins($msg, $topic = "SaSEntrance - Notification"){
          $admins = User::getAllAdmins();
          $header = 'From: fakemail657@gmail.com' . "\r\n";
          foreach ($admins as $admin){
