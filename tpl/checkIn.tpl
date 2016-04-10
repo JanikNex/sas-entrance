@@ -34,6 +34,23 @@
                                     <p class="red-text"><img src="checkFail.png" height="16px">Scan Fehlgeschlagen.<br/>
                                         Schlopolis ist momentan <b>geschlossen</b>! Keine Buchungsvorgänge möglich.
                                     </p>
+                                {elseif $page.scan.success == 4}
+                                    <p class="green-text"><img src="checkOk.png" height="16px">Scan Erfolgreich.<br/></p>
+                                    <p class="red-text">Diese Person wird polizeilich <b>gesucht</b>! Übergeben Sie diese bitte umgehend der Polizei!</p>
+                                {elseif $page.scan.success == 5}
+                                    <p class="red-text"><img src="checkFail.png" height="16px"> Scan Fehlgeschlagen. Achtung, Person ist jetzt geperrt.<br/>
+                                        [{$page.error.errorCode}]:
+                                        {if $page.error.errorCode == 1}Error@CheckIn | AlreadyCheckedIn {/if}
+                                        {if $page.error.errorCode == 2}Error@CheckOut | AlreadyCheckedOut {/if}
+                                        {if $page.error.errorCode == 3}Error@CheckOut | NoCheckOutYesterday {/if}
+                                        {if $page.error.errorCode == 4}Error@CheckIn | CitizenLocked {/if}
+                                        {if $page.error.errorCode == 5}Error@CheckOut | CitizenLocked {/if}
+                                        {if $page.error.errorCode == 6}Error@CheckIn | CitizenWanted {/if}
+                                        {if $page.error.errorCode == 7}Error@CheckOut | CitizenWanted {/if}
+                                        {if $page.error.errorCode == 8}Error@CheckIn | NoCitizenFound {/if}
+                                        {if $page.error.errorCode == 9}Error@CheckOut | NoCitizenFound {/if}
+                                    </p>
+                                    <p class="red-text">Diese Person wird polizeilich <b>gesucht</b>! Übergeben Sie diese bitte umgehend der Polizei!</p>
                                 {/if}
                             </div>
                         </div>

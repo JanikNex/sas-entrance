@@ -32,7 +32,11 @@ if(\Entrance\Util::isStateOpen()) {
             if (\Entrance\Citizen::doesBarcodeExist($_POST["barcode"])) {
                 $citizen = \Entrance\Citizen::fromBarcode($_POST["barcode"]);
                 if ($citizen->tryCheckIn($user)) {
-                    $pgdata["page"]["scan"]["success"] = 1;
+                    if($citizen->isCitizenWanted()){
+                        $pgdata["page"]["scan"]["success"] = 4;
+                    }else {
+                        $pgdata["page"]["scan"]["success"] = 1;
+                    }
                     $pgdata["page"]["citizen"] = $citizen->asArray();
                     $itsLogs = \Entrance\LogEntry::getAllLogsPerCID($citizen->getCID());
                     for ($i = 0; $i < sizeof($itsLogs); $i++) {
@@ -49,7 +53,11 @@ if(\Entrance\Util::isStateOpen()) {
             }
             goto output;
             cError: {
-                $pgdata["page"]["scan"]["success"] = 2;
+                if($citizen->isCitizenWanted()){
+                    $pgdata["page"]["scan"]["success"] = 5;
+                }else {
+                    $pgdata["page"]["scan"]["success"] = 2;
+                }
                 $pgdata["page"]["citizen"] = $citizen->asArray();
                 $itsLogs = \Entrance\LogEntry::getAllLogsPerCID($citizen->getCID());
                 for ($i = 0; $i < sizeof($itsLogs); $i++) {
@@ -74,21 +82,31 @@ if(\Entrance\Util::isStateOpen()) {
 
             if (\Entrance\Citizen::doesBarcodeExist($_POST["barcode"])) {
                 $citizen = \Entrance\Citizen::fromBarcode($_POST["barcode"]);
-                if ($citizen->hasCitizenEnoughTime() or $_POST["force"] == "true") {
-                    if ($citizen->tryCheckOut($user)) {
-                        $pgdata["page"]["scan"]["success"] = 1;
+                if(!$citizen->isCitizenWanted()) {
+                    if ($citizen->hasCitizenEnoughTime() or $_POST["force"] == "true") {
+                        if ($citizen->tryCheckOut($user)) {
+                            $pgdata["page"]["scan"]["success"] = 1;
+                            $pgdata["page"]["citizen"] = $citizen->asArray();
+                            $itsLogs = \Entrance\LogEntry::getAllLogsPerCID($citizen->getCID());
+                            for ($i = 0; $i < sizeof($itsLogs); $i++) {
+                                $pgdata["page"]["logs"][$i] = $itsLogs[$i]->asArray();
+                                if ($i >= 1) break;
+                            }
+                        } else goto cError;
+                    } else {
+                        $pgdata["page"]["barcode"] = $_POST["barcode"];
                         $pgdata["page"]["citizen"] = $citizen->asArray();
-                        $itsLogs = \Entrance\LogEntry::getAllLogsPerCID($citizen->getCID());
-                        for ($i = 0; $i < sizeof($itsLogs); $i++) {
-                            $pgdata["page"]["logs"][$i] = $itsLogs[$i]->asArray();
-                            if ($i >= 1) break;
-                        }
-                    } else goto cError;
-                } else {
-                    $pgdata["page"]["barcode"] = $_POST["barcode"];
+                        $dwoo->output("tpl/checkOutConfirm.tpl", $pgdata);
+                        exit;
+                    }
+                }else{
+                    $pgdata["page"]["scan"]["success"] = 4;
                     $pgdata["page"]["citizen"] = $citizen->asArray();
-                    $dwoo->output("tpl/checkOutConfirm.tpl", $pgdata);
-                    exit;
+                    $itsLogs = \Entrance\LogEntry::getAllLogsPerCID($citizen->getCID());
+                    for ($i = 0; $i < sizeof($itsLogs); $i++) {
+                        $pgdata["page"]["logs"][$i] = $itsLogs[$i]->asArray();
+                        if ($i >= 1) break;
+                    }
                 }
             } else {
                 \Entrance\Error::createError(0, 9);
