@@ -11,6 +11,7 @@ require_once "classes/Util.php";
 require_once 'classes/PDO_MYSQL.php'; //DB Anbindung
 require_once 'libs/dwoo/lib/Dwoo/Autoloader.php'; //Dwoo Laden
 require_once 'classes/User.php';
+require_once 'classes/Error.php';
 require_once 'classes/Permissions.php';
 require_once 'classes/Util.php';
 
@@ -34,6 +35,21 @@ if($action == "users") {
     }
     foreach($users as $user) {
         array_push($toEncode["users"], $user->asArray());
+    }
+    $jsoncode = json_encode($toEncode);
+    echo $jsoncode;
+    exit;
+} elseif($action == "errors") {
+    $toEncode = ["errors" => []];
+    if(!isset($_GET["page"]))
+        $users = \Entrance\Error::getAllErrors($sort, $filter);
+    else {
+        $users = \Entrance\Error::getAllErrors($sort, $filter);
+        $toEncode["page"] = $_GET["page"];
+        $toEncode["maxpage"] = 5;
+    }
+    foreach($users as $user) {
+        array_push($toEncode["errors"], $user->asArray());
     }
     $jsoncode = json_encode($toEncode);
     echo $jsoncode;
