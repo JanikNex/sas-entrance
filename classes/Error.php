@@ -73,6 +73,16 @@ class Error{
     }
 
     /**
+     * Returns the size of active Errors
+     * @return int
+     */
+    public static function getSizeOfActiveErrors() {
+        $pdo = new PDO_MYSQL();
+        $stmt = $pdo->queryMulti("SELECT eID FROM entrance_error WHERE active = 1");
+        return sizeof($stmt);
+    }
+
+    /**
      * @param $cID
      * @return Error[]
      */
@@ -233,6 +243,12 @@ class Error{
         $this->active = $active;
     }
 
-
+    /**
+     * @return mixed
+     */
+    public function isActive() {
+        if($this->getActive()==1) return true;
+        else return false;
+    }
 
 }

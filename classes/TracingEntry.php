@@ -54,6 +54,16 @@ class TracingEntry {
     }
 
     /**
+     * Returns the size of active Tracings
+     * @return int
+     */
+    public static function getSizeOfActiveTracings() {
+        $pdo = new PDO_MYSQL();
+        $stmt = $pdo->queryMulti("SELECT tID FROM entrance_tracing WHERE active = 1");
+        return sizeof($stmt);
+    }
+
+    /**
      * @see getAllLogs(), but for a specifc cID only
      *
      * @param int $cID
