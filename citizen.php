@@ -189,6 +189,26 @@ if($action == "new") {
         $dwoo->output("tpl/noPrivilegesSpecial.tpl", $pgdata);
         exit();
     }
+} elseif($action == "addTracing" and is_numeric($cID)) {
+    if($user->isActionAllowed(PERM_TRACING_ADD)) {
+        \Entrance\TracingEntry::createTracingEntry(\Entrance\Citizen::fromCID($cID),$user);
+        \Entrance\Util::forwardTo("citizen.php?action=citizeninfo&cID=".$cID);
+        exit;
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Fahndung hinzufügen", $user);
+        $dwoo->output("tpl/noPrivilegesSpecial.tpl", $pgdata);
+        exit();
+    }
+} elseif($action == "removeTracing" and is_numeric($cID)) {
+    if($user->isActionAllowed(PERM_TRACING_REMOVE)) {
+        \Entrance\TracingEntry::removeTracing(\Entrance\Citizen::fromCID($cID));
+        \Entrance\Util::forwardTo("citizen.php?action=citizeninfo&cID=".$cID);
+        exit;
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Fahndung entfernen", $user);
+        $dwoo->output("tpl/noPrivilegesSpecial.tpl", $pgdata);
+        exit();
+    }
 }
 
 

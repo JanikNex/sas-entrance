@@ -291,6 +291,7 @@ class Citizen {
             "birthdayNice" => date("d. M Y", strtotime($this->birthday))." (".Util::getAge($this->birthday).")",
             "barcode" => $this->barcode,
             "inState" => $this->isCitizenInState(),
+            "isWanted" => $this->isCitizenWanted(),
             "locked" => $this->isCitizenLocked() ? 1:0,
             "timeToday" => $this->getTimePerDay(date("Y-m-d")) != 0 ? gmdate("H\h i\m s\s",$this->getTimePerDay(date("Y-m-d"))) : "<i>Nicht anwesend</i>",
             "timeProject" =>$this->getTimePerProject() != 0 ? Util::seconds_to_time($this->getTimePerProject()) : "<i>Nicht anwesend</i>"

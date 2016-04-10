@@ -19,6 +19,19 @@
                                 {loop $page.times}<p><b>Zeit am {$date}:</b> {$time}</p>{/loop}
                                 <p><b>Gesamt:</b> {$page.timeTotal}</p>
                             {/if}
+                            <p><b>Fahndungsstatus:</b>
+                                {if $page.citizen.isWanted}<span class="red-text">gesucht</span>
+                                {else}<span class="green-text">nicht gesucht</span>
+                                {/if}
+
+                            </p>
+                            {if $header.perm.tracing_add == 1}
+                                {if $page.citizen.isWanted}
+                                    <a class="btn red" href="citizen.php?action=addTracing&cID={$page.citizen.id}">Fahndung hinzufügen</a>
+                                {else}
+                                    <a class="btn green" href="citizen.php?action=removeTracing&cID={$page.citizen.id}">Fahndung entfernen</a>
+                                {/if}
+                            {/if}
                         </div>
                     </div>
                     <div class="col s12 offset-m1 m6">
