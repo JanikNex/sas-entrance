@@ -219,7 +219,6 @@ class LogEntry {
             [":cID" => $this->cID, ":lID" => $this->lID]);
         $entries = $stmt -> fetchAll(PDO::FETCH_FUNC, "\\Entrance\\LogEntry::fromLID");
         if(sizeof($entries) == 2){
-            var_dump($entries);
             return $entries[0]->getEntrySuccessStatus() or $entries[1]->getEntrySuccessStatus();
         }else{
             return false;

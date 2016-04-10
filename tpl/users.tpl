@@ -46,74 +46,99 @@
                     {if $page.filter != "User"}<li>  <a href="?sort={$page.sort}&filter=User">User</a></li>{/if}
                 </ul>
             </div>
-            <ul class="collection col s12">
-                {loop $page.items}
-                    <li class="collection-item avatar">
-                        <i class="material-icons circle {if $lvl == 4}red{elseif $lvl == 3}orange{elseif $lvl == 2}blue{elseif $lvl == 1}green{else}grey{/if}">person</i>
-                        <span class="title">{$usrname}</span>
-                        <p>{$prefix} {$usrname} | {$email}
-                        </p>
-                        <span class="secondary-content">
-                            <a class="waves-effect waves-circle" href="users.php?action=edit&uID={$id}">
-                                <i class="material-icons grey-text text-darken-1">create</i>
-                            </a>
-                            <a class="waves-effect waves-circle waves-red modal-trigger" href="#modal{$id}">
-                                <i class="material-icons grey-text text-darken-1">delete</i>
-                            </a>
-                        </span>
-                        <div id="modal{$id}" class="modal">
-                            <div class="modal-content black-text">
-                                <h4>L&ouml;schen</h4>
-                                <p>M&ouml;chtest Du den Benutzer "{$usrname}" wirklich l&ouml;schen?</p>
-                            </div>
-                            <div class="modal-footer">
-                                <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Abbrechen</a>
-                                <a href="users.php?action=del&vID={$id}" class="modal-action modal-close waves-effect waves-green btn-flat red-text">L&ouml;schen</a>
-                            </div>
-                        </div>
-                    </li>
-                {/loop}
+            <ul class="collection col s12" id="users">
+
             </ul>
         </div>
     </div>
 </main>
 <script>
-  $(document).ready(function(){
-      // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
-      $('.modal-trigger').leanModal();
-      $("#filter").keyup(function(){
+    $(document).ready(function(){
+        // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+        $('.modal-trigger').leanModal();
+        $("#filter").keyup(function(){
 
-          // Retrieve the input field text and reset the count to zero
-          var filter = $(this).val(), count = 0;
+            // Retrieve the input field text and reset the count to zero
+            var filter = $(this).val(), count = 0;
 
-          // Loop through the comment list
-          $("ul.collection li").each(function(){
+            // Loop through the comment list
+            $("ul.collection li").each(function(){
 
-              // If the list item does not contain the text phrase fade it out
-              if ($(this).text().search(new RegExp(filter, "i")) < 0) {
-                  $(this).fadeOut();
+                // If the list item does not contain the text phrase fade it out
+                if ($(this).text().search(new RegExp(filter, "i")) < 0) {
+                    $(this).fadeOut();
+                // Show the list item if the phrase matches and increase the count by 1
+                } else {
+                    $(this).show();
+                    count++;
+                }
+            });
 
-                  // Show the list item if the phrase matches and increase the count by 1
-              } else {
-                  $(this).show();
-                  count++;
-              }
-          });
+            // Update the count
+            var numberItems = count;
+        });
 
-          // Update the count
-          var numberItems = count;
-      });
-  });
 
-  $('.dropdown-button').dropdown({
-      inDuration: 300,
-      outDuration: 225,
-      constrain_width: false, // Does not change width of dropdown to that of the activator
-      hover: false, // Activate on hover
-      gutter: 0, // Spacing from edge
-      belowOrigin: true, // Displays dropdown below the button
-      alignment: 'right' // Displays dropdown with edge aligned to the left of button
-  });
+            String.prototype.format = function() {
+            var s = arguments[0];
+            for (var i = 0; i < arguments.length - 1; i++) {
+            var reg = new RegExp("\\{"{"}" + i + "\\{"}"}", "gm");
+            s = s.replace(reg, arguments[i + 1]);
+        }
 
+        return s;
+        }
+        update();
+    });
+
+    function update() {
+        listElemTmplt = `
+            <li class="collection-item avatar">
+            <i class="material-icons circle {"{{color}}"}">person</i>
+            <span class="title">{"{{usrname}}"}</span>
+            <p>{"{{prefix}}"} {"{{usrname}}"} | {"{{email}}"}
+            </p>
+            <span class="secondary-content">
+            <a class="waves-effect waves-circle" href="users.php?action=edit&uID={"{{id}}"}">
+            <i class="material-icons grey-text text-darken-1">create</i>
+            </a>
+            <a class="waves-effect waves-circle waves-red modal-trigger" href="#modal{"{{id}}"}">
+            <i class="material-icons grey-text text-darken-1">delete</i>
+            </a>
+            </span>
+            <div id="modal{"{{id}}"}" class="modal">
+            <div class="modal-content black-text">
+            <h4>L&ouml;schen</h4>
+            <p>M&ouml;chtest Du den Benutzer "{"{{usrname}}"}" wirklich l&ouml;schen?</p>
+            </div>
+            <div class="modal-footer">
+            <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Abbrechen</a>
+            <a href="users.php?action=del&vID={"{{id}}"}" class="modal-action modal-close waves-effect waves-green btn-flat red-text">L&ouml;schen</a>
+            </div>
+            </div>
+            </li>
+        `;
+        template = Handlebars.compile(listElemTmplt);
+        finishedString = [];
+        $.getJSON("getLists.php?action=users&filter=Alle&sort=descID", function (data) {
+            console.log(data);
+            $("ul#users").html("");
+            data["users"].forEach(function (element, index, array) {
+                html = template({"{"}id: element["id"], usrname: element["usrname"], email: element["email"], prefix: element["prefix"]{"}"});
+                $("ul#users").append(html);
+            });
+        });
+        window.setTimeout("update()", 100)
+    }
+
+    $('.dropdown-button').dropdown({
+        inDuration: 300,
+        outDuration: 225,
+        constrain_width: false, // Does not change width of dropdown to that of the activator
+        hover: false, // Activate on hover
+        gutter: 0, // Spacing from edge
+        belowOrigin: true, // Displays dropdown below the button
+        alignment: 'right' // Displays dropdown with edge aligned to the left of button
+    });
 </script>
 {include file="newEnd.tpl"}

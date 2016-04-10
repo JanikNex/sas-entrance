@@ -141,7 +141,7 @@ if(\Entrance\Util::isStateOpen()) {
         }
     }
 } else{
-    if($action == "checkIn"){
+    if($action == "checkIn" or $action == "checkInScan"){
         $pgdata = \Entrance\Util::getEditorPageDataStub("Einbuchen", $user);
         $pgdata["page"]["scan"]["success"] = 3;
         $dwoo->output("tpl/checkIn.tpl", $pgdata);

@@ -18,7 +18,7 @@
                                 {if $page.scan.success == 1}
                                     <p class="lime-text"><img src="checkOk.png" height="16px"> Scan Erfolgreich.</p>
                                 {elseif $page.scan.success == 2}
-                                    <p class="red-text"><img src="checkFail.png" height="16px"> Scan Fehlgeschlagen. Achtung, Person ist jetzt geperrt. Bitte nicht an (Y/J)an(n)i(c)k wenden, wir warn's nicht!<br/>
+                                    <p class="red-text"><img src="checkFail.png" height="16px"> Scan Fehlgeschlagen. Achtung, Person ist jetzt geperrt.<br/>
                                     [{$page.error.errorCode}]:
                                     {if $page.error.errorCode == 1}Error@CheckIn | AlreadyCheckedIn {/if}
                                     {if $page.error.errorCode == 2}Error@CheckOut | AlreadyCheckedOut {/if}

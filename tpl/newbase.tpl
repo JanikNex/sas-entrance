@@ -3,7 +3,9 @@
     <head>
         <title>Sas Entrance - {$args.title}</title>
         <!--Import Google Icon Font-->
-        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Roboto+Mono' rel='stylesheet' type='text/css'>
         <!--Import materialize.css-->
         <link type="text/css" rel="stylesheet" href="libs/materialize/css/materialize.min.css"  media="screen,projection"/>
         <link type="text/css" rel="stylesheet" href="css/style.css" />
@@ -21,6 +23,7 @@
         <script type="text/javascript" src="libs/jquery-2.2.1.min.js"></script>
         <script type="text/javascript" src="libs/materialize/js/materialize.min.js"></script>
         <script type="text/javascript" src="libs/jquery-barcode.min.js"></script>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
 
         <!-- Dropdown Structure -->
         <ul id="dropdown1" class="dropdown-content">
@@ -50,7 +53,7 @@
                                 <a class="collapsible-header">ICH<i class="mdi-navigation-arrow-drop-down"></i></a>
                                 <div class="collapsible-body">
                                     <ul>
-                                        <li><a href="#!">Dashboard</a></li>
+                                        <li><a href="index.php">Startseite</a></li>
                                         <li><a href="users.php?action=edit&uID={$args.uID}">Mein Account</a></li>
                                         <li class="hide-on-large-only"><a href="logon.php?logout=1">Abmelden</a></li>
                                     </ul>
@@ -122,6 +125,7 @@
                                         {if $args.perm.admin_database == 1}<li><a href="adminer-4.2.4-mysql.php">Adminer (Datenbank)</a></li>{/if}
                                         {if $args.perm.admin_errors == 1}<li><a href="errors.php">Fehlerliste</a></li>{/if}
                                         {if $args.perm.admin_kickall == 1}<li><a href="citizen.php?action=kickall">Alle Rausschmeißen</a></li>{/if}
+                                        {if $args.perm.admin_state_dashboard == 1}<li><a href="dashboard.php">Staats Dashboard</a></li>{/if}
                                     </ul>
                                 </div>
                             </li>
