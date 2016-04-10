@@ -132,7 +132,8 @@
                         </ul>
                     </li>
                     <li class="divider"></li>
-                    <li class="indigo" style="position: absolute; width:100%; bottom: 60px; font-size: 12px; line-height: 16px; padding: 10px;">
+                    <li style="height: 100px"></li>
+                    <li class="indigo" style="position: fixed; width: 240px; bottom: 0px; font-size: 12px; line-height: 16px; padding:10px">
                         Entrance Version 0.5.1b<br/>© 2016 Yannick Félix & Janik Rapp
                     </li>
                     {/if}
