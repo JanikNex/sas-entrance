@@ -17,6 +17,7 @@ require_once 'classes/Util.php';
 require_once 'classes/Error.php';
 require_once 'classes/Citizen.php';
 require_once 'classes/LogEntry.php';
+require_once 'classes/TracingEntry.php';
 
 $user = \Entrance\Util::checkSession();
 $pdo = new \Entrance\PDO_MYSQL();
