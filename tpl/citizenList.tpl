@@ -65,7 +65,9 @@
                             {elseif $classlevel==14}Lehrer
                             {elseif $classlevel==15}Visum
                             {else}Kurier{/if}<br/>
-                            Zeit heute: {$timeToday} | Zeit gesamt: {$timeProject}
+                            {if $header.perm.citizen_info_difference == 1}
+                                Zeit heute: {$timeToday} | Zeit gesamt: {$timeProject}
+                            {/if}
                         </p>
                         <span class="secondary-content">
                             <a class="waves-effect waves-circle" href="citizen.php?action=edit&cID={$id}">
