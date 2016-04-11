@@ -49,7 +49,18 @@ class TracingEntry {
      */
     public static function getAllLogs() {
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT lID FROM entrance_tracing ORDER BY tID");
+        $stmt = $pdo->queryMulti("SELECT tID FROM entrance_tracing ORDER BY tID");
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\TracingEntry::fromTID");
+    }
+    
+    /**
+     * Returns all active logs found in the db
+     *
+     * @return TracingEntry[]
+     */
+    public static function getAllActiveLogs() {
+        $pdo = new PDO_MYSQL();
+        $stmt = $pdo->queryMulti("SELECT tID FROM entrance_tracing WHERE active = 1 ORDER BY tID");
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\TracingEntry::fromTID");
     }
 
@@ -58,9 +69,7 @@ class TracingEntry {
      * @return int
      */
     public static function getSizeOfActiveTracings() {
-        $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT tID FROM entrance_tracing WHERE active = 1");
-        return sizeof($stmt);
+        return sizeof(self::getAllActiveLogs());
     }
 
     /**

@@ -212,6 +212,22 @@ class Citizen {
         }
         return $courrierOutOfState;
     }
+
+    /**
+     * Returns all wanted citizens
+     *
+     * @return Citizen[]
+     */
+    public static function getAllWantedCitizens() {
+        $citizens = self::getAllCitizen();
+        $wantedCitizens = [];
+        foreach($citizens as $citizen){
+            if($citizen -> isCitizenWanted())
+                array_push($wantedCitizens, $citizen);
+        }
+        return $wantedCitizens;
+    }
+    
     /**
      * Count of @see getAllCitizenInState()
      *

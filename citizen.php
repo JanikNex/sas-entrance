@@ -102,6 +102,21 @@ if($action == "new") {
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
         exit;
     }
+} elseif($action == "wantedcitizen") {
+    if($user->isActionAllowed(PERM_TRACING_LIST)) {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Fahndungsliste", $user);
+        $citizens = \Entrance\Citizen::getAllWantedCitizens();
+        for ($i = 0; $i < sizeof($citizens); $i++) {
+            $pgdata["page"]["items"][$i] = $citizens[$i]->asArray();
+        }
+
+        $dwoo->output("tpl/citizenList.tpl", $pgdata);
+        exit;
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Schüler", $user);
+        $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
+    }
 } elseif($action == "citizeninfo") {
     if($user->isActionAllowed(PERM_CITIZEN_INFO_SPECIFIC) and is_numeric($cID)) {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Schülerinfo", $user, true, false, "citizen.php");
