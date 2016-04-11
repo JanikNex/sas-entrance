@@ -23,12 +23,13 @@
                                 {if $page.citizen.isWanted}<span class="red-text">gesucht</span>
                                 {else}<span class="green-text">nicht gesucht</span>
                                 {/if}
-
                             </p>
-                            {if $header.perm.tracing_add == 1}
-                                {if $page.citizen.isWanted}
+                            {if $page.citizen.isWanted}
+                                {if $header.perm.tracing_add == 1}
                                     <a class="btn red" href="citizen.php?action=addTracing&cID={$page.citizen.id}">Fahndung hinzufügen</a>
-                                {else}
+                                {/if}
+                            {else}
+                                {if $header.perm.tracing_remove == 1}
                                     <a class="btn green" href="citizen.php?action=removeTracing&cID={$page.citizen.id}">Fahndung entfernen</a>
                                 {/if}
                             {/if}
