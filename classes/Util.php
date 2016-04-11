@@ -176,7 +176,7 @@ namespace Entrance;
       */
      public static function mailToAdmins($msg, $topic = "SaSEntrance - Notification"){
          $admins = User::getAllAdmins();
-         $header = 'From: fakemail657@gmail.com' . "\r\n";
+         $header = 'From: SaSEntrance <fakemail657@gmail.com>' . "\r\n";
          foreach ($admins as $admin){
              if($admin -> isActionAllowed(PERM_ADMIN_NOTIFY_RECEIVE)) {
                  mail($admin->getUEmail(), $topic, $msg, $header);
