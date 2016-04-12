@@ -173,6 +173,10 @@ class Error{
             "errorString" => self::getErrorCodeStringForErrorCode($this->errorcode)
         ];
     }
+
+    public function asString() {
+        return json_encode($this->asArray());
+    }
     /**
      * @return mixed
      */

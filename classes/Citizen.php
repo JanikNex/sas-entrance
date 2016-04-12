@@ -147,7 +147,21 @@ class Citizen {
      *
      * @return Citizen[]
      */
-    public static function getAllStudents() {
+    public static function getAllStudents($sort, $filter) {
+        $pdo = new PDO_MYSQL();
+        if($filter != "Gesperrt") {
+            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen " . CFILTERING[$filter] . CSORTING[$sort]);
+            return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+        } else {
+            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen " . CSORTING[$sort]);
+            $array = $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+            $r_citizen = [];
+            foreach($array as $citizen) {
+                if($citizen->isCitizenLocked())
+                    array_push($r_citizen, $citizen);
+            }
+            return $r_citizen;
+        }
         $pdo = new PDO_MYSQL();
         $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE classlevel < 14 ORDER BY cID");
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
@@ -158,8 +172,8 @@ class Citizen {
      *
      * @return Citizen[]
      */
-    public static function getAllCitizenInState() {
-        $citizens = self::getAllCitizen();
+    public static function getAllCitizenInState($sort, $filter) {
+        $citizens = self::getAllCitizen($sort, $filter);
         $citizenInState = [];
         foreach($citizens as $citizen){
             if($citizen -> isCitizenInState() == 0 && !$citizen -> isCourrier())
@@ -268,8 +282,8 @@ class Citizen {
      *
      * @return Citizen[]
      */
-    public static function getAllBadCitizen() {
-        $citizens = self::getAllStudents();
+    public static function getAllBadCitizen($sort, $filter) {
+        $citizens = self::getAllStudents($sort, $filter);
         $days = LogEntry::getProjectDays();
         $badCitizens = [];
         foreach($citizens as $citizen){
@@ -312,6 +326,10 @@ class Citizen {
             "timeToday" => $this->getTimePerDay(date("Y-m-d")) != 0 ? gmdate("H\h i\m s\s",$this->getTimePerDay(date("Y-m-d"))) : "<i>Nicht anwesend</i>",
             "timeProject" =>$this->getTimePerProject() != 0 ? Util::seconds_to_time($this->getTimePerProject()) : "<i>Nicht anwesend</i>"
         ];
+    }
+
+    public function asString() {
+        return json_encode($this->asArray());
     }
 
     /**

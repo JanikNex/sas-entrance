@@ -44,8 +44,9 @@
                     <li><a onclick="setFilter('User')">User</a></li>
                 </ul>
             </div>
+            <ul id="pages" class="pagination col s12 center">
+            </ul>
             <ul class="collection col s12" id="users">
-
             </ul>
             <div
         </div>

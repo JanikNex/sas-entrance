@@ -6,6 +6,8 @@
 var oldData = "";
 var sort = "descDate";
 var filter = "Alle";
+var requestPage = 1;
+var searchString = "";
 
 function setFilter(afilter) {
     filter = afilter;
@@ -31,49 +33,39 @@ function updateSortnFilter() {
     $("#currFilter").html("<i class=\"mdi mdi-filter\"></i> "+filter);
 }
 
-function updateSearch() {
-    // Retrieve the input field text and reset the count to zero
-    var filter = $("#filter").val(), count = 0;
+function updatePages(currPage, maxPage) {
+    if(currPage > maxPage) {
+        requestPage = maxPage;
+    }
+    nextPage = parseInt(currPage)+1;
+    prevPage = currPage-1;
+    $("#pages").html("");
+    if(currPage <= 1) $("#pages").append("<li class=\"disabled\"><a><i class=\"material-icons\">chevron_left</i></a></li>");
+    else $("#pages").append("<li class=\"waves-effect\"><a onclick=\"setPage("+prevPage+")\"><i class=\"material-icons\">chevron_left</i></a></li>");
 
-    // Loop through the comment list
-    $("ul.collection li").each(function(){
-
-        // If the list item does not contain the text phrase fade it out
-        if ($(this).text().search(new RegExp(filter, "i")) < 0) {
-            $(this).hide();
-            // Show the list item if the phrase matches and increase the count by 1
+    for(i = 1; i <= maxPage; i++) {
+        if(i != currPage) {
+            $("#pages").append("<li class=\"waves-effect\"><a onclick=\"setPage("+i+")\">"+i+"</a></li>");
         } else {
-            $(this).show();
-            count++;
+            $("#pages").append("<li class=\"active indigo\"><a onclick=\"setPage("+i+")\">"+i+"</a></li>");
         }
-    });
+    }
 
-    // Update the count
-    var numberItems = count;
+    if(currPage >= maxPage) $("#pages").append("<li class=\"disabled\"><a><i class=\"material-icons\">chevron_right</i></a></li>");
+    else $("#pages").append("<li class=\"waves-effect\"><a onclick=\"setPage("+nextPage+")\"><i class=\"material-icons\">chevron_right</i></a></li>");
+}
+
+function setPage(apage) {
+    requestPage = apage;
+    update();
 }
 
 $(document).ready(function(){
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal-trigger').leanModal();
     $("#filter").keyup(function () {
-        // Retrieve the input field text and reset the count to zero
-        var filter = $(this).val(), count = 0;
-
-        // Loop through the comment list
-        $("ul.collection li").each(function(){
-
-            // If the list item does not contain the text phrase fade it out
-            if ($(this).text().search(new RegExp(filter, "i")) < 0) {
-                $(this).fadeOut();
-                // Show the list item if the phrase matches and increase the count by 1
-            } else {
-                $(this).show();
-                count++;
-            }
-        });
-
-        // Update the count
-        var numberItems = count;
+        searchString = $(this).val();
+        update();
     });
 
     // Initialize collapse button
@@ -126,7 +118,7 @@ function update() {
         `;
     template = Handlebars.compile(listElemTmplt);
     finishedString = [];
-    $.getJSON("getLists.php?action=errors&filter="+filter+"&sort="+sort, function (data) {
+    $.getJSON("getLists.php?action=errors&search="+searchString+"&page="+requestPage+"&filter="+filter+"&sort="+sort, function (data) {
         if(!(JSON.stringify(oldData) == JSON.stringify(data))) {
             $("ul#errors").html("");
             data["errors"].forEach(function (element, index, array) {
@@ -136,10 +128,10 @@ function update() {
                 html = template({eID: element["eID"], cID: element["cID"], errorCode: element["errorCode"], errorString: element["errorString"], citizenName: element["citizenName"], color: color, timestamp: element["timestamp"]});
                 $("ul#errors").append(html);
             });
+            updatePages(data["page"], data["maxpage"]);
             console.log("update");
             oldData = data;
             updateSortnFilter();
-            updateSearch();
         }
     });
     $('.modal-trigger').leanModal();

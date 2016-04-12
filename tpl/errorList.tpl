@@ -45,6 +45,8 @@
                     <li><a onclick="setFilter('OUTNoCitizenFound')"     >OUTNoCitizenFound     </a></li>
                 </ul>
             </div>
+            <ul id="pages" class="pagination col s12 center">
+            </ul>
             <ul id="errors" class="collection col s12">
 
             </ul>

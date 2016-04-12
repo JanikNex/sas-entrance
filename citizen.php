@@ -90,10 +90,7 @@ if($action == "new") {
 } elseif($action == "badcitizen") {
     if($user->isActionAllowed(PERM_CITIZEN_INFO_DIFFERENCE)) {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Böse Schüler", $user);
-        $citizens = \Entrance\Citizen::getAllBadCitizen();
-        for ($i = 0; $i < sizeof($citizens); $i++) {
-            $pgdata["page"]["items"][$i] = $citizens[$i]->asArray();
-        }
+        $pgdata["page"]["type"] = "Bad";
 
         $dwoo->output("tpl/citizenList.tpl", $pgdata);
         exit;
@@ -105,10 +102,7 @@ if($action == "new") {
 } elseif($action == "wantedcitizen") {
     if($user->isActionAllowed(PERM_TRACING_LIST)) {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Fahndungsliste", $user);
-        $citizens = \Entrance\Citizen::getAllWantedCitizens();
-        for ($i = 0; $i < sizeof($citizens); $i++) {
-            $pgdata["page"]["items"][$i] = $citizens[$i]->asArray();
-        }
+        $pgdata["page"]["type"] = "Wanted";
 
         $dwoo->output("tpl/citizenList.tpl", $pgdata);
         exit;
@@ -146,10 +140,7 @@ if($action == "new") {
 } elseif($action == "listInState") {
     if($user->isActionAllowed(PERM_CITIZEN_PRESENT_LIST)) {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Personen im Staat", $user);
-        $citizens = \Entrance\Citizen::getAllCitizenInState();
-        for ($i = 0; $i < sizeof($citizens); $i++) {
-            $pgdata["page"]["items"][$i] = $citizens[$i]->asArray();
-        }
+        $pgdata["page"]["type"] = "InState";
 
         $dwoo->output("tpl/citizenList.tpl", $pgdata);
         exit;
@@ -229,12 +220,7 @@ if($action == "new") {
 
 if($user->isActionAllowed(PERM_CITIZEN_VIEW)) {
     $pgdata = \Entrance\Util::getEditorPageDataStub("Person", $user);
-    $citizens = \Entrance\Citizen::getAllCitizen($_GET["sort"], $_GET["filter"]);
-    for ($i = 0; $i < sizeof($citizens); $i++) {
-        $pgdata["page"]["items"][$i] = $citizens[$i]->asArray();
-    }
-    if(isset($_GET["sort"])) $pgdata["page"]["sort"] = $_GET["sort"]; else $pgdata["page"]["sort"] = "ascName";
-    if(isset($_GET["filter"])) $pgdata["page"]["filter"] = $_GET["filter"]; else $pgdata["page"]["filter"] = "Alle";
+    $pgdata["page"]["type"] = "";
 
     $dwoo->output("tpl/citizenList.tpl", $pgdata);
 } else {

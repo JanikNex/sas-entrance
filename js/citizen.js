@@ -5,6 +5,8 @@
 var oldData = "";
 var sort = "ascName";
 var filter = "Alle";
+var requestPage = 1;
+var searchString = "";
 
 function setFilter(afilter) {
     filter = afilter;
@@ -27,32 +29,45 @@ function updateSortnFilter() {
         thissort = sort.replace("desc","");
         $("#sortCurr").html("<i class=\"mdi mdi-sort-descending\"></i> "+thissort);
     }
-    $("#filterCurr").html("<i class=\"mdi mdi-filter\"></i> "+filter);
+    if(filter.startsWith("Stufe")) {
+        thisfilter = parseInt(filter.replace("Stufe",""));
+        $("#filterCurr").html("<i class=\"mdi mdi-filter\"></i> KS "+thisfilter);
+    } else $("#filterCurr").html("<i class=\"mdi mdi-filter\"></i> "+filter);
+}
+
+function updatePages(currPage, maxPage) {
+    if(currPage > maxPage) {
+        requestPage = maxPage;
+    }
+    nextPage = parseInt(currPage)+1;
+    prevPage = currPage-1;
+    $("#pages").html("");
+    if(currPage <= 1) $("#pages").append("<li class=\"disabled\"><a><i class=\"material-icons\">chevron_left</i></a></li>");
+    else $("#pages").append("<li class=\"waves-effect\"><a onclick=\"setPage("+prevPage+")\"><i class=\"material-icons\">chevron_left</i></a></li>");
+
+    for(i = 1; i <= maxPage; i++) {
+        if(i != currPage) {
+            $("#pages").append("<li class=\"waves-effect\"><a onclick=\"setPage("+i+")\">"+i+"</a></li>");
+        } else {
+            $("#pages").append("<li class=\"active indigo\"><a onclick=\"setPage("+i+")\">"+i+"</a></li>");
+        }
+    }
+
+    if(currPage >= maxPage) $("#pages").append("<li class=\"disabled\"><a><i class=\"material-icons\">chevron_right</i></a></li>");
+    else $("#pages").append("<li class=\"waves-effect\"><a onclick=\"setPage("+nextPage+")\"><i class=\"material-icons\">chevron_right</i></a></li>");
+}
+
+function setPage(apage) {
+    requestPage = apage;
+    update();
 }
 
 $(document).ready(function(){
     // the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
     $('.modal-trigger').leanModal();
-    $("#filter").keyup(function(){
-
-        // Retrieve the input field text and reset the count to zero
-        var filter = $(this).val(), count = 0;
-
-        // Loop through the comment list
-        $("ul.collection li").each(function(){
-
-            // If the list item does not contain the text phrase fade it out
-            if ($(this).text().search(new RegExp(filter, "i")) < 0) {
-                $(this).fadeOut();
-                // Show the list item if the phrase matches and increase the count by 1
-            } else {
-                $(this).show();
-                count++;
-            }
-        });
-
-        // Update the count
-        var numberItems = count;
+    $("#filter").keyup(function () {
+        searchString = $(this).val();
+        update();
     });
 
     // Initialize collapse button
@@ -71,55 +86,70 @@ $(document).ready(function(){
         return s;
     };
     updateSortnFilter();
-    update();
+    updateCaller();
 });
 
 function update() {
     var listElemTmplt = `
             <li class="collection-item avatar">
-            <i class="material-icons circle {{color}}">person</i>
-            <span class="title">{{usrname}}</span>
-            <p>{{{prefix}}} {{usrname}} | {{email}}
-            </p>
-            <span class="secondary-content">
-            <a class="waves-effect waves-circle" href="users.php?action=edit&uID={{id}}">
-            <i class="material-icons grey-text text-darken-1">create</i>
-            </a>
-            <a class="waves-effect waves-circle waves-red modal-trigger" href="#modal{{id}}">
-            <i class="material-icons grey-text text-darken-1">delete</i>
-            </a>
-            </span>
-            <div id="modal{{id}}" class="modal">
-            <div class="modal-content black-text">
-            <h4>L&ouml;schen</h4>
-            <p>M&ouml;chtest Du den Benutzer "{{usrname}}" wirklich l&ouml;schen?</p>
-            </div>
-            <div class="modal-footer">
-            <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Abbrechen</a>
-            <a href="users.php?action=del&vID={{id}}" class="modal-action modal-close waves-effect waves-green btn-flat red-text">L&ouml;schen</a>
-            </div>
-            </div>
+                <i class="material-icons circle {{color}}">person</i>
+                <span class="title">{{firstname}} {{lastname}}</span>
+                <p> {{{locked}}}
+                    {{classlvl}}<br/>
+                    Zeit heute: {{{timeToday}}} | Zeit gesamt: {{{timeProject}}}
+                </p>
+                <span class="secondary-content">
+                    <a class="waves-effect waves-circle" href="citizen.php?action=edit&cID={{id}}">
+                        <i class="material-icons grey-text text-darken-1" style="margin: 0px 5px;">create</i>
+                    </a>
+                    <a class="waves-effect waves-circle" href="citizen.php?action=citizeninfo&cID={{id}}" style="margin: 0px 5px;">
+                        <i class="material-icons grey-text text-darken-1">reorder</i>
+                    </a>
+                    <a class="waves-effect waves-circle waves-red modal-trigger" onclick="$('#modal{{id}}').openModal();" style="margin: 0px 5px;">
+                        <i class="material-icons grey-text text-darken-1">delete</i>
+                    </a>
+                </span>
+                <div id="modal{$id}" class="modal">
+                    <div class="modal-content black-text">
+                        <h4>L&ouml;schen</h4>
+                        <p>M&ouml;chtest Du die Person "{{firstname}} {{lastname}}" wirklich l&ouml;schen?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Abbrechen</a>
+                        <a href="citizen.php?action=del&cID={{id}}" class="modal-action modal-close waves-effect waves-green btn-flat red-text">L&ouml;schen</a>
+                    </div>
+                </div>
             </li>
         `;
     template = Handlebars.compile(listElemTmplt);
     finishedString = [];
-    $.getJSON("getLists.php?action=citizen&filter="+filter+"&sort="+sort, function (data) {
+    $.getJSON("getLists.php?action=citizen&search="+searchString+"&page="+requestPage+"&filter="+filter+"&sort="+sort, function (data) {
         if(!(JSON.stringify(oldData) == JSON.stringify(data))) {
-            $("ul#users").html("");
-            data["users"].forEach(function (element, index, array) {
-                if(element["lvl"] == 0) color = "grey";
-                else if(element["lvl"] == 1) color = "green";
-                else if(element["lvl"] == 2) color = "blue";
-                else if(element["lvl"] == 3) color = "orange";
-                else if(element["lvl"] == 4) color = "red";
-                html = template({id: element["id"], usrname: element["usrname"], email: element["email"], prefix: element["prefix"], color: color});
-                $("ul#users").append(html);
+            $("ul#citizens").html("");
+            data["citizens"].forEach(function (element, index, array) {
+                if(element["inState"] == 0) color = "green";
+                else if(element["inState"] == 1) color = "red";
+                else color = "grey";
+
+                if(element["locked"] == 1) locked = "<span class=\"red-text\"><b>!</b> Person gesperrt</span><br/>";
+                if(element["isWanted"] == 1) locked = "<span class=\"red-text\"><b>!</b> Person gesperrt</span><br/>";
+                else locked = "";
+
+                if(element["classlevel"] <= 13) classlevel = "Klassenstufe " + element["classlevel"];
+                else if(element["classlevel"] == 14) classlevel = "Lehrer";
+                else if(element["classlevel"] == 15) classlevel = "Visum";
+                else classlevel = "Kurier";
+
+                html = template({id: element["id"], firstname: element["firstname"], lastname: element["lastname"], locked: locked, classlvl: classlevel, timeToday: element["timeToday"], timeProject: element["timeProject"], color: color});
+                $("ul#citizens").append(html);
             });
+            updatePages(data["page"], data["maxpage"]);
             console.log("update");
             oldData = data;
             updateSortnFilter();
         }
     });
+    $('.modal-trigger').leanModal();
 }
 
 function updateCaller(){
