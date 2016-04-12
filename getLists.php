@@ -33,7 +33,7 @@ if($action == "users") {
     $users = \Entrance\User::getAllUsers($sort, $filter);
     foreach($users as $user) {
         if(isset($_GET["search"]) and $_GET["search"] != null) {
-            if (strpos($user->toString(), $_GET["search"]) !== FALSE)
+            if (strpos(strtolower($user->asString()), strtolower($_GET["search"])) !== FALSE)
                 array_push($toEncode["users"], $user->asArray());
         } else
             array_push($toEncode["users"], $user->asArray());
@@ -57,7 +57,7 @@ if($action == "users") {
     $errors = \Entrance\Error::getAllErrors($sort, $filter);
     foreach($errors as $error) {
         if(isset($_GET["search"]) and $_GET["search"] != null) {
-            if (strpos($error->asString(), $_GET["search"]) !== FALSE)
+            if (strpos(strtolower($error->asString()), strtolower($_GET["search"])) !== FALSE)
                 array_push($toEncode["errors"], $error->asArray());
         } else
             array_push($toEncode["errors"], $error->asArray());
@@ -84,7 +84,7 @@ if($action == "users") {
     elseif($action == "citizen") $citizens = \Entrance\Citizen::getAllCitizen($sort, $filter);
     foreach($citizens as $citizen) {
         if(isset($_GET["search"]) and $_GET["search"] != null) {
-            if (strpos($citizen->asString(), $_GET["search"]) !== FALSE)
+            if (strpos(strtolower($citizen->asString()), strtolower($_GET["search"])) !== FALSE)
                 array_push($toEncode["citizens"], $citizen->asArray());
         } else
             array_push($toEncode["citizens"], $citizen->asArray());
