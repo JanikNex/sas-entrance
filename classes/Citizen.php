@@ -286,12 +286,14 @@ class Citizen {
      * @return int
      */
     public static function getCurrentBadCitizenCount(){
-        return sizeof(self::getAllCourriersOutOfState());
+        return sizeof(self::getAllBadCitizen());
     }
 
     /**
      * Returns all "bad" citizen
      *
+     * @param $sort
+     * @param $filter
      * @return Citizen[]
      */
     public static function getAllBadCitizen($sort, $filter) {
