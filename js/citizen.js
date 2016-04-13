@@ -131,8 +131,9 @@ function update() {
                 else if(element["inState"] == 1) color = "red";
                 else color = "grey";
 
-                if(element["locked"] == 1) locked = "<span class=\"red-text\"><b>!</b> Person gesperrt</span><br/>";
-                if(element["isWanted"] == 1) locked = "<span class=\"red-text\"><b>!</b> Fahndung aktiv</span><br/>";
+                if(element["locked"] == 1 && element["isWanted"] == 1) locked = "<span class=\"red-text\"><b>!</b> Person gesperrt | Fahndung aktiv</span><br/>";
+                else if(element["locked"] == 1) locked = "<span class=\"red-text\"><b>!</b> Person gesperrt</span><br/>";
+                else if(element["isWanted"] == 1) locked = "<span class=\"red-text\"><b>!</b> Fahndung aktiv</span><br/>";
                 else locked = "";
 
                 if(element["classlevel"] <= 13) classlevel = "Klassenstufe " + element["classlevel"];
