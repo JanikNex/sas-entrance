@@ -145,6 +145,8 @@ class Citizen {
      * Returns all Citizen in the db; Filter: Students
      * Todo provide Sorting by
      *
+     * @param $sort
+     * @param $filter
      * @return Citizen[]
      */
     public static function getAllStudents($sort, $filter) {
@@ -277,6 +279,16 @@ class Citizen {
     public static function getCurrentCourrierCount(){
         return sizeof(self::getAllCourriersOutOfState());
     }
+
+    /**
+     * Count of @see getAllBadCitizens()
+     *
+     * @return int
+     */
+    public static function getCurrentBadCitizenCount(){
+        return sizeof(self::getAllCourriersOutOfState());
+    }
+
     /**
      * Returns all "bad" citizen
      *

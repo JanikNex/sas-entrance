@@ -109,7 +109,7 @@ if($action == "new") {
         exit;
     }
 } elseif($action == "postPreset" and is_numeric($uID)) {
-    if($user->isActionAllowed(PERM_USER_EDIT_PERMISSIONS or PERM_USER_GUARDCONTROL)) {
+    if($user->isActionAllowed(PERM_USER_EDIT_PERMISSIONS) or $user->isActionAllowed(PERM_USER_GUARDCONTROL)) {
         $userToEdit = \Entrance\User::fromUID($uID);
         switch($_POST["preset"]) {
             case 0:
