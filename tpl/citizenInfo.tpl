@@ -25,11 +25,11 @@
                                 {/if}
                             </p>
                             {if $page.citizen.isWanted}
-                                {if $header.perm.tracing_add == 1}
+                                {if $header.perm.citizen_tracing_add == 1}
                                     <a class="btn red" href="citizen.php?action=addTracing&cID={$page.citizen.id}">Fahndung hinzufügen</a>
                                 {/if}
                             {else}
-                                {if $header.perm.tracing_remove == 1}
+                                {if $header.perm.citizen_tracing_remove == 1}
                                     <a class="btn green" href="citizen.php?action=removeTracing&cID={$page.citizen.id}">Fahndung entfernen</a>
                                 {/if}
                             {/if}
