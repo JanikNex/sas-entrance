@@ -14,7 +14,7 @@
             </div>
             <div class="card-panel col s12 m12 l12">
                 <!-- Unterer Kasten -->
-                <p class="red-text text-darken-2 bolden">Jegliche Interaktionen mit SaSEntrance werden geloggt!</sp>
+                <p class="red-text text-darken-2 bolden">Jegliche Interaktionen mit SaSEntrance werden geloggt!</p>
                 <p>Versuche der Kompromittierung, Manipulation oder Sabotage ziehen rechtliche Konsequenzen mit sich!</p>
             </div>
         </div>
