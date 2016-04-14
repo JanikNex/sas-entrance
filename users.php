@@ -248,8 +248,8 @@ if($action == "new") {
                 $userToEdit->setPermission(PERM_CITIZEN_INFO_DIFFERENCE, 1);
 
                 $userToEdit->setPermission(PERM_CITIZEN_DELETE, 0);
-                $userToEdit->setPermission(PERM_CITIZEN_EDIT, 1);
-                $userToEdit->setPermission(PERM_CITIZEN_CREATE, 1);
+                $userToEdit->setPermission(PERM_CITIZEN_EDIT, 0);
+                $userToEdit->setPermission(PERM_CITIZEN_CREATE, 0);
                 $userToEdit->setPermission(PERM_CITIZEN_VIEW, 1);
 
                 $userToEdit->setPermission(PERM_TRACING_ADD, 0);
