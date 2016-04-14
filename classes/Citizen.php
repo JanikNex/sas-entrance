@@ -392,6 +392,22 @@ class Citizen {
     }
 
     /**
+     *Updates the citizen state
+     */
+    public function updateCitizenState() {
+        $pdo = new PDO_MYSQL();
+        if($this->isCitizenInState() == 0) {
+            $pdo->query("UPDATE entrance_citizen SET state = 0 WHERE cID = :cID", [":cID" => $this->getCID()]);
+        }
+        elseif ($this->isCitizenInState() == 1) {
+            $pdo->query("UPDATE entrance_citizen SET state = 1 WHERE cID = :cID", [":cID" => $this->getCID()]);
+        }
+        elseif ($this->isCitizenInState() == 2) {
+            $pdo->query("UPDATE entrance_citizen SET state = 2 WHERE cID = :cID", [":cID" => $this->getCID()]);
+        }
+    }
+
+    /**
      * Returns true if the citizen is in a locked state
      *
      * @return bool
@@ -467,6 +483,7 @@ class Citizen {
                     [":cID" => $this->cID, ":uID" => $user->getUID(), ":timestamp" => $date]);
                 Error::createError($this->cID, 3);
                 $this->getLastEntry()->invalidateLogEntryBeforeEntry();
+                $this->updateCitizenState();
                 return true;
             }
         } elseif ($this->isCourrier()) {
@@ -474,6 +491,7 @@ class Citizen {
                 [":cID" => $this->cID, ":uID" => $user->getUID(), ":timestamp" => $date]);
             Error::createError($this->cID, 3);
             $this->getLastEntry()->invalidateLogEntryBeforeEntry();
+            $this->updateCitizenState();
             return true;
         }
     }
@@ -511,6 +529,7 @@ class Citizen {
             Error::correctError($this->cID);
             $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 1, 1)",
                 [":cID" => $this->cID, ":uID" => $user -> getUID(), ":timestamp" => $date]);
+            $this->updateCitizenState();
             return true;
         }
         elseif($this -> isCitizenInState() == 0){
@@ -520,6 +539,7 @@ class Citizen {
             Error::correctError($this->cID);
             $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 0, 1)",
                 [":cID" => $this->cID, ":uID" => $user -> getUID(), ":timestamp" => $date]);
+            $this->updateCitizenState();
             return true;
         }
     }
@@ -538,6 +558,7 @@ class Citizen {
                 Error::correctError($this->getCID());
                 $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 0, 1)",
                     [":cID" => $this->cID, ":uID" => $user -> getUID(), ":timestamp" => date("Y-m-d H:i:s")]);
+                $this->updateCitizenState();
                 return true;
             }
             return false;
@@ -546,6 +567,7 @@ class Citizen {
                 Error::correctError($this->getCID());
                 $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, 1, 1)",
                     [":cID" => $this->cID, ":uID" => $user -> getUID(), ":timestamp" => date("Y-m-d H:i:s")]);
+                $this->updateCitizenState();
                 return true;
             }
             return false;
@@ -561,11 +583,13 @@ class Citizen {
             if($this -> getLastEntry() -> getLastTwoEntrySuccessStatus()) {
                 LogEntry::ignoreLastLogEntry($this, $user);
                 Error::correctError($this->cID);
+                $this->updateCitizenState();
                 return true;
             }else{
                 LogEntry::ignoreLastLogEntry($this, $user);
                 $this -> getLastEntry() -> validateLogEntry();
                 Error::correctError($this->cID);
+                $this->updateCitizenState();
                 return true;
             }
         }

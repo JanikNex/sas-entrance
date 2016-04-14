@@ -104,22 +104,26 @@ class LogEntry {
             if ($action == 0) { //Ignoriert
                 $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, :action, 1)",
                     [":cID" => $citizen->getCID(), ":uID" => $user->getUID(), ":timestamp" => $date, ":action" => $action]);
+                $citizen->updateCitizenState();
                 return true;
             } elseif ($action == 1) { //Ignoriert -> Error
                 $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, :action, 0)",
                     [":cID" => $citizen->getCID(), ":uID" => $user->getUID(), ":timestamp" => $date, ":action" => $action]);
                 Error::createError($citizen->getCID(), 1);
+                $citizen->updateCitizenState();
                 return false;
             }
         } else {
             if ($action == 1) { //Ignoriert
                 $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, :action, 1)",
                     [":cID" => $citizen->getCID(), ":uID" => $user->getUID(), ":timestamp" => $date, ":action" => $action]);
+                $citizen->updateCitizenState();
                 return true;
             } elseif ($action == 0) { //Ignoriert -> Error
                 $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, :action, 0)",
                     [":cID" => $citizen->getCID(), ":uID" => $user->getUID(), ":timestamp" => $date, ":action" => $action]);
                 Error::createError($citizen->getCID(), 1);
+                $citizen->updateCitizenState();
                 return false;
             }
         }
@@ -141,22 +145,26 @@ class LogEntry {
             if ($action == 1) { //Schueler ist im Staat und verlaesst ihn
                 $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, :action, 1)",
                     [":cID" => $citizen->getCID(), ":uID" => $user->getUID(), ":timestamp" => $date, ":action" => $action]);
+                $citizen->updateCitizenState();
                 return true;
             } elseif ($action == 0) { //Schueler ist im Staat und betritt ihn -> Error
                 $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, :action, 0)",
                     [":cID" => $citizen->getCID(), ":uID" => $user->getUID(), ":timestamp" => $date, ":action" => $action]);
                 Error::createError($citizen->getCID(), 1);
+                $citizen->updateCitizenState();
                 return false;
             }
         } else {
             if ($action == 0) { //Schueler ist nicht im Staat und betritt ihn
                 $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, :action, 1)",
                     [":cID" => $citizen->getCID(), ":uID" => $user->getUID(), ":timestamp" => $date, ":action" => $action]);
+                $citizen->updateCitizenState();
                 return true;
             } elseif ($action == 1) { //Schueler ist nicht im Staat und verlaesst ihn -> Error
                 $pdo->query("INSERT INTO entrance_logs(cID, uID,`timestamp`, `action`, success) VALUES (:cID,:uID, :timestamp, :action, 0)",
                     [":cID" => $citizen->getCID(), ":uID" => $user->getUID(), ":timestamp" => $date, ":action" => $action]);
                 Error::createError($citizen->getCID(), 2);
+                $citizen->updateCitizenState();
                 return false;
             }
         }
@@ -195,6 +203,7 @@ class LogEntry {
         $pdo = new PDO_MYSQL();
         $toUpdate = $citizen -> getLastEntry();
         $pdo->query("UPDATE entrance_logs SET `action` = 2, uID = :uID, `timestamp` = `timestamp` WHERE lID = :lID", [":lID" => $toUpdate->getLID(), ":uID" => $user -> getUID()]);
+        $citizen->updateCitizenState();
     }
     /**
      * Returns true if the last entry was a success
