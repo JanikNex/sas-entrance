@@ -46,6 +46,7 @@ class LogEntry {
 
     /**
      * Returns all logs found in the db
+     * Attention: This function will destroy everything!
      * Todo Sorting options / filtering options
      *
      * @return LogEntry[]
