@@ -333,6 +333,7 @@ class Citizen {
             "classlevel" => $this->classlevel,
             "birthday" => $this->birthday,
             "birthdayNice" => date("d. M Y", strtotime($this->birthday))." (".Util::getAge($this->birthday).")",
+            "age" => Util::getAge($this->birthday),
             "barcode" => $this->barcode,
             "inState" => $this->isCitizenInState(),
             "isWanted" => $this->isCitizenWanted() ? 1:0,

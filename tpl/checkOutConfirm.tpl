@@ -22,7 +22,9 @@
                     <h5>Person</h5>
                     {if $locked == 1}<p class="red-text"><b>!</b> Person gesperrt</p><br/>{/if}
                     <p><b>Name:</b> {$page.citizen.firstname} {$page.citizen.lastname}</p>
-                    <p><b>Geburtstag:</b> {$page.citizen.birthdayNice}</p>
+                    {if $page.citizen.age <= 100}
+                        <p><b>Geburtstag:</b> {$page.citizen.birthdayNice}</p>
+                    {/if}
                     <p><b>Klassenstufe:</b>
                         {if $page.citizen.classlevel<=13}{$page.citizen.classlevel}
                         {elseif $page.citizen.classlevel==14}Lehrer
