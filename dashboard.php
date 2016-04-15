@@ -46,6 +46,6 @@ if($action == "closeState") {
 if($user->isActionAllowed(PERM_ADMIN_STATE_DASHBOARD)) {
     $dwoo->output("tpl/dashboard.tpl", \Entrance\Util::getEditorPageDataStub("Dashboard", $user));
 } else {
-    $pgdata = \Entrance\Util::getEditorPageDataStub("Person", $user);
+    $pgdata = \Entrance\Util::getEditorPageDataStub("Dashboard", $user);
     $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
 }
