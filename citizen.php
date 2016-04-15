@@ -155,7 +155,7 @@ if($action == "new") {
         header('Cache-Control: must-revalidate, pre-check=0, no-store, no-cache, max-age=0, post-check=0'); // ist mal wieder wichtig wegen IE
         switch($_GET['type']) {
             case "all":
-                echo \Entrance\Citizen::getCurrentCitizenCount();
+                echo \Entrance\Citizen::getCurrentCitizenCount("","","");
                 break;
             case "visit":
                 echo \Entrance\Citizen::getCurrentVisitorCount();
@@ -164,7 +164,7 @@ if($action == "new") {
                 echo \Entrance\Citizen::getCurrentStudentCount();
                 break;
             default:
-                echo \Entrance\Citizen::getCurrentCitizenCount();
+                echo \Entrance\Citizen::getCurrentCitizenCount("","","");
         }
         exit;
     } else {

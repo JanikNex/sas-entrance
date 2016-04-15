@@ -120,7 +120,7 @@ function update() {
                     <a class="waves-effect waves-circle" href="citizen.php?action=citizeninfo&cID={{id}}" style="margin: 0px 5px;">
                         <i class="material-icons grey-text text-darken-1">reorder</i>
                     </a>
-                    <a class="waves-effect waves-circle waves-red" onclick="openModal({{modalid}})" style="margin: 0px 5px;">
+                    <a class="waves-effect waves-circle waves-red" onclick="$('#modal{{modalid}}').openModal();" style="margin: 0px 5px;">
                         <i class="material-icons grey-text text-darken-1">delete</i>
                     </a>
                 </span>
@@ -139,7 +139,7 @@ function update() {
     template = Handlebars.compile(listElemTmplt);
     finishedString = [];
     if(requestPage == 0)requestPage = 1;
-    $.getJSON("getLists.php?action=citizen&search="+searchString+"&page="+requestPage+"&filter="+filter+"&sort="+sort, function (data) {
+    $.getJSON("getLists.php?action=citizenWanted&search="+searchString+"&page="+requestPage+"&filter="+filter+"&sort="+sort, function (data) {
         if(!(JSON.stringify(oldData) == JSON.stringify(data))) {
             $("ul#citizens").html("");
             data["citizens"].forEach(function (element, index, array) {
@@ -173,11 +173,6 @@ function update() {
 function updateCaller(){
     if(window.openHTTPs == 0) update();
     window.setTimeout("updateCaller()", 1000);
-}
-
-function openModal(id) {
-    window.openHTTPs = 1000;
-    $('#modal'+id).openModal();
 }
 
 $('.dropdown-button').dropdown({

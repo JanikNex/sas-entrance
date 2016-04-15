@@ -7,6 +7,7 @@ var sort = "ascName";
 var filter = "Alle";
 var requestPage = 1;
 var searchString = "";
+var modalID = 0;
 
 function setFilter(afilter) {
     filter = afilter;
@@ -38,6 +39,7 @@ function updateSortnFilter() {
 function updatePages(currPage, maxPage) {
     if(currPage > maxPage) {
         requestPage = maxPage;
+        if(requestPage == 0) requestPage = 1;
     }
     nextPage = parseInt(currPage)+1;
     prevPage = currPage-1;
@@ -85,6 +87,19 @@ $(document).ready(function(){
 
         return s;
     };
+    (function() {
+        var oldOpen = XMLHttpRequest.prototype.open;
+        window.openHTTPs = 0;
+        XMLHttpRequest.prototype.open = function(method, url, async, user, pass) {
+            window.openHTTPs++;
+            this.addEventListener("readystatechange", function() {
+                if(this.readyState == 4) {
+                    window.openHTTPs--;
+                }
+            }, false);
+            oldOpen.call(this, method, url, async, user, pass);
+        }
+    })();
     updateSortnFilter();
     updateCaller();
 });
@@ -105,17 +120,17 @@ function update() {
                     <a class="waves-effect waves-circle" href="citizen.php?action=citizeninfo&cID={{id}}" style="margin: 0px 5px;">
                         <i class="material-icons grey-text text-darken-1">reorder</i>
                     </a>
-                    <a class="waves-effect waves-circle waves-red modal-trigger" onclick="$('#modal{{id}}').openModal();" style="margin: 0px 5px;">
+                    <a class="waves-effect waves-circle waves-red" onclick="openModal({{modalid}});" style="margin: 0px 5px;">
                         <i class="material-icons grey-text text-darken-1">delete</i>
                     </a>
                 </span>
-                <div id="modal{$id}" class="modal">
+                <div id="modal{{modalid}}" class="modal">
                     <div class="modal-content black-text">
                         <h4>L&ouml;schen</h4>
                         <p>M&ouml;chtest Du die Person "{{firstname}} {{lastname}}" wirklich l&ouml;schen?</p>
                     </div>
                     <div class="modal-footer">
-                        <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat">Abbrechen</a>
+                        <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat" onclick="window.openHTTPs = 0;">Abbrechen</a>
                         <a href="citizen.php?action=del&cID={{id}}" class="modal-action modal-close waves-effect waves-green btn-flat red-text">L&ouml;schen</a>
                     </div>
                 </div>
@@ -123,6 +138,7 @@ function update() {
         `;
     template = Handlebars.compile(listElemTmplt);
     finishedString = [];
+    if(requestPage == 0)requestPage = 1;
     $.getJSON("getLists.php?action=citizenInState&search="+searchString+"&page="+requestPage+"&filter="+filter+"&sort="+sort, function (data) {
         if(!(JSON.stringify(oldData) == JSON.stringify(data))) {
             $("ul#citizens").html("");
@@ -131,8 +147,9 @@ function update() {
                 else if(element["inState"] == 1) color = "red";
                 else color = "grey";
 
-                if(element["locked"] == 1) locked = "<span class=\"red-text\"><b>!</b> Person gesperrt</span><br/>";
-                if(element["isWanted"] == 1) locked = "<span class=\"red-text\"><b>!</b> Fahndung aktiv</span><br/>";
+                if(element["locked"] == 1 && element["isWanted"] == 1) locked = "<span class=\"red-text\"><b>!</b> Person gesperrt | Fahndung aktiv</span><br/>";
+                else if(element["locked"] == 1) locked = "<span class=\"red-text\"><b>!</b> Person gesperrt</span><br/>";
+                else if(element["isWanted"] == 1) locked = "<span class=\"red-text\"><b>!</b> Fahndung aktiv</span><br/>";
                 else locked = "";
 
                 if(element["classlevel"] <= 13) classlevel = "Klassenstufe " + element["classlevel"];
@@ -140,8 +157,9 @@ function update() {
                 else if(element["classlevel"] == 15) classlevel = "Visum";
                 else classlevel = "Kurier";
 
-                html = template({id: element["id"], firstname: element["firstname"], lastname: element["lastname"], locked: locked, classlvl: classlevel, timeToday: element["timeToday"], timeProject: element["timeProject"], color: color});
+                html = template({modalid: modalID, id: element["id"], firstname: element["firstname"], lastname: element["lastname"], locked: locked, classlvl: classlevel, timeToday: element["timeToday"], timeProject: element["timeProject"], color: color});
                 $("ul#citizens").append(html);
+                modalID++;
             });
             updatePages(data["page"], data["maxpage"]);
             console.log("update");
@@ -153,8 +171,13 @@ function update() {
 }
 
 function updateCaller(){
-    update();
-    window.setTimeout("updateCaller()", 500);
+    if(window.openHTTPs == 0) update();
+    window.setTimeout("updateCaller()", 1000);
+}
+
+function openModal(id) {
+    window.openHTTPs = 1000;
+    $('#modal'+id).openModal();
 }
 
 $('.dropdown-button').dropdown({

@@ -60,61 +60,41 @@
           // Initialize collapsible (uncomment the line below if you use the dropdown variation)
           //$('.collapsible').collapsible();
 
-          $('.odometer').html(123) // with jQuery
+          $('.odometer').html(123); // with jQuery
+          (function() {
+              var oldOpen = XMLHttpRequest.prototype.open;
+              window.openHTTPs = 0;
+              XMLHttpRequest.prototype.open = function(method, url, async, user, pass) {
+                  window.openHTTPs++;
+                  this.addEventListener("readystatechange", function() {
+                      if(this.readyState == 4) {
+                          window.openHTTPs--;
+                      }
+                  }, false);
+                  oldOpen.call(this, method, url, async, user, pass);
+              }
+          })();
             refresh();
+            refreshCaller();
         });
-                var request = false;
 
-        function refresh() {
-            // Request erzeugen
-            if (window.XMLHttpRequest) {
-                request = new XMLHttpRequest(); // Mozilla, Safari, Opera
-            } else if (window.ActiveXObject) {
-                try {
-                    request = new ActiveXObject('Msxml2.XMLHTTP'); // IE 5
-                } catch (e) {
-                    try {
-                        request = new ActiveXObject('Microsoft.XMLHTTP'); // IE 6
-                    } catch (e) {}
-                }
-            }
-
-            // überprüfen, ob Request erzeugt wurde
-            if (!request) {
-                alert("Kann keine XMLHTTP-Instanz erzeugen");
-                return false;
-            } else {
-                var url = "citizen.php?action=counter&type=<?php echo $_GET['type'];?>";
-                // Request öffnen
-                request.open('post', url, true);
-                // Request senden
-                request.send(null);
-                // Request auswerten
-                request.onreadystatechange = interpretRequest;
-            }
-            window.setTimeout("refresh()", 500)
+        function refreshCaller() {
+            if(window.openHTTPs == 0) refresh();
+            // den Inhalt des Requests in das <div> schreiben
+            var d = new Date();
+            $('#timehour').html(100+d.getHours());
+            $('#timemin').html(100+d.getMinutes());
+            $('#timesec').html(100+d.getSeconds());
+            window.setTimeout("refreshCaller()", 250);
         }
 
-        // Request auswerten
-        function interpretRequest() {
-            switch (request.readyState) {
-                // wenn der readyState 4 und der request.status 200 ist, dann ist alles korrekt gelaufen
-                case 4:
-                    if (request.status != 200) {
-                    } else {
-                        var content = request.responseText;
-                        // den Inhalt des Requests in das <div> schreiben
-                        var d = new Date();
-                        $('#count').html(1000+content)
-                        $('#timehour').html(100+d.getHours())
-                        $('#timemin').html(100+d.getMinutes())
-                        $('#timesec').html(100+d.getSeconds())
-                        console.log(content);
-                    }
-                    break;
-                default:
-                    break;
-            }
+        var request = false;
+
+        function refresh() {
+            $.get("citizen.php?action=counter&type=<?php echo $_GET['type'];?>", null, function (data) {
+                var content = data;
+                $('#count').html(1000+content);
+            });
         }
     </script>
 </html>

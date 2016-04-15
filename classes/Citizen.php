@@ -21,17 +21,18 @@ const CSORTING = [
 const CFILTERING = [
     ""          => "",
     "Alle"      => "",
-    "Stufe05"   => " WHERE classLevel = 5 ",
-    "Stufe06"   => " WHERE classLevel = 6 ",
-    "Stufe07"   => " WHERE classLevel = 7 ",
-    "Stufe08"   => " WHERE classLevel = 8 ",
-    "Stufe09"   => " WHERE classLevel = 9 ",
-    "Stufe10"   => " WHERE classLevel = 10 ",
-    "Stufe11"   => " WHERE classLevel = 11 ",
-    "Stufe12"   => " WHERE classLevel = 12 ",
-    "Visum"     => " WHERE classLevel = 15 ",
-    "Lehrer"    => " WHERE classLevel = 14 ",
-    "Kurier"    => " WHERE classLevel = 16 "
+    "Stufe05"   => " AND classLevel = 5 ",
+    "Stufe06"   => " AND classLevel = 6 ",
+    "Stufe07"   => " AND classLevel = 7 ",
+    "Stufe08"   => " AND classLevel = 8 ",
+    "Stufe09"   => " AND classLevel = 9 ",
+    "Stufe10"   => " AND classLevel = 10 ",
+    "Stufe11"   => " AND classLevel = 11 ",
+    "Stufe12"   => " AND classLevel = 12 ",
+    "Schüler"   => " AND classLevel < 14 ",
+    "Visum"     => " AND classLevel = 15 ",
+    "Lehrer"    => " AND classLevel = 14 ",
+    "Kurier"    => " AND classLevel = 16 "
 ];
 
 
@@ -49,8 +50,8 @@ class Citizen {
      */
     public function __construct($cID, $firstname, $lastname, $classlevel, $birthday, $barcode) {
         $this->cID = $cID;
-        $this->firstname = $firstname;
-        $this->lastname = $lastname;
+        $this->firstname = utf8_encode($firstname);
+        $this->lastname = utf8_encode($lastname);
         $this->classlevel = $classlevel;
         $this->birthday = $birthday;
         $this->barcode = $barcode;
@@ -116,44 +117,49 @@ class Citizen {
         return isset($res->firstname);
     }
 
+
     /**
-     * Returns all Citizen in the db
-     * Todo provide Sorting by
+     * Returns the Count of all Citizens in the db
      *
      * @param string $sort
      * @param string $filter
-     * @return Citizen[]
+     * @param string $search
+     * @return int
      */
-    public static function getAllCitizen($sort = "", $filter = "") {
+    public static function getTotalCitizenCount($sort, $filter, $search) {
         $pdo = new PDO_MYSQL();
-        if($filter != "Gesperrt") {
-            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen " . CFILTERING[$filter] . CSORTING[$sort]);
-            return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
-        } else {
-            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen " . CSORTING[$sort]);
-            $array = $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
-            $r_citizen = [];
-            foreach($array as $citizen) {
-                if($citizen->isCitizenLocked())
-                    array_push($r_citizen, $citizen);
-            }
-            return $r_citizen;
-        }
+        if($search != "") $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE MATCH(firstname, lastname) AGAINST('".$search."' IN BOOLEAN MODE) ".CFILTERING[$filter].CSORTING[$sort];
+        else $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE cID != 0".CFILTERING[$filter].CSORTING[$sort];
+
+        $res = $pdo->query($query);
+        return $res->count;
     }
 
     /**
-     * Returns all Citizen in the db; Filter: Students
-     * Todo provide Sorting by
+     * Returns all Citizen in the db
      *
-     * @param $sort
-     * @param $filter
+     * @param string $sort
+     * @param string $filter
+     * @param int $page
+     * @param int $pagesize
+     * @param string $search
      * @return Citizen[]
      */
-    public static function getAllStudents($sort, $filter) {
+    public static function getAllCitizen($sort = "", $filter = "", $page = 1, $pagesize = 999999, $search = "") {
         $pdo = new PDO_MYSQL();
         if($filter != "Gesperrt") {
-            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen " . CFILTERING[$filter] . CSORTING[$sort]);
-            return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+            if($search != "") {
+                $startElem = ($page-1) * $pagesize;
+                $endElem = $startElem + $pagesize;
+                $query = "SELECT cID FROM entrance_citizen WHERE MATCH(firstname, lastname) AGAINST('".$_GET["search"]."' IN BOOLEAN MODE) ".CFILTERING[$filter].CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
+                $stmt = $pdo->queryMulti($query);
+                return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+            } else {
+                $startElem = ($page-1) * $pagesize;
+                $endElem = $startElem + $pagesize;
+                $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE cID != 0 " . CFILTERING[$filter] . CSORTING[$sort]." LIMIT ".$startElem.','.$endElem);
+                return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+            }
         } else {
             $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen " . CSORTING[$sort]);
             $array = $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
@@ -164,129 +170,99 @@ class Citizen {
             }
             return $r_citizen;
         }
-        $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE classlevel < 14 ORDER BY cID");
-        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
     }
 
     /**
      * Returns all Citizen, which are currently in the State
      *
+     * @param string $sort
+     * @param string $filter
+     * @param int $page
+     * @param int $pagesize
+     * @param string $search
      * @return Citizen[]
      */
-    public static function getAllCitizenInState($sort, $filter) {
-        $citizens = self::getAllCitizen($sort, $filter);
-        $citizenInState = [];
-        foreach($citizens as $citizen){
-            if($citizen -> isCitizenInState() == 0 && !$citizen -> isCourrier())
-                array_push($citizenInState, $citizen);
+    public static function getAllCitizenInState($sort = "", $filter = "", $page = 1, $pagesize = 999999, $search = "") {
+        $pdo = new PDO_MYSQL();
+        if($filter != "Gesperrt") {
+            if($search != "") {
+                $startElem = ($page-1) * $pagesize;
+                $endElem = $startElem + $pagesize;
+                $query = "SELECT cID FROM entrance_citizen WHERE MATCH(firstname, lastname) AGAINST('".$_GET["search"]."' IN BOOLEAN MODE) AND state = 0".CFILTERING[$filter].CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
+                $stmt = $pdo->queryMulti($query);
+                return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+            } else {
+                $startElem = ($page-1) * $pagesize;
+                $endElem = $startElem + $pagesize;
+                $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE state = 0" . CFILTERING[$filter] . CSORTING[$sort]." LIMIT ".$startElem.','.$endElem);
+                return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+            }
+        } else {
+            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen state = 0" . CSORTING[$sort]);
+            $array = $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+            $r_citizen = [];
+            foreach($array as $citizen) {
+                if($citizen->isCitizenLocked())
+                    array_push($r_citizen, $citizen);
+            }
+            return $r_citizen;
         }
-        return $citizenInState;
     }
 
     /**
-     * Returns all Visitors currently in the State
+     * Count of @see getAllCitizenInState()
      *
-     * @return Citizen[]
+     * @param string $sort
+     * @param string $filter
+     * @param string $search
+     * @return int
      */
-    public static function getAllVisitorsInState() {
-        $citizens = self::getAllCitizen();
-        $citizenInState = [];
-        foreach($citizens as $citizen){
-            if($citizen -> isCitizenInState() == 0 && $citizen -> getClasslevel() == 15)
-                array_push($citizenInState, $citizen);
-        }
-        return $citizenInState;
-    }
+    public static function getCurrentCitizenCount($sort, $filter, $search) {
+        $pdo = new PDO_MYSQL();
+        if($search != "") $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE MATCH(firstname, lastname) AGAINST('".$search."' IN BOOLEAN MODE) AND state = 0".CFILTERING[$filter].CSORTING[$sort];
+        else $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE state = 0".CFILTERING[$filter].CSORTING[$sort];
 
-    /**
-     * Returns all Students currently in the state
-     *
-     * @return Citizen[]
-     */
-    public static function getAllStudentsInState() {
-        $citizens = self::getAllCitizen();
-        $citizenInState = [];
-        foreach($citizens as $citizen){
-            if($citizen -> isCitizenInState() == 0 && $citizen -> getClasslevel() < 14)
-                array_push($citizenInState, $citizen);
-        }
-        return $citizenInState;
-    }
-
-    /**
-     * Returns all Courriers, which are on a tour
-     *
-     * @return Citizen[]
-     */
-    public static function getAllCourriersOutOfState(){
-        $citizens = self::getAllCitizen();
-        $courrierOutOfState = [];
-        foreach($citizens as $citizen){
-            if($citizen -> isCitizenInState() == 1 && $citizen -> isCourrier())
-                array_push($courrierOutOfState, $citizen);
-        }
-        return $courrierOutOfState;
+        $res = $pdo->query($query);
+        return $res->count;
     }
 
     /**
      * Returns all wanted citizens
      *
+     * @param int $page
+     * @param int $pagesize
+     * @param string $search
      * @return Citizen[]
      */
-    public static function getAllWantedCitizens() {
-        $citizens = self::getAllCitizen();
-        $wantedCitizens = [];
-        foreach($citizens as $citizen){
-            if($citizen -> isCitizenWanted())
-                array_push($wantedCitizens, $citizen);
+    public static function getAllWantedCitizens($page = 1, $pagesize = 999999, $search = "") {
+        $pdo = new PDO_MYSQL();
+        if($search != "") {
+            $startElem = ($page-1) * $pagesize;
+            $endElem = $startElem + $pagesize;
+            $query = "SELECT cID FROM entrance_tracing WHERE MATCH(firstname, lastname) AGAINST('".$_GET["search"]."' IN BOOLEAN MODE) WHERE active = 1 LIMIT ".$startElem.','.$endElem;
+            $stmt = $pdo->queryMulti($query);
+            return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+        } else {
+            $startElem = ($page-1) * $pagesize;
+            $endElem = $startElem + $pagesize;
+            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_tracing WHERE active = 1 LIMIT ".$startElem.','.$endElem);
+            return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
         }
-        return $wantedCitizens;
-    }
-    
-    /**
-     * Count of @see getAllCitizenInState()
-     *
-     * @return int
-     */
-    public static function getCurrentCitizenCount() {
-        return sizeof(self::getAllCitizenInState());
     }
 
     /**
-     * Count of @see getAllStudentsInState()
+     * Returns the count of all citizen
      *
+     * @param string $search
      * @return int
      */
-    public static function getCurrentStudentCount() {
-        return sizeof(self::getAllStudentsInState());
-    }
+    public static function getCurrentWantedCount($search = "") {
+        $pdo = new PDO_MYSQL();
+        if($search != "") $query = "SELECT COUNT(*) as count FROM entrance_tracing WHERE MATCH(firstname, lastname) AGAINST('".$search."' IN BOOLEAN MODE) AND active = 1";
+        else $query = "SELECT COUNT(*) as count FROM entrance_tracing WHERE active = 1";
 
-    /**
-     * Count of @see getAllVisitorsInState()
-     *
-     * @return int
-     */
-    public static function getCurrentVisitorCount() {
-        return sizeof(self::getAllVisitorsInState());
-    }
-
-    /**
-     * Count of @see getAllCourrierOutOfState()
-     *
-     * @return int
-     */
-    public static function getCurrentCourrierCount(){
-        return sizeof(self::getAllCourriersOutOfState());
-    }
-
-    /**
-     * Count of @see getAllBadCitizens()
-     *
-     * @return int
-     */
-    public static function getCurrentBadCitizenCount(){
-        return sizeof(self::getAllBadCitizen());
+        $res = $pdo->query($query);
+        return $res->count;
     }
 
     /**
@@ -310,6 +286,110 @@ class Citizen {
         }
         return $badCitizens;
     }
+
+    /**
+     * Count of @see getAllBadCitizens()
+     *
+     * @return int
+     */
+    public static function getCurrentBadCitizenCount(){
+        return sizeof(self::getAllBadCitizen());
+    }
+
+    /**
+     * Returns all Citizen in the db; Filter: Students
+     *
+     * @param $sort
+     * @param $filter
+     * @return Citizen[]
+     */
+    public static function getAllStudents($sort = "", $page = 1, $pagesize = 9999999, $search = "") {
+        return self::getAllCitizen($sort, "Schüler", $page, $pagesize, $search);
+    }
+
+    /**
+     * Returns all Students currently in the state
+     *
+     * @return Citizen[]
+     */
+    public static function getAllStudentsInState($sort = "", $search = "") {
+        return self::getTotalCitizenCount($sort, "Schüler", $search);
+    }
+
+    /**
+     * Count of @see getAllStudentsInState()
+     *
+     * @return int
+     */
+    public static function getCurrentStudentCount($sort = "", $search = "") {
+        return self::getCurrentCitizenCount($sort, "Schüler", $search);
+    }
+
+    /**
+     * Returns all Visitors currently in the State
+     *
+     * @return Citizen[]
+     */
+    public static function getAllVisitorsInState($sort = "", $page = 1, $pagesize = 9999999, $search = "") {
+        return self::getAllCitizen($sort, "Schüler", $page, $pagesize, $search);
+    }
+
+    /**
+     * Count of @see getAllVisitorsInState()
+     *
+     * @return int
+     */
+    public static function getCurrentVisitorCount($sort = "", $search = "") {
+        return self::getCurrentCitizenCount($sort, "Visum", $search);
+    }
+
+    /**
+     * Returns all Courriers, which are on a tour
+     *
+     * @return Citizen[]
+     */
+    public static function getAllCourriersOutOfState($sort, $page, $pagesize, $search){
+        $pdo = new PDO_MYSQL();
+        if($filter != "Gesperrt") {
+            if($search != "") {
+                $startElem = ($page-1) * $pagesize;
+                $endElem = $startElem + $pagesize;
+                $query = "SELECT cID FROM entrance_citizen WHERE MATCH(firstname, lastname) AGAINST('".$_GET["search"]."' IN BOOLEAN MODE) AND classlevel = 16 AND state = 1  ".CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
+                $stmt = $pdo->queryMulti($query);
+                return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+            } else {
+                $startElem = ($page-1) * $pagesize;
+                $endElem = $startElem + $pagesize;
+                $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE classlevel = 16 AND state = 1 " . CSORTING[$sort]." LIMIT ".$startElem.','.$endElem);
+                return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+            }
+        } else {
+            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE classlevel = 16 AND state = 1 " . CSORTING[$sort]);
+            $array = $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+            $r_citizen = [];
+            foreach($array as $citizen) {
+                if($citizen->isCitizenLocked())
+                    array_push($r_citizen, $citizen);
+            }
+            return $r_citizen;
+        }
+    }
+
+    /**
+     * Count of @see getAllCourrierOutOfState()
+     *
+     * @return int
+     */
+    public static function getCurrentCourrierCount($sort = "", $search = "") {
+            $pdo = new PDO_MYSQL();
+            if($search != "") $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE MATCH(firstname, lastname) AGAINST('".$search."' IN BOOLEAN MODE) AND classlevel = 16 AND state = 1 ".CSORTING[$sort];
+            else $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE classlevel = 16 AND state = 1".CSORTING[$sort];
+
+            $res = $pdo->query($query);
+            return $res->count;
+        }
+
+
 
     /**
      * Saves all changes made to this object into the db

@@ -7,7 +7,7 @@
     </div>
     <div class="container">
         <div class="row">
-            <form class="col s12 m7" method="post" action="" id="live-search">
+            <form class="col s12 {if $page.type != "Wanted"}m7{/if}" method="post" action="" id="live-search">
                 <div class="row">
                     <div class="input-field col s12 ">
                         <i class="material-icons prefix">search</i>
@@ -16,7 +16,7 @@
                     </div>
                 </div>
             </form>
-            <div class="col offset-s4 s4 offset-m1 m2 right-align">
+            {if $page.type != "Wanted"}<div class="col offset-s4 s4 offset-m1 m2 right-align">
                 <br class="hide-on-small-only"/>
                 <!-- Dropdown Trigger -->
                 <a id="sortCurr" class='dropdown-button btn indigo' href='#' data-activates='dropdown0'><i class="mdi mdi-sort"></i></a>
@@ -50,7 +50,7 @@
                     <li> <a onclick="setFilter('Visum');">Visum      </a></li>
                     <li> <a onclick="setFilter('Kurier');">Kurier    </a></li>
                 </ul>
-            </div>
+            </div>{/if}
             <ul id="pages" class="pagination col s12 center">
             </ul>
             <ul class="collection col s12" id="citizens">
