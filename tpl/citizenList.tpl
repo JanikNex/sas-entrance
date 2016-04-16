@@ -1,10 +1,11 @@
 {include file="newbase.tpl" args=$header}
 <main>
+    {if $page.type == ""}
     <div class="fixed-action-btn" style="bottom: 45px; right: 24px;">
         <a href="?action=new" class="btn-floating btn-large green tooltipped"  data-position="left" data-delay="50" data-tooltip="Neue Person anlegen">
         <i class="large material-icons">add</i>
         </a>
-    </div>
+    </div>{/if}
     <div class="container">
         <div class="row">
             <form class="col s12 {if $page.type != "Wanted"}m7{/if}" method="post" action="" id="live-search">
