@@ -10,6 +10,7 @@ namespace Entrance;
 
 define("PERM_DB_LOGIN", "admin.database");
 define("PERM_ADMIN_ERRORS", "admin.errors");
+define("PERM_ADMIN_TRACING", "admin.tracing");
 define("PERM_ADMIN_NOTIFY", "admin.notify");
 define("PERM_ADMIN_NOTIFY_RECEIVE", "admin.notify.receive");
 define("PERM_ADMIN_KICKALL", "admin.kickall");

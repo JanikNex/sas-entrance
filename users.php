@@ -115,6 +115,7 @@ if($action == "new") {
             case 0:
                 $userToEdit->setPermission(PERM_DB_LOGIN, 0);
                 $userToEdit->setPermission(PERM_ADMIN_ERRORS, 0);
+                $userToEdit->setPermission(PERM_ADMIN_TRACING, 0);
                 $userToEdit->setPermission(PERM_ADMIN_NOTIFY, 0);
                 $userToEdit->setPermission(PERM_ADMIN_NOTIFY_RECEIVE, 0);
                 $userToEdit->setPermission(PERM_ADMIN_KICKALL, 0);
@@ -151,6 +152,7 @@ if($action == "new") {
             case 1:
                 $userToEdit->setPermission(PERM_DB_LOGIN, 0);
                 $userToEdit->setPermission(PERM_ADMIN_ERRORS, 0);
+                $userToEdit->setPermission(PERM_ADMIN_TRACING, 0);
                 $userToEdit->setPermission(PERM_ADMIN_NOTIFY, 0);
                 $userToEdit->setPermission(PERM_ADMIN_NOTIFY_RECEIVE, 0);
                 $userToEdit->setPermission(PERM_ADMIN_KICKALL, 0);
@@ -187,6 +189,7 @@ if($action == "new") {
             case 2:
                 $userToEdit->setPermission(PERM_DB_LOGIN, 0);
                 $userToEdit->setPermission(PERM_ADMIN_ERRORS, 0);
+                $userToEdit->setPermission(PERM_ADMIN_TRACING, 0);
                 $userToEdit->setPermission(PERM_ADMIN_NOTIFY, 0);
                 $userToEdit->setPermission(PERM_ADMIN_NOTIFY_RECEIVE, 0);
                 $userToEdit->setPermission(PERM_ADMIN_KICKALL, 0);
@@ -223,6 +226,7 @@ if($action == "new") {
             case 3:
                 $userToEdit->setPermission(PERM_DB_LOGIN, 0);
                 $userToEdit->setPermission(PERM_ADMIN_ERRORS, 0);
+                $userToEdit->setPermission(PERM_ADMIN_TRACING, 0);
                 $userToEdit->setPermission(PERM_ADMIN_NOTIFY, 0);
                 $userToEdit->setPermission(PERM_ADMIN_NOTIFY_RECEIVE, 0);
                 $userToEdit->setPermission(PERM_ADMIN_KICKALL, 0);
@@ -259,6 +263,7 @@ if($action == "new") {
             case 4:
                 $userToEdit->setPermission(PERM_DB_LOGIN, 1);
                 $userToEdit->setPermission(PERM_ADMIN_ERRORS, 1);
+                $userToEdit->setPermission(PERM_ADMIN_TRACING, 1);
                 $userToEdit->setPermission(PERM_ADMIN_NOTIFY, 1);
                 $userToEdit->setPermission(PERM_ADMIN_NOTIFY_RECEIVE, 1);
                 $userToEdit->setPermission(PERM_ADMIN_KICKALL, 1);

@@ -111,6 +111,17 @@ if($action == "new") {
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
         exit;
     }
+} elseif($action == "allTracings") {
+    if($user->isActionAllowed(PERM_ADMIN_TRACING)) {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Alle Fahndungen", $user);
+
+        $dwoo->output("tpl/tracingList.tpl", $pgdata);
+        exit;
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Alle Fahndungen", $user);
+        $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
+    }
 } elseif($action == "citizeninfo") {
     if($user->isActionAllowed(PERM_CITIZEN_INFO_SPECIFIC) and is_numeric($cID)) {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Schülerinfo", $user, true, false, "citizen.php");

@@ -112,4 +112,28 @@ if($action == "users") {
     $jsoncode = json_encode($toEncode);
     echo $jsoncode;
     exit;
+} elseif($action == "tracings") {
+    $toEncode = ["tracings" => []];
+    $tracings = \Entrance\TracingEntry::getAllTracings($sort, $filter);
+    foreach($tracings as $tracing) {
+        if(isset($_GET["search"]) and $_GET["search"] != null) {
+            if (strpos(strtolower($tracing->asString()), strtolower($_GET["search"])) !== FALSE)
+                array_push($toEncode["tracings"], $tracing->asArray());
+        } else
+            array_push($toEncode["tracings"], $tracing->asArray());
+    }
+    if(!isset($_GET["page"])) {
+        $toEncode["page"] = 1;
+        $toEncode["maxpage"] = ceil(sizeof($toEncode["tracings"]) / $pageSize);
+        $startElem = 0;
+        $toEncode["tracings"] = array_slice($toEncode["tracings"], $startElem, $pageSize);
+    } else {
+        $toEncode["page"] = $_GET["page"];
+        $toEncode["maxpage"] = ceil(sizeof($toEncode["tracings"]) / $pageSize);
+        $startElem = ($toEncode["page"]-1) * $pageSize;
+        $toEncode["tracings"] = array_slice($toEncode["tracings"], $startElem, $pageSize);
+    }
+    $jsoncode = json_encode($toEncode);
+    echo $jsoncode;
+    exit;
 }

@@ -65,6 +65,18 @@ class TracingEntry {
     }
 
     /**
+     * @param string $sort
+     * @param string $filter
+     * @return Error[]
+     */
+    public static function getAllTracings($sort = "", $filter = ""){
+        $pdo = new PDO_MYSQL();
+        $query = "SELECT tID FROM entrance_tracing ".EFILTERING[$filter].ESORTING[$sort];
+        $stmt = $pdo->queryMulti($query);
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\TracingEntry::fromTID");
+    }
+
+    /**
      * Returns the size of active Tracings
      * @return int
      */
@@ -110,6 +122,19 @@ class TracingEntry {
             $pdo -> query("UPDATE entrance_tracing SET active = 0 WHERE cID = :cID", [":cID" => $citizen->getCID()]);
             return true;
         }else return false;
+    }
+
+    public function asArray() {
+        return [
+            "tID" => $this->tID,
+            "cID" => $this->cID,
+            "citizenName" => Citizen::fromCID($this->cID)->getFirstname()." ".Citizen::fromCID($this->cID)->getLastname(),
+            "citizenClassLevel" => Citizen::fromCID($this->cID)->getClasslevel(),
+            "tracingStatus" => $this->active,
+            "timestamp" => date("d. M Y - H:i", strtotime($this->timestamp)),
+            "user" => User::fromUID($this->uID)->getUName(),
+            "prefix" => User::fromUID($this->uID)->getPrefixAsHtml(),
+        ];
     }
     /**
      * @return mixed
