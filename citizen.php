@@ -114,8 +114,9 @@ if($action == "new") {
 } elseif($action == "allTracings") {
     if($user->isActionAllowed(PERM_ADMIN_TRACING)) {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Alle Fahndungen", $user);
+        $pgdata["page"]["type"] = "Tracing";
 
-        $dwoo->output("tpl/tracingList.tpl", $pgdata);
+        $dwoo->output("tpl/citizenList.tpl", $pgdata);
         exit;
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Alle Fahndungen", $user);

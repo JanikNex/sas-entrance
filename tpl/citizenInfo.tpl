@@ -78,7 +78,7 @@
         </main>
 <script>
     jQuery(document).ready(function($) {
-        $("#bcTarget").barcode("{$page.citizen.barcode}", "ean13");
+        $("#bcTarget").barcode("{$page.citizen.barcode}", "codabar");
     });
 </script>
 {include file="newEnd.tpl"}

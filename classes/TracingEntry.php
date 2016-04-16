@@ -9,6 +9,21 @@
 namespace Entrance;
 use PDO;
 
+const TSORTING = [
+    "ascID"    => " ORDER BY eID ASC",
+    "ascDate"  => " ORDER BY `timestamp` ASC",
+    "descDate" => " ORDER BY `timestamp` DESC",
+    "descID"   => " ORDER BY eID DESC",
+    "" => ""
+];
+
+const TFILTERING = [
+    ""          => "",
+    "Alle"      => "",
+    "Aktiv"     => " AND active = 1 ",
+    "Inaktiv"   => " AND active = 0 ",
+];
+
 class TracingEntry {
     private $tID, $cID, $uID,  $timestamp, $active;
 
@@ -71,7 +86,7 @@ class TracingEntry {
      */
     public static function getAllTracings($sort = "", $filter = ""){
         $pdo = new PDO_MYSQL();
-        $query = "SELECT tID FROM entrance_tracing ".EFILTERING[$filter].ESORTING[$sort];
+        $query = "SELECT tID FROM entrance_tracing ".TFILTERING[$filter].TSORTING[$sort];
         $stmt = $pdo->queryMulti($query);
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\TracingEntry::fromTID");
     }
@@ -132,7 +147,7 @@ class TracingEntry {
             "citizenClassLevel" => Citizen::fromCID($this->cID)->getClasslevel(),
             "tracingStatus" => $this->active,
             "timestamp" => date("d. M Y - H:i", strtotime($this->timestamp)),
-            "user" => User::fromUID($this->uID)->getUName(),
+            "usrname" => User::fromUID($this->uID)->getUName(),
             "prefix" => User::fromUID($this->uID)->getPrefixAsHtml(),
         ];
     }

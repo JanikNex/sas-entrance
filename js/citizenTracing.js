@@ -90,9 +90,9 @@ function update() {
     var listElemTmplt = `
             <li class="collection-item avatar">
                 <i class="material-icons circle {{color}}">vpn_key</i>
-                <span class="title">[{{tID}}]: {{citizenName}} @classlevel {{lvl}} | {{prefix}}{{user}}</span>
+                <span class="title">[{{tID}}]: {{citizenName}} @classlevel {{lvl}}</span>
                 <p>
-                    {{timestamp}}
+                    {{{prefix}}} {{user}} @{{timestamp}}
                 </p>
             </li>
         `;
@@ -100,13 +100,13 @@ function update() {
     finishedString = [];
     $.getJSON("getLists.php?action=tracings&search="+searchString+"&page="+requestPage+"&filter="+filter+"&sort="+sort, function (data) {
         if(!(JSON.stringify(oldData) == JSON.stringify(data))) {
-            $("ul#tracings").html("");
+            $("ul#citizens").html("");
             data["tracings"].forEach(function (element, index, array) {
                 if(element["tracingStatus"] == 0) color = "green";
                 else if(element["tracingStatus"] == 1) color = "red";
                 else color = "grey";
-                html = template({tID: element["tID"], cID: element["cID"], citizenName: element["citizenName"], citizenLevel: element["citizenClassLevel"], color: color, timestamp: element["timestamp"], user: element["username"], prefix: element["prefix"]});
-                $("ul#tracings").append(html);
+                html = template({tID: element["tID"], cID: element["cID"], citizenName: element["citizenName"], lvl: element["citizenClassLevel"], color: color, timestamp: element["timestamp"], user: element["usrname"], prefix: element["prefix"]});
+                $("ul#citizens").append(html);
             });
             updatePages(data["page"], data["maxpage"]);
             console.log("update");
