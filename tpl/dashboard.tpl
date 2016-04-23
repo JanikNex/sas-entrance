@@ -19,7 +19,7 @@
                     <div class="card-panel yellow lighten-2 col s12 m3 offset-m1">
                         <!-- gesamte   -->
                         <p class="white-text">
-                            <!-- Zahl -->
+                            <span id="all"></span>
                         </p>
                         <p class="center-align"><b>Gesamt</b></p>
                     </div>
@@ -27,21 +27,21 @@
                     <div class="card-panel light-green accent-2 col s12 m3">
                         <!--   Besucher -->
                         <p class="white-text">
-                            <!-- Zahl -->
+                            <span id="visitors"></span>
                         </p>
                         <p class="center-align"><b>Besucher</b></p>
                     </div>
                     <div class="card-panel light-green accent-2 col s12 m4 offset-m1">
                         <!-- Schueler   -->
                         <p class="white-text">
-                            <!-- Zahl -->
+                            <span id="students"></span>
                         </p>
                         <p class="center-align"><b>Schüler</b></p>
                     </div>
                     <div class="card-panel light-green accent-2 col s12 m3 offset-m1">
                         <!--   Kurriere -->
                         <p class="white-text">
-                            <!-- Zahl -->
+                            <span id="courriers"></span>
                         </p>
                         <p class="center-align"><b>Kurriere</b></p>
                     </div>
@@ -49,21 +49,21 @@
                     <div class="card-panel red col s12 m3">
                         <!--   badCitizens -->
                         <p class="white-text">
-                            <!-- Zahl -->
+                            <span id="badCitizens"></span>
                         </p>
                         <p class="center-align"><b>Böse Schüler</b></p>
                     </div>
                     <div class="card-panel red col s12 m4 offset-m1">
                         <!--   aktive Errors -->
                         <p class="white-text">
-                            <!-- Zahl -->
+                            <span id="errors"></span>
                         </p>
                         <p class="center-align"><b>Fehler</b></p>
                     </div>
                     <div class="card-panel red col s12 m3 offset-m1">
                         <!--   aktive Fahndungen -->
                         <p class="white-text">
-                            <!-- Zahl -->
+                            <span id="tracings"></span>
                         </p>
                         <p class="center-align"><b>Fahndungen</b></p>
                     </div>
