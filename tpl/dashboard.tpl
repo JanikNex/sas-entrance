@@ -12,7 +12,7 @@
                 <div class="row">
                     <div class="card-panel col s12 m8">
                         <!-- Staatkontrolle -->
-                        <p class="center-align"><b>Staatskontrolle</b></p>
+                        <p class="center-align"><b>Staatskontrolle</b></p><!--änderung-->
                         <p id="stateState"></p>
                         <p>
                             {if $header.perm.admin_state_open == 1}
