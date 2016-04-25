@@ -174,7 +174,7 @@ class Error{
         ];
     }
 
-    public function asString() {
+    public function toString() {
         return json_encode($this->asArray());
     }
     /**
