@@ -136,4 +136,17 @@ if($action == "users") {
     $jsoncode = json_encode($toEncode);
     echo $jsoncode;
     exit;
+} elseif($action == "dashboard") {
+    $toEncode = [];
+    $toEncode["stateState"] = \Entrance\Util::isStateOpen();
+    $toEncode["all"] = \Entrance\Citizen::getCurrentCitizenCount("", "", "");
+    $toEncode["visitors"] = \Entrance\Citizen::getCurrentVisitorCount();
+    $toEncode["students"] = \Entrance\Citizen::getCurrentStudentCount();
+    $toEncode["courrieres"] = \Entrance\Citizen::getCurrentCourrierCount();
+    $toEncode["badCitizens"] = \Entrance\Citizen::getCurrentBadCitizenCount();
+    $toEncode["errors"] = \Entrance\Error::getSizeOfActiveErrors();
+    $toEncode["tracings"] = \Entrance\TracingEntry::getSizeOfActiveTracings();
+    $jsoncode = json_encode($toEncode);
+    echo $jsoncode;
+    exit;
 }

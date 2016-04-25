@@ -96,7 +96,9 @@ class TracingEntry {
      * @return int
      */
     public static function getSizeOfActiveTracings() {
-        return sizeof(self::getAllActiveLogs());
+        $pdo = new PDO_MYSQL();
+        $res = $pdo->query("SELECT COUNT(*) as count FROM entrance_tracing WHERE active = 1");
+        return $res->count;
     }
 
     /**

@@ -39,8 +39,8 @@
                                     <audio src="mp3/closed.mp3" autoplay />
                                 {elseif $page.scan.success == 4}
                                     <p class="green-text"><img src="checkOk.png" height="16px">Scan Erfolgreich.<br/></p>
-                                    <audio src="mp3/wanted.mp3" autoplay />
                                     <p class="red-text">Diese Person wird polizeilich <b>gesucht</b>! Übergeben Sie diese bitte umgehend der Polizei!</p>
+                                    <audio src="mp3/wanted.mp3" autoplay />
                                 {elseif $page.scan.success == 5}
                                     <p class="red-text"><img src="checkFail.png" height="16px"> Scan Fehlgeschlagen. Achtung, Person ist jetzt geperrt.<br/>
                                         [{$page.error.errorCode}]:
@@ -54,9 +54,9 @@
                                         {if $page.error.errorCode == 8}Error@CheckIn | NoCitizenFound {/if}
                                         {if $page.error.errorCode == 9}Error@CheckOut | NoCitizenFound {/if}
                                     </p>
+                                    <p class="red-text">Diese Person wird polizeilich <b>gesucht</b>! Übergeben Sie diese bitte umgehend der Polizei!</p>
                                     <audio src="mp3/wanted.mp3" autoplay />
                                     <audio src="mp3/error.mp3" autoplay />
-                                    <p class="red-text">Diese Person wird polizeilich <b>gesucht</b>! Übergeben Sie diese bitte umgehend der Polizei!</p>
                                 {/if}
                             </div>
                         </div>
@@ -66,7 +66,7 @@
                             <h5>Person</h5>
                             {if $locked == 1}<p class="red-text"><b>!</b> Person gesperrt</p><br/>{/if}
                             <p><b>Name:</b>
-                                {if ($page.citizen.firstname == 'Janik' and $page.citizen.lastname == 'Rapp') or ($page.citizen.firstname == 'Yannick' and $page.citizen.lastname == 'Félix')} <p class="red-text"> [Admin] </p>{/if}{$page.citizen.firstname} {$page.citizen.lastname}</p>
+                                {if ($page.citizen.firstname == 'Janik' and $page.citizen.lastname == 'Rapp') or ($page.citizen.firstname == 'Yannick' and $page.citizen.lastname == 'Félix')} <span class="red-text"> [Admin] </span>{/if}{$page.citizen.firstname} {$page.citizen.lastname}</p>
                             {if $page.citizen.age <= 100}
                                 <p><b>Geburtstag:</b> {$page.citizen.birthdayNice}</p>
                             {/if}

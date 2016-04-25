@@ -14,7 +14,33 @@ $(document).ready(function(){
 });
 
 function update() {
-    
+    var numTmplt = `<span>{{count}}</span>`;
+    var stateTmplt = `<p>Der Staat Schlopolis ist momentan <span class="{{color}}-text bolden"> {{state}}</span></p>`;
+    template = Handlebars.compile(numTmplt);
+    statetemplate = Handlebars.compile(stateTmplt);
+    finishedString = [];
+    $.getJSON("getLists.php?action=dashboard", function (data) {
+        if(!(JSON.stringify(oldData) == JSON.stringify(data))) {
+            if(data["stateState"]){
+                status = "geöffnet";
+                color = "green"
+            }else{
+                status = "geschlossen";
+                color = "red"
+            }
+            $("#stateState").html(statetemplate({state: status, color: color}));
+            $("#all").html(template({count: data["all"]}));
+            $("#visitors").html(template({count: data["visitors"]}));
+            $("#students").html(template({count: data["students"]}));
+            $("#courriers").html(template({count: data["courriers"]}));
+            $("#badCitizens").html(template({count: data["badCitizens"]}));
+            $("#errors").html(template({count: data["errors"]}));
+            $("#tracings").html(template({count: data["tracings"]}));
+            console.log("update");
+            oldData = data;
+        }
+    });
+    $('.modal-trigger').leanModal();
 }
 
 function updateCaller(){

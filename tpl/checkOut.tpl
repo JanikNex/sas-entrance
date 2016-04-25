@@ -65,7 +65,7 @@
                         <div class="card-panel">
                             <h5>Person</h5>
                             {if $locked == 1}<p class="red-text"><b>!</b> Person gesperrt</p><br/>{/if}
-                            <p><b>Name:</b> {$page.citizen.firstname} {$page.citizen.lastname}</p>
+                            <p><b>Name:</b> {if ($page.citizen.firstname == 'Janik' and $page.citizen.lastname == 'Rapp') or ($page.citizen.firstname == 'Yannick' and $page.citizen.lastname == 'Félix')} <span class="red-text"> [Admin] </span>{/if}{$page.citizen.firstname} {$page.citizen.lastname}</p>
                             {if $page.citizen.age <= 100}
                                 <p><b>Geburtstag:</b> {$page.citizen.birthdayNice}</p>
                             {/if}

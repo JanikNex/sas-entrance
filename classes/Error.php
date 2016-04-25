@@ -78,8 +78,8 @@ class Error{
      */
     public static function getSizeOfActiveErrors() {
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT eID FROM entrance_error WHERE active = 1");
-        return sizeof($stmt);
+        $res = $pdo->query("SELECT COUNT(*) as count FROM entrance_error WHERE active = 1");
+        return $res->count;
     }
 
     /**
