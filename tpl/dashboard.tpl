@@ -13,8 +13,15 @@
                     <div class="card-panel col s12 m8">
                         <!-- Staatkontrolle -->
                         <p class="center-align"><b>Staatskontrolle</b></p>
-                        <!-- aktueller Status (geöffnet/geschlossen) und Button zum wechseln des Status (nur wenn Permission vorhanden,
-                        weiterleitunng auf "dashboard.php?action=openState" bzw. "closeState" -->
+                        <p id="stateState"></p>
+                        <p>
+                            {if $header.perm.admin_state_open == 1}
+                                <a class="btn green" href="dashboard.php?action=openState"><i class="small material-icons">play_arrow</i>Staat öffnen</a>
+                            {/if}
+                            {if $header.perm.admin_state_close == 1}
+                                <a class="btn red" href="dashboard.php?action=closeState"><i class="small material-icons">pause</i>Staat schließen</a>
+                            {/if}
+                        </p>
                     </div>
                     <div class="card-panel yellow lighten-2 col s12 m3 offset-m1">
                         <!-- gesamte   -->
