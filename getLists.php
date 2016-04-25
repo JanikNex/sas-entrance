@@ -117,7 +117,7 @@ if($action == "users") {
     $tracings = \Entrance\TracingEntry::getAllTracings($sort, $filter);
     foreach($tracings as $tracing) {
         if(isset($_GET["search"]) and $_GET["search"] != null) {
-            if (strpos(strtolower($tracing->asString()), strtolower($_GET["search"])) !== FALSE)
+            if (strpos(strtolower($tracing->toString()), strtolower($_GET["search"])) !== FALSE)
                 array_push($toEncode["tracings"], $tracing->asArray());
         } else
             array_push($toEncode["tracings"], $tracing->asArray());
