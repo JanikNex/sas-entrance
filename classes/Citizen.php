@@ -269,52 +269,81 @@ class Citizen {
     /**
      * Returns all "bad" citizen
      *
-     * @param $sort
-     * @param $filter
+     * @param string $sort
+     * @param string $filter
+     * @param int    $page
+     * @param int    $pagesize
+     * @param string $search
      * @return Citizen[]
      */
-    public static function getAllBadCitizen($sort, $filter) {
-        $citizens = self::getAllStudents($sort, $filter);
-        $days = LogEntry::getProjectDays();
-        $badCitizens = [];
-        foreach($citizens as $citizen){
-            foreach($days as $day){
-                if(($citizen -> getTimePerDay($day) <= 21600) && ($citizen->getClasslevel()<13)){
-                    array_push($badCitizens, $citizen);
-                    break;
-                }
+    public static function getAllBadCitizen($sort = "", $filter = "Schüler", $page = 1, $pagesize = 9999999, $search = "") {
+        $pdo = new PDO_MYSQL();
+        if($filter != "Gesperrt") {
+            if($search != "") {
+                $startElem = ($page-1) * $pagesize;
+                $endElem = $startElem + $pagesize;
+                $query = "SELECT cID FROM entrance_citizen WHERE MATCH(firstname, lastname) AGAINST('".$_GET["search"]."' IN BOOLEAN MODE) AND isBad = 1".CFILTERING[$filter].CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
+                $stmt = $pdo->queryMulti($query);
+                return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+            } else {
+                $startElem = ($page-1) * $pagesize;
+                $endElem = $startElem + $pagesize;
+                $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE isBad = 1". CFILTERING[$filter] . CSORTING[$sort]." LIMIT ".$startElem.','.$endElem);
+                return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
             }
+        } else {
+            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE isBad = 1" . CSORTING[$sort]);
+            $array = $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+            $r_citizen = [];
+            foreach($array as $citizen) {
+                if($citizen->isCitizenLocked())
+                    array_push($r_citizen, $citizen);
+            }
+            return $r_citizen;
         }
-        return $badCitizens;
     }
 
     /**
      * Count of @see getAllBadCitizens()
      *
+     * @param string $sort
+     * @param string $filter
+     * @param string $search
      * @return int
      */
-    public static function getCurrentBadCitizenCount(){
-        return sizeof(self::getAllBadCitizen());
+    public static function getCurrentBadCitizenCount($sort = "", $filter = "Schüler", $search = ""){
+        $pdo = new PDO_MYSQL();
+        if($search != "") $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE MATCH(firstname, lastname) AGAINST('".$search."' IN BOOLEAN MODE) AND isBad = 1 ".CFILTERING[$filter].CSORTING[$sort];
+        else $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE isBad = 1".CFILTERING[$filter].CSORTING[$sort];
+
+        $res = $pdo->query($query);
+        return $res->count;
     }
 
     /**
      * Returns all Citizen in the db; Filter: Students
      *
-     * @param $sort
-     * @param $filter
+     * @param string $sort
+     * @param string $filter
+     * @param int    $page
+     * @param int    $pagesize
+     * @param string $search
      * @return Citizen[]
      */
-    public static function getAllStudents($sort = "", $page = 1, $pagesize = 9999999, $search = "") {
-        return self::getAllCitizen($sort, "Schüler", $page, $pagesize, $search);
+    public static function getAllStudents($sort = "", $filter = "Schüler", $page = 1, $pagesize = 9999999, $search = "") {
+        return self::getAllCitizen($sort, $filter, $page, $pagesize, $search);
     }
 
     /**
      * Returns all Students currently in the state
      *
+     * @param string $sort
+     * @param string $filter
+     * @param string $search
      * @return Citizen[]
      */
-    public static function getAllStudentsInState($sort = "", $search = "") {
-        return self::getTotalCitizenCount($sort, "Schüler", $search);
+    public static function getAllStudentsInState($sort = "", $filter = "Schüler", $search = "") {
+        return self::getAllCitizenInState($sort, $filter, $search);
     }
 
     /**
@@ -347,32 +376,25 @@ class Citizen {
     /**
      * Returns all Courriers, which are on a tour
      *
+     * @param $sort
+     * @param $page
+     * @param $pagesize
+     * @param $search
      * @return Citizen[]
      */
     public static function getAllCourriersOutOfState($sort, $page, $pagesize, $search){
         $pdo = new PDO_MYSQL();
-        if($filter != "Gesperrt") {
-            if($search != "") {
-                $startElem = ($page-1) * $pagesize;
-                $endElem = $startElem + $pagesize;
-                $query = "SELECT cID FROM entrance_citizen WHERE MATCH(firstname, lastname) AGAINST('".$_GET["search"]."' IN BOOLEAN MODE) AND classlevel = 16 AND state = 1  ".CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
-                $stmt = $pdo->queryMulti($query);
-                return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
-            } else {
-                $startElem = ($page-1) * $pagesize;
-                $endElem = $startElem + $pagesize;
-                $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE classlevel = 16 AND state = 1 " . CSORTING[$sort]." LIMIT ".$startElem.','.$endElem);
-                return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
-            }
+        if($search != "") {
+            $startElem = ($page-1) * $pagesize;
+            $endElem = $startElem + $pagesize;
+            $query = "SELECT cID FROM entrance_citizen WHERE MATCH(firstname, lastname) AGAINST('".$_GET["search"]."' IN BOOLEAN MODE) AND classlevel = 16 AND state = 1  ".CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
+            $stmt = $pdo->queryMulti($query);
+            return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
         } else {
-            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE classlevel = 16 AND state = 1 " . CSORTING[$sort]);
-            $array = $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
-            $r_citizen = [];
-            foreach($array as $citizen) {
-                if($citizen->isCitizenLocked())
-                    array_push($r_citizen, $citizen);
-            }
-            return $r_citizen;
+            $startElem = ($page-1) * $pagesize;
+            $endElem = $startElem + $pagesize;
+            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE classlevel = 16 AND state = 1 " . CSORTING[$sort]." LIMIT ".$startElem.','.$endElem);
+            return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
         }
     }
 

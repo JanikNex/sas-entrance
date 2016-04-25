@@ -17,7 +17,7 @@
                     </div>
                 </div>
             </form>
-            {if $page.type != "Wanted" and $page.type != "Tracing"}<div class="col offset-s4 s4 offset-m1 m2 right-align">
+            {if $page.type != "Wanted" and $page.type != "Tracing" and $page.type != "bad"}<div class="col offset-s4 s4 offset-m1 m2 right-align">
                 <br class="hide-on-small-only"/>
                 <!-- Dropdown Trigger -->
                 <a id="sortCurr" class='dropdown-button btn indigo' href='#' data-activates='dropdown0'><i class="mdi mdi-sort"></i></a>
@@ -77,6 +77,40 @@
                         <li><a onclick="setFilter('Alle')"                  >Alle                  </a></li>
                         <li><a onclick="setFilter('Active')"                >Aktiv                 </a></li>
                         <li><a onclick="setFilter('Inactive')"              >Inaktiv               </a></li>
+                    </ul>
+                </div>
+            {elseif $page.type == "bad"}
+                <div class="col offset-s4 s4 offset-m1 m2 right-align">
+                    <br class="hide-on-small-only"/>
+                    <!-- Dropdown Trigger -->
+                    <a id="sortCurr" class='dropdown-button btn indigo' href='#' data-activates='dropdown0'></a>
+
+                    <!-- Dropdown Structure -->
+                    <ul id='dropdown0' class='dropdown-content'>
+                        <li><a onclick="setSort('ascDate')"> <i class="mdi mdi-sort-ascending"> </i> Datum</a></li>
+                        <li><a onclick="setSort('descDate')"><i class="mdi mdi-sort-descending"></i> Datum</a></li>
+                        <li><a onclick="setSort('ascID')">   <i class="mdi mdi-sort-ascending"> </i> ID</a></li>
+                        <li><a onclick="setSort('descID')">  <i class="mdi mdi-sort-descending"></i> ID</a></li>
+                    </ul>
+                </div>
+                <div class="col s4 m2 right-align">
+                    <br class="hide-on-small-only"/>
+                    <!-- Dropdown Trigger -->
+                    <a id="filterCurr" class='dropdown-button btn indigo' href='#' data-activates='dropdown'></a>
+
+                    <!-- Dropdown Structure -->
+                    <ul id='dropdown' class='dropdown-content'>
+                        <li><a id="currFilter"></a></li>
+                        <li class="divider"></li>
+                        <li> <a onclick="setFilter('Stufe05');">Stufe 5  </a></li>
+                        <li> <a onclick="setFilter('Stufe06');">Stufe 6  </a></li>
+                        <li> <a onclick="setFilter('Stufe07');">Stufe 7  </a></li>
+                        <li> <a onclick="setFilter('Stufe08');">Stufe 8  </a></li>
+                        <li> <a onclick="setFilter('Stufe09');">Stufe 9  </a></li>
+                        <li> <a onclick="setFilter('Stufe10');">Stufe 10 </a></li>
+                        <li> <a onclick="setFilter('Stufe11');">Stufe 11 </a></li>
+                        <li> <a onclick="setFilter('Stufe12');">Stufe 12 </a></li>
+                        <li> <a onclick="setFilter('Schüler');">Schüler   </a></li>
                     </ul>
                 </div>
             {/if}

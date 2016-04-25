@@ -90,7 +90,7 @@ if($action == "new") {
 } elseif($action == "badcitizen") {
     if($user->isActionAllowed(PERM_CITIZEN_INFO_DIFFERENCE)) {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Böse Schüler", $user);
-        $pgdata["page"]["type"] = "Bad";
+        $pgdata["page"]["type"] = "bad";
 
         $dwoo->output("tpl/citizenList.tpl", $pgdata);
         exit;

@@ -90,8 +90,16 @@ if($action == "users") {
         $toEncode["maxpage"] = ceil($currCount / $pageSize);
         $toEncode["size"] = $currCount;
     }
-    elseif($action == "citizenBad") $citizens = \Entrance\Citizen::getAllBadCitizen($sort, $filter);
-    elseif($action == "citizenWanted") {
+    elseif($action == "citizenBad") {
+        $citizens = \Entrance\Citizen::getAllBadCitizen($sort, $filter, $_GET["page"], $pageSize, $_GET["search"]);
+        foreach ($citizens as $citizen) {
+            array_push($toEncode["citizens"], $citizen->asArray());
+        }
+        $currCount = \Entrance\Citizen::getCurrentBadCitizenCount($sort, $filter, $_GET["search"]);
+        $toEncode["page"] = $_GET["page"];
+        $toEncode["maxpage"] = ceil($currCount / $pageSize);
+        $toEncode["size"] = $currCount;
+    } elseif($action == "citizenWanted") {
         $citizens = \Entrance\Citizen::getAllWantedCitizens($_GET["page"], $pageSize, $_GET["search"]);
         foreach($citizens as $citizen) {
             array_push($toEncode["citizens"], $citizen->asArray());
