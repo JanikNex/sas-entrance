@@ -64,7 +64,7 @@ class LogEntry {
      */
     public static function getNumLogs($limit) {
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT lID FROM `entrance_logs` ORDER BY `lID` DESC LIMIT :limit", [":limit" => $limit]);
+        $stmt = $pdo->queryMulti("SELECT lID FROM entrance_logs ORDER BY lID DESC LIMIT " . intval($limit));
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\LogEntry::fromLID");
     }
 
@@ -315,6 +315,7 @@ class LogEntry {
             "scanner" => User::fromUID($this->uID)->getPrefixAsHtml().User::fromUID($this->uID)->getUName(),
             "uID" => $this->uID,
             "cID" => $this->cID,
+            "citizenname" => Citizen::fromCID($this->cID)->getFirstname()." ".Citizen::fromCID($this->cID)->getLastname(),
             "lID" => $this->lID,
             "timeSinceLast" => $this->timeBetweenTwoEntries() != 0 ? gmdate("H\h i\m s\s", $this->timeBetweenTwoEntries()) : "Nicht anwesend",
             "timestamp" => date("d. M Y - H:i:s", strtotime($this->timestamp)),

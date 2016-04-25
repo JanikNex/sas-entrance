@@ -75,7 +75,9 @@
                 <div class="card-panel">
                     <!-- die letzten 5 Logs aus der Datenbank -->
                     <p class="center-align"><b>Logs</b></p>
-                    <span><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/></span>
+                    <ul class="collection" id="logs">
+
+                    </ul>
                 </div>
             </div>
         </div>

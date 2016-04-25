@@ -32,7 +32,8 @@ const CFILTERING = [
     "Schüler"   => " AND classLevel < 14 ",
     "Visum"     => " AND classLevel = 15 ",
     "Lehrer"    => " AND classLevel = 14 ",
-    "Kurier"    => " AND classLevel = 16 "
+    "Kurier"    => " AND classLevel = 16 ",
+    "ohneKurier"=> " AND classLevel < 16"
 ];
 
 

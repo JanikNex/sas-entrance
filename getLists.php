@@ -141,7 +141,7 @@ if($action == "users") {
 } elseif($action == "dashboard") {
     $toEncode = [];
     $toEncode["stateState"] = \Entrance\Util::isStateOpen();
-    $toEncode["all"] = \Entrance\Citizen::getCurrentCitizenCount("", "", "");
+    $toEncode["all"] = \Entrance\Citizen::getCurrentCitizenCount("", "ohneKurier", "");
     $toEncode["visitors"] = \Entrance\Citizen::getCurrentVisitorCount();
     $toEncode["students"] = \Entrance\Citizen::getCurrentStudentCount();
     $toEncode["courriers"] = \Entrance\Citizen::getCurrentCourrierCount();

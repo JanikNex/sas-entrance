@@ -17,9 +17,9 @@ function update() {
     var logsTmplt = `
     <li class="collection-item avatar">
         <i class="material-icons circle {{color}}">{{icon}}</i>
-            <span class="title">{{infotext}}</span>
+            <span class="title">{{name}} hat den Staat {{infotext}}</span>
             <p>{{timestamp}}<br/>
-                <img src="barcode-scan.svg" height="16px" /> {{scanner}}
+                <img src="barcode-scan.svg" height="16px" /> {{{scanner}}}
             </p>
 
         <i class="material-icons secondary-content {{success_color}}">{{success_icon}}</i>
@@ -31,6 +31,7 @@ function update() {
     template = Handlebars.compile(numTmplt);
     timetemplate = Handlebars.compile(timeTmplt);
     statetemplate = Handlebars.compile(stateTmplt);
+    logstemplate = Handlebars.compile(logsTmplt);
     finishedString = [];
     $.getJSON("getLists.php?action=dashboard", function (data) {
         if(!(JSON.stringify(oldData) == JSON.stringify(data))) {
@@ -57,14 +58,28 @@ function update() {
             $("#badcitizen").html(template({count: data["badCitizens"]}));
             $("#errors").html(template({count: data["errors"]}));
             $("#tracings").html(template({count: data["tracings"]}));
-            data["citizens"].forEach(function (element, index, array) {
-                
-            });
             console.log("update");
             oldData = data;
         }
         var d = new Date();
         $("#time").html(timetemplate({hrs: pad(d.getHours()), min: pad(d.getMinutes()), sec: pad(d.getSeconds())}));
+    });
+
+    $.getJSON("getLists.php?action=latestLogs", function(data) {
+        $("ul#logs").html("");
+        data["logs"].forEach(function (element, index, array) {
+            name = element["citizenname"];
+            if(element["success"] == 1) {success_color = "green-text"; success_icon = "done";}
+            else {success_color = "red-text"; success_icon = "priority_high";}
+
+            if(element["action"] == 0) {color = "green"; icon = "navigate_before"; infotext = "betreten";}
+            else if(element["action"] == 1) {color = "red"; icon = "navigate_next"; infotext = "verlassen";}
+            else {color = "grey"; icon = "code"; infotext = "ignoriert";}
+
+
+            html = logstemplate({icon: icon, color: color, infotext: infotext, name: name, timestamp: element["timestamp"], scanner: element["scanner"], success_color: success_color, success_icon: success_icon});
+            $("ul#logs").append(html);
+        });
     });
 }
 
