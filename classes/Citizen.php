@@ -11,10 +11,11 @@ namespace Entrance;
 use PDO;
 
 const CSORTING = [
-    "ascName"  => " ORDER BY lastname ASC",
-    "ascID"    => " ORDER BY cID ASC",
-    "descName" => " ORDER BY lastname DESC",
-    "descID"   => " ORDER BY cID DESC",
+    "ascName"      => " ORDER BY lastname ASC",
+    "ascID"        => " ORDER BY cID ASC",
+    "descName"     => " ORDER BY lastname DESC",
+    "descID"       => " ORDER BY cID DESC",
+    "ascBarcode"   => " ORDER BY barcode ASC",
     "" => ""
 ];
 
@@ -719,6 +720,65 @@ class Citizen {
         foreach(LogEntry::getProjectDays() as $day)
             $time += $this->getTimePerDay($day);
         return $time;
+    }
+
+    /**
+     * Creates an array with all students and their time informations
+     * @return array
+     */
+    public static function createClassListsAsArray(){
+        $students = Citizen::getAllStudents($sort="ascBarcode");
+        $list = [];
+        $currentClass = [0,0];
+        $label = ["cID", "Vorname", "Nachname", "Klassenstufe", "Barcode"];
+        foreach (LogEntry::getProjectDays() as $day){
+            array_push($label, $day);
+        }
+        array_push($label, "Gesamtzeit");
+        array_push($list, $label);
+        foreach ($students as $student){
+            if($student->getClasslevel()<= 10){
+                if(!((substr($student->getBarcode(), 9, 2) == $currentClass[0]) && (substr($student->getBarcode(), 11, 1) == $currentClass[1]))){
+                    $currentClass = [substr($student->getBarcode(), 9, 2), substr($student->getBarcode(), 11, 1)];
+                    array_push($list, ["Klasse", $currentClass[0], $currentClass[1]]);
+                }
+            } else{
+                if(!((substr($student->getBarcode(), 9, 2) == $currentClass[0]))){
+
+                    array_push($list, ["Klasse", $currentClass[0]]);
+                }
+            }
+            array_push($list, $student->timeAsArray());
+        }
+
+        return $list;
+    }
+
+
+    /**
+     *Sends the Classlist as Array to the CSV creator
+     */
+    public static function createClasslistAsCSV(){
+        Util::writeCSV(self::createClassListsAsArray(), "classlist.csv");
+    }
+
+    /**
+     * Returns an array with all important student informations and his times per day
+     * @return array
+     */
+    public function timeAsArray(){
+        $studentData = [
+            "id" => $this->cID,
+            "firstname" => $this->firstname,
+            "lastname" => $this->lastname,
+            "classlevel" => $this->classlevel,
+            "barcode" => $this->barcode
+        ];
+        foreach (LogEntry::getProjectDays() as $day){
+            array_push($studentData, $this->getTimePerDay($day));
+        }
+        array_push($studentData, $this->getTimePerProject());
+        return $studentData;
     }
 
     /**

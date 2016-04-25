@@ -183,4 +183,17 @@ namespace Entrance;
              }
          }
      }
+
+     /**
+      * Writes the given list as CSV in a specific file
+      * @param $list
+      * @param $filename
+      */
+     public static function writeCSV($list, $filename){
+         $fp = fopen($filename, 'w');
+         foreach ($list as $fields) {
+             fputcsv($fp, $fields);
+         }
+         fclose($fp);
+     }
  }
