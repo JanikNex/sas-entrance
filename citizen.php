@@ -6,7 +6,7 @@
  * Time: 15:30
  */
 
-error_reporting(E_ALL);
+error_reporting(E_ERROR);
 ini_set("diplay_errors", "on");
 
 require_once 'classes/PDO_MYSQL.php'; //DB Anbindung

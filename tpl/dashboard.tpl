@@ -3,9 +3,11 @@
     <div class="container">
         <div class="row">
             <div class="col s12 m4 offset-m8">
-                <div class="card-panel s12">
+                <div class="card-panel s12 no-padding">
                     <!-- Uhrzeit -->
-                    <p class="center-align"><b>Zeit</b></p>
+                    <p class="center" style="font-family: monospace; font-weight: bold; font-size: 35px;" id="time">
+
+                    </p>
                 </div>
             </div>
             <div class="col s12 m8">
@@ -16,61 +18,54 @@
                         <p id="stateState"></p>
                         <p>
                             {if $header.perm.admin_state_open == 1}
-                                <a class="btn green" href="dashboard.php?action=openState"><i class="small material-icons">play_arrow</i>Staat öffnen</a>
+                                <a id="btnopen" class="btn waves-light green" onclick="openState()"><i class="mdi mdi-play"></i> Öffnen</a>
                             {/if}
                             {if $header.perm.admin_state_close == 1}
-                                <a class="btn red" href="dashboard.php?action=closeState"><i class="small material-icons">pause</i>Staat schließen</a>
+                                <a id="btnclose" class="btn waves-light red" onclick="closeState()"><i class="mdi mdi-pause"></i> Schließen</a>
                             {/if}
                         </p>
                     </div>
                     <div class="card-panel yellow lighten-2 col s12 m3 offset-m1">
                         <!-- gesamte   -->
-                        <p class="white-text">
-                            <span id="all"></span>
+                        <p class="black-text center" style="font-family: monospace; font-size: 30px;" id="all">
                         </p>
                         <p class="center-align"><b>Gesamt</b></p>
                     </div>
                     <!-- Zeile 2 -->
                     <div class="card-panel light-green accent-2 col s12 m3">
                         <!--   Besucher -->
-                        <p class="white-text">
-                            <span id="visitors"></span>
+                        <p class="black-text center" style="font-family: monospace; font-size: 30px;" id="visitors">
                         </p>
                         <p class="center-align"><b>Besucher</b></p>
                     </div>
                     <div class="card-panel light-green accent-2 col s12 m4 offset-m1">
                         <!-- Schueler   -->
-                        <p class="white-text">
-                            <span id="students"></span>
+                        <p class="black-text center" style="font-family: monospace; font-size: 30px;" id="students">
                         </p>
                         <p class="center-align"><b>Schüler</b></p>
                     </div>
                     <div class="card-panel light-green accent-2 col s12 m3 offset-m1">
                         <!--   Kurriere -->
-                        <p class="white-text">
-                            <span id="courriers"></span>
+                        <p class="black-text center" style="font-family: monospace; font-size: 30px;" id="courriers">
                         </p>
                         <p class="center-align"><b>Kurriere</b></p>
                     </div>
                     <!-- Zeile 3 -->
                     <div class="card-panel red col s12 m3">
                         <!--   badCitizens -->
-                        <p class="white-text">
-                            <span id="badCitizens"></span>
+                        <p class="white-text center" style="font-family: monospace; font-size: 30px;" id="badcitizen">
                         </p>
                         <p class="center-align"><b>Böse Schüler</b></p>
                     </div>
                     <div class="card-panel red col s12 m4 offset-m1">
                         <!--   aktive Errors -->
-                        <p class="white-text">
-                            <span id="errors"></span>
+                        <p class="white-text center" style="font-family: monospace; font-size: 30px;" id="errors">
                         </p>
                         <p class="center-align"><b>Fehler</b></p>
                     </div>
                     <div class="card-panel red col s12 m3 offset-m1">
                         <!--   aktive Fahndungen -->
-                        <p class="white-text">
-                            <span id="tracings"></span>
+                        <p class="white-text center" style="font-family: monospace; font-size: 30px;" id="tracings">
                         </p>
                         <p class="center-align"><b>Fahndungen</b></p>
                     </div>

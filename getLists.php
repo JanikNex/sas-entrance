@@ -5,6 +5,8 @@
  * Date: 09.04.2016
  * Time: 22:50
  */
+    error_reporting(E_ERROR);
+    ini_set("diplay_errors", "on");
 
 require_once "classes/Util.php";
 
@@ -142,7 +144,7 @@ if($action == "users") {
     $toEncode["all"] = \Entrance\Citizen::getCurrentCitizenCount("", "", "");
     $toEncode["visitors"] = \Entrance\Citizen::getCurrentVisitorCount();
     $toEncode["students"] = \Entrance\Citizen::getCurrentStudentCount();
-    $toEncode["courrieres"] = \Entrance\Citizen::getCurrentCourrierCount();
+    $toEncode["courriers"] = \Entrance\Citizen::getCurrentCourrierCount();
     $toEncode["badCitizens"] = \Entrance\Citizen::getCurrentBadCitizenCount();
     $toEncode["errors"] = \Entrance\Error::getSizeOfActiveErrors();
     $toEncode["tracings"] = \Entrance\TracingEntry::getSizeOfActiveTracings();

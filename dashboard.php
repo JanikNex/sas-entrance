@@ -21,24 +21,24 @@ $pdo = new \Entrance\PDO_MYSQL();
 Dwoo\Autoloader::register();
 $dwoo = new Dwoo\Core();
 
+$action = $_GET["action"];
+
 if($action == "closeState") {
     if ($user->isActionAllowed(PERM_ADMIN_STATE_CLOSE)) {
         \Entrance\Util::closeState();
-        \Entrance\Util::forwardTo("dashboard.php");
+        echo json_encode(["success" => true]);
         exit; //To not show the list
     } else {
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Dashboard", $user);
-        $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        echo json_encode(["success" => false]);
         exit;
     }
 } elseif($action == "openState") {
     if ($user->isActionAllowed(PERM_ADMIN_STATE_OPEN)) {
         \Entrance\Util::openState();
-        \Entrance\Util::forwardTo("dashboard.php");
+        echo json_encode(["success" => true]);
         exit; //To not show the list
     } else {
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Dashboard", $user);
-        $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        echo json_encode(["success" => false]);
         exit;
     }
 }
