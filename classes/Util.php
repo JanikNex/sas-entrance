@@ -190,7 +190,7 @@ namespace Entrance;
       * @param $filename
       */
      public static function writeCSV($list, $filename){
-         $fp = fopen($filename, 'w');
+         $fp = fopen($filename, 'w') or die("Error");
          foreach ($list as $fields) {
              fputcsv($fp, $fields);
          }

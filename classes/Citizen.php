@@ -760,13 +760,13 @@ class Citizen {
         array_push($list, $label);
         foreach ($students as $student){
             if($student->getClasslevel()<= 10){
-                if(!((substr($student->getBarcode(), 9, 2) == $currentClass[0]) && (substr($student->getBarcode(), 11, 1) == $currentClass[1]))){
-                    $currentClass = [substr($student->getBarcode(), 9, 2), substr($student->getBarcode(), 11, 1)];
+                if(!((substr($student->getBarcode(), 8, 2) == $currentClass[0]) && (substr($student->getBarcode(), 10, 1) == $currentClass[1]))){
+                    $currentClass = [substr($student->getBarcode(), 8, 2), substr($student->getBarcode(), 10, 1)];
                     array_push($list, ["Klasse", $currentClass[0], $currentClass[1]]);
                 }
             } else{
-                if(!((substr($student->getBarcode(), 9, 2) == $currentClass[0]))){
-
+                if(!((substr($student->getBarcode(), 8, 2) == $currentClass[0]))){
+                    $currentClass = [substr($student->getBarcode(), 8, 2), 0];
                     array_push($list, ["Klasse", $currentClass[0]]);
                 }
             }
@@ -781,7 +781,9 @@ class Citizen {
      *Sends the Classlist as Array to the CSV creator
      */
     public static function createClasslistAsCSV(){
-        Util::writeCSV(self::createClassListsAsArray(), "classlist.csv");
+        $array = self::createClassListsAsArray();
+        Util::writeCSV($array, "/var/customers/webs/Chaos234/yannick9906/csv/classlist".date("Y-m-d_H-i").".csv");
+        Util::writeCSV($array, "/var/customers/webs/Chaos234/yannick9906/janik/csv/classlist".date("Y-m-d_H-i").".csv");
     }
 
     /**
@@ -797,9 +799,9 @@ class Citizen {
             "barcode" => $this->barcode
         ];
         foreach (LogEntry::getProjectDays() as $day){
-            array_push($studentData, $this->getTimePerDay($day));
+            array_push($studentData, Util::seconds_to_time($this->getTimePerDay($day)));
         }
-        array_push($studentData, $this->getTimePerProject());
+        array_push($studentData, Util::seconds_to_time($this->getTimePerProject()));
         return $studentData;
     }
 
