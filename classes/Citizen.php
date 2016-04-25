@@ -486,6 +486,15 @@ class Citizen {
         elseif ($this->isCitizenInState() == 2) {
             $pdo->query("UPDATE entrance_citizen SET state = 2 WHERE cID = :cID", [":cID" => $this->getCID()]);
         }
+        $days = LogEntry::getProjectDays();
+        $isBad = 0;
+        foreach($days as $day){
+            if(($this -> getTimePerDay($day) <= 21600) && ($this->getClasslevel()<13)){
+                $isBad = 1;
+                break;
+            }
+        }
+        $pdo->query("UPDATE entrance_citizen SET isBad = :isBad WHERE cID = :cID", [":cID" => $this->getCID(), ":isBad" => $isBad]);
     }
 
     /**
