@@ -4,7 +4,7 @@
 
 var oldData = "";
 var sort = "ascName";
-var filter = "Alle";
+var filter = "Schüler";
 var requestPage = 1;
 var searchString = "";
 var modalID = 0;
@@ -22,6 +22,8 @@ function setSort(asort) {
 }
 
 function updateSortnFilter() {
+    console.log(sort);
+    console.log(filter);
     if(sort.startsWith("asc")) {
         thissort = sort.replace("asc","");
         $("#sortCurr").html("<i class=\"mdi mdi-sort-ascending\"></i> "+thissort);
@@ -139,7 +141,9 @@ function update() {
     template = Handlebars.compile(listElemTmplt);
     finishedString = [];
     if(requestPage == 0)requestPage = 1;
+    window.openHTTPs++;
     $.getJSON("getLists.php?action=citizenBad&search="+searchString+"&page="+requestPage+"&filter="+filter+"&sort="+sort, function (data) {
+        window.openHTTPs--;
         if(!(JSON.stringify(oldData) == JSON.stringify(data))) {
             $("ul#citizens").html("");
             data["citizens"].forEach(function (element, index, array) {
