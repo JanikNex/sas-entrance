@@ -58,6 +58,17 @@ class LogEntry {
     }
 
     /**
+     * Returns the last $limit logs
+     * @param $limit
+     * @return LogEntry[]
+     */
+    public static function getNumLogs($limit) {
+        $pdo = new PDO_MYSQL();
+        $stmt = $pdo->queryMulti("SELECT lID FROM `entrance_logs` ORDER BY `lID` DESC LIMIT :limit", [":limit" => $limit]);
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\LogEntry::fromLID");
+    }
+
+    /**
      * @see getAllLogs(), but for a specifc cID only
      *
      * @param int $cID

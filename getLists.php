@@ -151,4 +151,13 @@ if($action == "users") {
     $jsoncode = json_encode($toEncode);
     echo $jsoncode;
     exit;
+} elseif($action == "latestLogs") {
+    $toEncode = ["logs" => []];
+    $logs = \Entrance\LogEntry::getNumLogs(5);
+    foreach($logs as $log) {
+        array_push($toEncode["logs"], $log->asArray());
+    }
+    $jsoncode = json_encode($toEncode);
+    echo $jsoncode;
+    exit;
 }
