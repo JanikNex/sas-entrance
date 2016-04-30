@@ -196,4 +196,19 @@ namespace Entrance;
          }
          fclose($fp);
      }
+
+     /**
+      * Creates a downloadable pdf document from HTML code using TCPDF
+      * http://wiki.spipu.net/doku.php?id=html2pdf:de:v4:5_page
+      * @param $html
+      * @param $filename
+      */
+     public static function writePDF($html, $filename){
+         require_once('/libs/html2pdf-4.5.1/html2pdf.class.php');
+         $html2pdf = new HTML2PDF('P','A4','de', false, 'UTF-8');
+         //$html2pdf->setModeDebug();
+         $html2pdf->setDefaultFont('Arial');
+         $html2pdf->writeHTML($html, false);
+         $html2pdf->Output($filename,"I");
+     }
  }
