@@ -878,8 +878,8 @@ class Citizen {
             }
         }else{
             $pgdata = [
-              "size" => $size,
-                "data" => $data
+                "size" => $size,
+                "data" => $data[0]
             ];
             $html = $dwoo->get($tpl, $pgdata);
         }
