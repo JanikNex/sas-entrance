@@ -904,25 +904,25 @@ class Citizen {
 
     public function addRoll($roll){
         if ($roll == "orga" && !$this->isOrga()){
-            Util::setGlobal("roll.orga", json_decode(array_push(json_encode(Util::getGlobal("roll.orga")), $this->getCID())));
+            Util::setGlobal("roll.orga", json_encode(array_push(json_decode(Util::getGlobal("roll.orga")), $this->getCID())));
         }
         elseif ($roll == "police" && !$this->isPolizei()){
-            Util::setGlobal("roll.police", json_decode(array_push(json_encode(Util::getGlobal("roll.police")), $this->getCID())));
+            Util::setGlobal("roll.police", json_encode(array_push(json_decode(Util::getGlobal("roll.police")), $this->getCID())));
         }
         elseif ($roll == "parliament" && !$this->isParlament()){
-            Util::setGlobal("roll.parliament", json_decode(array_push(json_encode(Util::getGlobal("roll.parliament")), $this->getCID())));
+            Util::setGlobal("roll.parliament", json_decode(array_push(json_decode(Util::getGlobal("roll.parliament")), $this->getCID())));
         }
     }
 
     public function removeRoll($roll){
         if ($roll == "orga" && $this->isOrga()){
-            Util::setGlobal("roll.orga", json_decode(array_diff(json_encode(Util::getGlobal("roll.orga")), array($this->getCID()))));
+            Util::setGlobal("roll.orga", json_encode(array_diff(json_decode(Util::getGlobal("roll.orga")), array($this->getCID()))));
         }
         elseif ($roll == "police" && $this->isPolizei()){
-            Util::setGlobal("roll.police", json_decode(array_diff(json_encode(Util::getGlobal("roll.police")), array($this->getCID()))));
+            Util::setGlobal("roll.police", json_encode(array_diff(json_decode(Util::getGlobal("roll.police")), array($this->getCID()))));
         }
         elseif ($roll == "parliament" && $this->isParlament()){
-            Util::setGlobal("roll.parliament", json_decode(array_diff(json_encode(Util::getGlobal("roll.parliament")), array($this->getCID()))));
+            Util::setGlobal("roll.parliament", json_encode(array_diff(json_decode(Util::getGlobal("roll.parliament")), array($this->getCID()))));
         }
     }
 
