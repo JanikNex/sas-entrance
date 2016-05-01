@@ -26,6 +26,7 @@ $dwoo = new Dwoo\Core();
 
 $action = $_GET['action'];
 $cID    = $_GET['cID'];
+$roll   = $_GET['roll'];
 
 if($action == "new") {
     if ($user->isActionAllowed(PERM_CITIZEN_CREATE)) {
@@ -224,6 +225,26 @@ if($action == "new") {
         exit;
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Fahndung entfernen", $user);
+        $dwoo->output("tpl/noPrivilegesSpecial.tpl", $pgdata);
+        exit();
+    }
+} elseif($action == "addRoll" and is_numeric($cID)) {
+    if($user->isActionAllowed(PERM_USER_EDIT)) {
+        \Entrance\Citizen::fromCID($cID)->addRoll($roll);
+        \Entrance\Util::forwardTo("citizen.php?action=citizeninfo&cID=".$cID);
+        exit;
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Rolle hinzufügen", $user);
+        $dwoo->output("tpl/noPrivilegesSpecial.tpl", $pgdata);
+        exit();
+    }
+} elseif($action == "removeRoll" and is_numeric($cID)) {
+    if($user->isActionAllowed(PERM_USER_EDIT)) {
+        \Entrance\Citizen::fromCID($cID)->removeRoll($roll);
+        \Entrance\Util::forwardTo("citizen.php?action=citizeninfo&cID=".$cID);
+        exit;
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Rolle entfernen", $user);
         $dwoo->output("tpl/noPrivilegesSpecial.tpl", $pgdata);
         exit();
     }

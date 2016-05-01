@@ -439,6 +439,7 @@ class Citizen {
             "birthdayNice" => date("d. M Y", strtotime($this->birthday))." (".Util::getAge($this->birthday).")",
             "age" => Util::getAge($this->birthday),
             "barcode" => $this->barcode,
+            "roll" => $this->getRoll(),
             "inState" => $this->isCitizenInState(),
             "isWanted" => $this->isCitizenWanted() ? 1:0,
             "locked" => $this->isCitizenLocked() ? 1:0,
@@ -901,6 +902,29 @@ class Citizen {
         return $roll;
     }
 
+    public function addRoll($roll){
+        if ($roll == "orga" && !$this->isOrga()){
+            Util::setGlobal("roll.orga", json_decode(array_push(json_encode(Util::getGlobal("roll.orga")), $this->getCID())));
+        }
+        elseif ($roll == "police" && !$this->isPolizei()){
+            Util::setGlobal("roll.police", json_decode(array_push(json_encode(Util::getGlobal("roll.police")), $this->getCID())));
+        }
+        elseif ($roll == "parliament" && !$this->isParlament()){
+            Util::setGlobal("roll.parliament", json_decode(array_push(json_encode(Util::getGlobal("roll.parliament")), $this->getCID())));
+        }
+    }
+
+    public function removeRoll($roll){
+        if ($roll == "orga" && $this->isOrga()){
+            Util::setGlobal("roll.orga", json_decode(array_diff(json_encode(Util::getGlobal("roll.orga")), array($this->getCID()))));
+        }
+        elseif ($roll == "police" && $this->isPolizei()){
+            Util::setGlobal("roll.police", json_decode(array_diff(json_encode(Util::getGlobal("roll.police")), array($this->getCID()))));
+        }
+        elseif ($roll == "parliament" && $this->isParlament()){
+            Util::setGlobal("roll.parliament", json_decode(array_diff(json_encode(Util::getGlobal("roll.parliament")), array($this->getCID()))));
+        }
+    }
 
     /**
      * Returns wether this citizen is in orga
