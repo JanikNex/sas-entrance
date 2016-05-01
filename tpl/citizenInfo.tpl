@@ -41,16 +41,16 @@
                             {if $header.perm.admin_export == 1}
                                 <a class="btn grey" href="export.php?action=printThisPassport&cID={$page.citizen.id}"><i class="small material-icons">print</i>Ausweis ausdrucken</a>
                             {/if}
-                            {if $header.perm.user_edit == 1}
+                            {if $header.perm.citizen_edit == 1}
                                 <p>
-                                    <a class="btn orange" href="citizen.php?action=addRoll&roll=orga&cID={$page.citizen.id}"><i class="small material-icons col s1">library_add</i>Orga</a>
-                                    <a class="btn blue" href="citizen.php?action=addRoll&roll=police&cID={$page.citizen.id}"><i class="small material-icons col s1">library_add</i>Police</a>
-                                    <a class="btn pink" href="citizen.php?action=addRoll&roll=parliament&cID={$page.citizen.id}"><i class="small material-icons col s1">library_add</i>Parliament</a>
+                                    <a class="btn orange col s1" href="citizen.php?action=addRoll&roll=orga&cID={$page.citizen.id}"><i class="small material-icons">library_add</i>Orga</a>
+                                    <a class="btn blue col s1" href="citizen.php?action=addRoll&roll=police&cID={$page.citizen.id}"><i class="small material-icons">library_add</i>Police</a>
+                                    <a class="btn pink col s1" href="citizen.php?action=addRoll&roll=parliament&cID={$page.citizen.id}"><i class="small material-icons">library_add</i>Parliament</a>
                                 </p>
                                 <p>
-                                    <a class="btn orange" href="citizen.php?action=removeRoll&roll=orga&cID={$page.citizen.id}"><i class="small material-icons col s1">delete</i>Orga</a>
-                                    <a class="btn blue" href="citizen.php?action=removeRoll&roll=police&cID={$page.citizen.id}"><i class="small material-icons col s1">delete</i>Police</a>
-                                    <a class="btn pink" href="citizen.php?action=removeRoll&roll=parliament&cID={$page.citizen.id}"><i class="small material-icons col s1">delete</i>Parliament</a>
+                                    <a class="btn orange col s1" href="citizen.php?action=removeRoll&roll=orga&cID={$page.citizen.id}"><i class="small material-icons">delete</i>Orga</a>
+                                    <a class="btn blue col s1" href="citizen.php?action=removeRoll&roll=police&cID={$page.citizen.id}"><i class="small material-icons">delete</i>Police</a>
+                                    <a class="btn pink col s1" href="citizen.php?action=removeRoll&roll=parliament&cID={$page.citizen.id}"><i class="small material-icons">delete</i>Parliament</a>
                                 </p>
                             {/if}
                         </div>
