@@ -35,6 +35,9 @@
                                     <a class="btn red" href="citizen.php?action=addTracing&cID={$page.citizen.id}"><i class="small material-icons">lock_outline</i>Fahndung hinzufügen</a>
                                 {/if}
                             {/if}
+                            {if $header.perm.admin_export == 1}
+                                <a class="btn grey" href="export.php?action=printThisPassport&cID={$page.citizen.id}"><i class="small material-icons">print</i>Ausweis ausdrucken</a>
+                            {/if}
                         </div>
                     </div>
                     <div class="col s12 offset-m1 m6">
