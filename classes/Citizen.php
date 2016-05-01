@@ -794,7 +794,8 @@ class Citizen {
         $data = [[
             "name" => $this->lastname,
             "firstname" => $this->firstname,
-            "barcode" => $this->barcode
+            "barcode" => $this->barcode,
+            "roll" => $this->getRoll()
         ]];
         return $data;
     }
@@ -874,6 +875,66 @@ class Citizen {
         array_push($studentData, Util::seconds_to_time($this->getTimePerProject()));
         return $studentData;
     }
+
+    public function getRoll(){
+        $roll = "";
+        $array = [];
+        if ($this->isOrga()){
+            array_push($array, "Orga-Team");
+        }
+        if ($this->isPolizei()){
+            array_push($array, "Polizei");
+        }
+        if ($this->isParlament()){
+            array_push($array, "Parlament");
+        }
+        $roll = $array[0];
+        if (sizeof($array) > 1) {
+            $roll = "";
+            foreach ($array as $part) {
+                $roll .=", ".$part;
+            }
+        }
+        return $roll;
+    }
+
+
+    /**
+     * Returns wether this citizen is in orga
+     * @return bool
+     */
+    public function isOrga(){
+        if (in_array($this->getCID(), json_decode(Util::getGlobal("roll.orga")))){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * Returns wether this citizen is in Police
+     * @return bool
+     */
+    public function isPolizei(){
+        if (in_array($this->getCID(), json_decode(Util::getGlobal("roll.police")))){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**
+     * Returns wether this citizen is in Parlament
+     * @return bool
+     */
+    public function isParlament(){
+        if (in_array($this->getCID(), json_decode(Util::getGlobal("roll.parliament")))){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
     /**
      * @return Error

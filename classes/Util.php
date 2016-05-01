@@ -204,9 +204,13 @@ namespace Entrance;
       * @param $filename
       */
      public static function writePDF($html, $filename){
-         $html2pdf = new \HTML2PDF('P','A4','de', false, 'UTF-8');
+         $html2pdf = new \HTML2PDF('P','A4','de', true, 'UTF-8', array(10,10,10,10));
          //$html2pdf->setModeDebug();
          $html2pdf->setDefaultFont('Arial');
+         $html2pdf->pdf->SetAuthor('SaSEntrance 2016');
+         $html2pdf->pdf->SetTitle('SaSEntrance Export'.date("Y-m-d_H-i"));
+         $html2pdf->pdf->SetSubject('SaSEntrance 2016');
+         $html = utf8_encode($html);
          $html2pdf->writeHTML($html, false);
          $html2pdf->Output($filename,"I");
      }
