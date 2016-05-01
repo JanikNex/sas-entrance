@@ -792,12 +792,22 @@ class Citizen {
      * @return array
      */
     public function getCitizenPassportData(){
-        $data = [[
-            "name" => $this->lastname,
-            "firstname" => $this->firstname,
-            "barcode" => $this->barcode,
-            "roll" => $this->getRoll()
-        ]];
+        if($this->getClasslevel() != 15){
+            $data = [[
+                "name" => $this->lastname,
+                "firstname" => $this->firstname,
+                "barcode" => $this->barcode,
+                "roll" => $this->getRoll()
+            ]];
+        }elseif($this->getClasslevel() == 15){
+            $data = [[
+                "name" => $this->firstname,
+                "firstname" => $this->lastname,
+                "barcode" => $this->barcode,
+                "roll" => $this->getRoll()
+            ]];
+        }
+
         return $data;
     }
 
