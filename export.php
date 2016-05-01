@@ -24,31 +24,22 @@ $dwoo = new Dwoo\Core();
 
 $action = $_GET['action'];
 $cID    = $_GET['cID'];
+$group    = $_GET['group'];
 
 if($action == "exportClasslist") {
     if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
-        $pgdata["page"]["type"] = "waiting";
-        $dwoo->output("tpl/export.tpl", $pgdata);
         \Entrance\Citizen::createClasslistAsCSV();
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
-        $pgdata["page"]["type"] = "classlist";
-        $dwoo->output("tpl/export.tpl", $pgdata);
+        echo json_encode(["success" => true]);
         exit; //To not show the list
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
         exit;
     }
-} elseif($action == "printAllPassports") {
+}elseif($action == "exportPassportGroup" and is_numeric($group)) {
     if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
-        $pgdata["page"]["type"] = "waiting";
-        //$dwoo->output("tpl/export.tpl", $pgdata);
-        \Entrance\Citizen::printAllCitizenPassports();
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
-        $pgdata["page"]["type"] = "printAllPassports";
-        //$dwoo->output("tpl/export.tpl", $pgdata);
+        $link = \Entrance\Citizen::printPassportGroup($group);
+        echo json_encode(["success" => true, "link" => str_replace("/var/customers/webs/Chaos234/yannick9906/", "http://entrance.yannickfelix.tk/", $link)]);
         exit; //To not show the list
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
@@ -58,11 +49,8 @@ if($action == "exportClasslist") {
 }elseif($action == "printThisPassport" and is_numeric($cID)) {
     if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
         $citizen= \Entrance\Citizen::fromCID($cID);
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
-        $pgdata["page"]["type"] = "waiting";
-        //$dwoo->output("tpl/export.tpl", $pgdata);
-        $citizen->printThisCitizenPassport();
-        //\Entrance\Util::forwardTo("citizen.php?action=citizeninfo&cID=".$cID);
+        $link = $citizen->printThisCitizenPassport();
+        \Entrance\Util::forwardTo(str_replace("/var/customers/webs/Chaos234/yannick9906/", "http://entrance.yannickfelix.tk/", $link));
         exit; //To not show the list
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);

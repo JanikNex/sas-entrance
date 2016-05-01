@@ -22,6 +22,11 @@ const CSORTING = [
 const CFILTERING = [
     ""          => "",
     "Alle"      => "",
+    "Stufe5"   => " AND classLevel = 5 ",
+    "Stufe6"   => " AND classLevel = 6 ",
+    "Stufe7"   => " AND classLevel = 7 ",
+    "Stufe8"   => " AND classLevel = 8 ",
+    "Stufe9"   => " AND classLevel = 9 ",
     "Stufe05"   => " AND classLevel = 5 ",
     "Stufe06"   => " AND classLevel = 6 ",
     "Stufe07"   => " AND classLevel = 7 ",
@@ -30,7 +35,12 @@ const CFILTERING = [
     "Stufe10"   => " AND classLevel = 10 ",
     "Stufe11"   => " AND classLevel = 11 ",
     "Stufe12"   => " AND classLevel = 12 ",
+    "Stufe13"   => " AND classLevel = 13 ",
+    "Stufe14"   => " AND classLevel = 14 ",
+    "Stufe15"   => " AND classLevel = 15 ",
+    "Stufe16"   => " AND classLevel = 16 ",
     "Schüler"   => " AND classLevel < 14 ",
+    "ohneVisumK"=> " AND classLevel < 15 ",
     "Visum"     => " AND classLevel = 15 ",
     "Lehrer"    => " AND classLevel = 14 ",
     "Kurier"    => " AND classLevel = 16 ",
@@ -815,26 +825,35 @@ class Citizen {
      *Prints the passport of this citizen
      */
     public function printThisCitizenPassport(){
-        self::printPassport($this->getCitizenPassportData());
+        return self::printPassport([$this->getCitizenPassportData()]);
     }
 
     /**
      *Prints the passport of all Citizens
      */
     public static function printAllCitizenPassports(){
-        $citizens = self::getAllCitizen();
+        $citizens = self::getAllCitizen("", "ohneVisumK");
         $data = [];
             foreach ($citizens as $citizen){
                 array_push($data, $citizen->getCitizenPassportData());
             }
-        self::printPassport($data);
+        return self::printPassport($data);
+    }
+
+    public static function printPassportGroup($group){
+        $citizens = self::getAllCitizen("", "Stufe".$group);
+        $data = [];
+        foreach ($citizens as $citizen){
+            array_push($data, $citizen->getCitizenPassportData());
+        }
+        return self::printPassport($data, $group);
     }
 
     /**
      * Prints passport(s) from given citizenpassportdata
-     * @param $data
+     * @param array[] $data
      */
-    public static function printPassport($data){
+    public static function printPassport($data, $group = 0){
         $size = sizeof($data);
         $pages = ceil($size/10);
         $dwoo = new \Dwoo\Core();
@@ -865,7 +884,9 @@ class Citizen {
             $html = $dwoo->get($tpl, $pgdata);
         }
         $html = "<page>".$html."</page>";
-        Util::writePDF($html, "Passports".date("Y-m-d_H-i").".pdf");
+        $link = "/var/customers/webs/Chaos234/yannick9906/pdf/passports-".$group."-".date("Y-m-d_H-i-s").".pdf";
+        Util::writePDF($html, $link);
+        return $link;
     }
 
     /**
@@ -903,11 +924,8 @@ class Citizen {
             array_push($array, "Kurier");
         }
         $roll = $array[0];
-        if (sizeof($array) > 1) {
-            $roll = "";
-            foreach ($array as $part) {
-                $roll .=", ".$part;
-            }
+        foreach ($array as $part) {
+            if($part != $array[0]) $roll .=", ".$part;
         }
         return $roll;
     }
@@ -918,13 +936,19 @@ class Citizen {
      */
     public function addRoll($roll){
         if ($roll == "orga" && !$this->isOrga()){
-            Util::setGlobal("roll.orga", json_encode(array_push(json_decode(Util::getGlobal("roll.orga")), $this->getCID())));
+            $array = json_decode(Util::getGlobal("roll.orga"));
+            array_push($array, $this->getCID());
+            Util::setGlobal("roll.orga", json_encode($array));
         }
         elseif ($roll == "police" && !$this->isPolizei()){
-            Util::setGlobal("roll.police", json_encode(array_push(json_decode(Util::getGlobal("roll.police")), $this->getCID())));
+            $array = json_decode(Util::getGlobal("roll.police"));
+            array_push($array, $this->getCID());
+            Util::setGlobal("roll.police", json_encode($array));
         }
         elseif ($roll == "parliament" && !$this->isParlament()){
-            Util::setGlobal("roll.parliament", json_decode(array_push(json_decode(Util::getGlobal("roll.parliament")), $this->getCID())));
+            $array = json_decode(Util::getGlobal("roll.parliament"));
+            array_push($array, $this->getCID());
+            Util::setGlobal("roll.parliament", json_encode($array));
         }
     }
 
@@ -933,15 +957,28 @@ class Citizen {
      * @param $roll
      */
     public function removeRoll($roll){
-        if ($roll == "orga" && $this->isOrga()){
-            Util::setGlobal("roll.orga", json_encode(array_diff(json_decode(Util::getGlobal("roll.orga")), array($this->getCID()))));
+        if ($roll == "orga"){
+            $array = json_decode(Util::getGlobal("roll.orga"));
+            $array = self::array_remove($array, $this->getCID());
+            Util::setGlobal("roll.orga", json_encode($array));
         }
-        elseif ($roll == "police" && $this->isPolizei()){
-            Util::setGlobal("roll.police", json_encode(array_diff(json_decode(Util::getGlobal("roll.police")), array($this->getCID()))));
+        elseif ($roll == "police"){
+            $array = json_decode(Util::getGlobal("roll.police"));
+            $array = self::array_remove($array, $this->getCID());
+            Util::setGlobal("roll.police", json_encode($array));
         }
-        elseif ($roll == "parliament" && $this->isParlament()){
-            Util::setGlobal("roll.parliament", json_encode(array_diff(json_decode(Util::getGlobal("roll.parliament")), array($this->getCID()))));
+        elseif ($roll == "parliament"){
+            $array = json_decode(Util::getGlobal("roll.parliament"));
+            $array = self::array_remove($array, $this->getCID());
+            Util::setGlobal("roll.parliament", json_encode($array));
         }
+    }
+
+    private function array_remove($array, $elem) {
+        if(($key = array_search($elem, $array)) !== false) {
+            unset($array[$key]);
+        }
+        return $array;
     }
 
     /**
@@ -949,11 +986,9 @@ class Citizen {
      * @return bool
      */
     public function isOrga(){
-        if (in_array($this->getCID(), json_decode(Util::getGlobal("roll.orga")))){
-            return true;
-        }else{
-            return false;
-        }
+        $array = json_decode(Util::getGlobal("roll.orga"));
+        if(!is_array($array)) $array = [];
+        return in_array($this->getCID(), $array);
     }
 
     /**
@@ -961,11 +996,9 @@ class Citizen {
      * @return bool
      */
     public function isPolizei(){
-        if (in_array($this->getCID(), json_decode(Util::getGlobal("roll.police")))){
-            return true;
-        }else{
-            return false;
-        }
+        $array = json_decode(Util::getGlobal("roll.police"));
+        if(!is_array($array)) $array = [];
+        return in_array($this->getCID(), $array);
     }
 
     /**
@@ -973,11 +1006,9 @@ class Citizen {
      * @return bool
      */
     public function isParlament(){
-        if (in_array($this->getCID(), json_decode(Util::getGlobal("roll.parliament")))){
-            return true;
-        }else{
-            return false;
-        }
+        $array = json_decode(Util::getGlobal("roll.parliament"));
+        if(!is_array($array)) $array = [];
+        return in_array($this->getCID(), $array);
     }
 
 
