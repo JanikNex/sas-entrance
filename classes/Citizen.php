@@ -787,6 +787,78 @@ class Citizen {
     }
 
     /**
+     * Returns the citizens passport data
+     * @return array
+     */
+    public function getCitizenPassportData(){
+        $data = [
+            "name" => $this->lastname,
+            "firstname" => $this->firstname,
+            "barcode" => $this->barcode
+        ];
+        return $data;
+    }
+
+    /**
+     *Prints the passport of this citizen
+     */
+    public function printThisCitizenPassport(){
+        self::printPassport($this->getCitizenPassportData());
+    }
+
+    /**
+     *Prints the passport of all Citizens
+     */
+    public static function printAllCitizenPassports(){
+        $citizens = self::getAllCitizen();
+        $data = [];
+            foreach ($citizens as $citizen){
+                array_push($data, $citizen->getCitizenPassportData());
+            }
+        self::printPassport($data);
+    }
+
+    /**
+     * Prints passport(s) from given citizenpassportdata
+     * @param $data
+     */
+    public static function printPassport($data){
+        $size = sizeof($data);
+        $pages = ceil($size/10);
+        require_once 'libs/dwoo/lib/Dwoo/Autoloader.php';
+        Dwoo\Autoloader::register();
+        $dwoo = new Dwoo\Core();
+        $tpl = new \Dwoo\Template\File('tpl/passport.tpl');
+        if($size> 10){
+            $html = "";
+            for ($i=0; $i<$pages;$i++){
+                $page = [];
+                for ($e=$i*10; $e<=10;$e++) {
+                    array_push($page, $data[$e]);
+                }
+                if($i == $pages-1){
+                    $count = 10-(($pages*10)-$size);
+                }else{
+                    $count = 10;
+                }
+                $pgdata = [
+                    "size" => $count,
+                    "data" => $page
+                ];
+                $html .= $dwoo->get($tpl, $pgdata);
+            }
+        }else{
+            $pgdata = [
+              "size" => $size,
+                "data" => $data
+            ];
+            $html = $dwoo->get($tpl, $pgdata);
+        }
+        $html = "<page>".$html."</page>";
+        Util::writePDF($html, "Passports".date("Y-m-d_H-i").".pdf");
+    }
+
+    /**
      * Returns an array with all important student informations and his times per day
      * @return array
      */
