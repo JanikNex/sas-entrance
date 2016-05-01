@@ -803,19 +803,19 @@ class Citizen {
      */
     public function getCitizenPassportData(){
         if($this->getClasslevel() != 15){
-            $data = [[
+            $data = [
                 "name" => $this->lastname,
                 "firstname" => $this->firstname,
                 "barcode" => $this->barcode,
                 "roll" => $this->getRoll()
-            ]];
+            ];
         }elseif($this->getClasslevel() == 15){
-            $data = [[
+            $data = [
                 "name" => $this->firstname,
                 "firstname" => $this->lastname,
                 "barcode" => $this->barcode,
                 "roll" => $this->getRoll()
-            ]];
+            ];
         }
 
         return $data;
@@ -860,18 +860,10 @@ class Citizen {
         $tpl = new \Dwoo\Template\File('tpl/passport.tpl');
         if($size> 10){
             $html = "";
-            for ($i=0; $i<$pages;$i++){
-                $page = [];
-                for ($e=$i*10; $e<=10;$e++) {
-                    array_push($page, $data[$e]);
-                }
-                if($i == $pages-1){
-                    $count = 10-(($pages*10)-$size);
-                }else{
-                    $count = 10;
-                }
+            $pgsdata = array_chunk($data, 10);
+            foreach($pgsdata as $page) {
                 $pgdata = [
-                    "size" => $count,
+                    "size" => sizeof($page),
                     "data" => $page
                 ];
                 $html .= $dwoo->get($tpl, $pgdata);
@@ -879,11 +871,10 @@ class Citizen {
         }else{
             $pgdata = [
                 "size" => $size,
-                "data" => $data[0]
+                "data" => $data
             ];
             $html = $dwoo->get($tpl, $pgdata);
         }
-        $html = "<page>".$html."</page>";
         $link = "/var/customers/webs/Chaos234/yannick9906/pdf/passports-".$group."-".date("Y-m-d_H-i-s").".pdf";
         Util::writePDF($html, $link);
         return $link;

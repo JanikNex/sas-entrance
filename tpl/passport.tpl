@@ -1,3 +1,4 @@
+<page>
 <table border="1" style="border-collapse:collapse; text-align: center">
     <tr>
             <td style="width: 65.60mm; height: 52.98mm; padding-left: 5mm; max-height: 53.98mm; max-width: 65.50mm;">
@@ -214,3 +215,4 @@
         {/if}
     </tr>
 </table>
+</page>
