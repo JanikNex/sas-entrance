@@ -791,11 +791,11 @@ class Citizen {
      * @return array
      */
     public function getCitizenPassportData(){
-        $data = [
+        $data = [[
             "name" => $this->lastname,
             "firstname" => $this->firstname,
             "barcode" => $this->barcode
-        ];
+        ]];
         return $data;
     }
 
@@ -825,9 +825,7 @@ class Citizen {
     public static function printPassport($data){
         $size = sizeof($data);
         $pages = ceil($size/10);
-        require_once 'libs/dwoo/lib/Dwoo/Autoloader.php';
-        Dwoo\Autoloader::register();
-        $dwoo = new Dwoo\Core();
+        $dwoo = new \Dwoo\Core();
         $tpl = new \Dwoo\Template\File('tpl/passport.tpl');
         if($size> 10){
             $html = "";

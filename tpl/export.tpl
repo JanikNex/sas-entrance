@@ -6,14 +6,14 @@
             <div class="col s12 m12">
                 <div class="card blue-grey darken-1">
                     <div class="card-content white-text">
-                        <span class="card-title"><i class="material-icons circle green">import_export</i>Daten exportieren</span>
+                        <span class="card-title"><i class="material-icons circle">import_export</i> Daten exportieren</span>
                         <p>Durch einen klick auf einen der untenstehenden Buttons kann die jeweilige Datei exportiert werden!
                         Bitte beachten Sie, dass dies einige Minuten dauern kann. Betätigen Sie den jeweiligen Button bitte nur einmal!
                         </p>
                     </div>
                     <div class="card-action">
                         <a href="export.php?action=exportClasslist">Klassenliste</a>
-                        <a href="export.php?action=exportClasslist">Alle Ausweise</a>
+                        <a href="export.php?action=printAllPassports">Alle Ausweise</a>
                     </div>
                 </div>
             </div>{/if}

@@ -204,8 +204,7 @@ namespace Entrance;
       * @param $filename
       */
      public static function writePDF($html, $filename){
-         require_once('/libs/html2pdf-4.5.1/html2pdf.class.php');
-         $html2pdf = new HTML2PDF('P','A4','de', false, 'UTF-8');
+         $html2pdf = new \HTML2PDF('P','A4','de', false, 'UTF-8');
          //$html2pdf->setModeDebug();
          $html2pdf->setDefaultFont('Arial');
          $html2pdf->writeHTML($html, false);
