@@ -890,7 +890,7 @@ class Citizen {
             array_push($array, "Parlament");
         }
         if ($this->isCourrier()){
-            array_push($array, "Kurrier");
+            array_push($array, "Kurier");
         }
         $roll = $array[0];
         if (sizeof($array) > 1) {
@@ -902,6 +902,10 @@ class Citizen {
         return $roll;
     }
 
+    /**
+     * Adds a specific roll to this citizen
+     * @param $roll
+     */
     public function addRoll($roll){
         if ($roll == "orga" && !$this->isOrga()){
             Util::setGlobal("roll.orga", json_encode(array_push(json_decode(Util::getGlobal("roll.orga")), $this->getCID())));
@@ -914,6 +918,10 @@ class Citizen {
         }
     }
 
+    /**
+     * Removes a specific roll from this citizen
+     * @param $roll
+     */
     public function removeRoll($roll){
         if ($roll == "orga" && $this->isOrga()){
             Util::setGlobal("roll.orga", json_encode(array_diff(json_decode(Util::getGlobal("roll.orga")), array($this->getCID()))));
