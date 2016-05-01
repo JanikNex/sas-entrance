@@ -888,6 +888,9 @@ class Citizen {
         if ($this->isParlament()){
             array_push($array, "Parlament");
         }
+        if ($this->isCourrier()){
+            array_push($array, "Kurrier");
+        }
         $roll = $array[0];
         if (sizeof($array) > 1) {
             $roll = "";
