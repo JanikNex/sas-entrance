@@ -212,6 +212,6 @@ namespace Entrance;
          $html2pdf->pdf->SetSubject('SaSEntrance 2016');
          $html = utf8_encode($html);
          $html2pdf->writeHTML($html, false);
-         $html2pdf->Output($filename,"I");
+         $html2pdf->Output($filename,"F");
      }
  }

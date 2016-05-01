@@ -31,28 +31,29 @@
                             </p>
                             {if $page.citizen.isWanted}
                                 {if $header.perm.citizen_tracing_remove == 1}
-                                    <a class="btn green" href="citizen.php?action=removeTracing&cID={$page.citizen.id}"><i class="small material-icons">lock_open</i>Fahndung entfernen</a>
+                                    <a class="btn green" href="citizen.php?action=removeTracing&cID={$page.citizen.id}"><i class="small mdi mdi-lock-open-outline"></i> Fahndung entfernen</a>
                                 {/if}
                             {else}
                                 {if $header.perm.citizen_tracing_add == 1}
-                                    <a class="btn red" href="citizen.php?action=addTracing&cID={$page.citizen.id}"><i class="small material-icons">lock_outline</i>Fahndung hinzufügen</a>
+                                    <a class="btn red" href="citizen.php?action=addTracing&cID={$page.citizen.id}"><i class="small mdi mdi-lock-outline"></i> Fahndung hinzufügen</a>
                                 {/if}
-                            {/if}<br/>
+                            {/if}<br/><br/>
                             {if $header.perm.admin_export == 1}
-                                <a class="btn grey" href="export.php?action=printThisPassport&cID={$page.citizen.id}"><i class="small material-icons">print</i>Ausweis ausdrucken</a>
+                                <a class="btn grey" href="export.php?action=printThisPassport&cID={$page.citizen.id}"><i class="small mdi mdi-printer"></i> Ausweis ausdrucken</a>
                             {/if}
                             {if $header.perm.citizen_edit == 1}
                                 <p>
-                                    <a class="btn orange col s2" href="citizen.php?action=addRoll&roll=orga&cID={$page.citizen.id}"><i class="small material-icons">library_add</i>Orga</a>
-                                    <a class="btn blue col s2" href="citizen.php?action=addRoll&roll=police&cID={$page.citizen.id}"><i class="small material-icons">library_add</i>Police</a>
-                                    <a class="btn pink col s2" href="citizen.php?action=addRoll&roll=parliament&cID={$page.citizen.id}"><i class="small material-icons">library_add</i>Parliament</a>
-                                </p><br/>
+                                    <a class="btn orange col s2 tooltipped" href="citizen.php?action=addRoll&roll=orga&cID={$page.citizen.id}" data-position="top" data-delay="50" data-tooltip="Orga"><i class="small material-icons">library_add</i></a>
+                                    <a class="btn blue col s2 tooltipped" href="citizen.php?action=addRoll&roll=police&cID={$page.citizen.id}" data-position="top" data-delay="50" data-tooltip="Polizei"><i class="small material-icons">library_add</i></a>
+                                    <a class="btn pink col s2 tooltipped" href="citizen.php?action=addRoll&roll=parliament&cID={$page.citizen.id}" data-position="top" data-delay="50" data-tooltip="Parlament"><i class="small material-icons">library_add</i></a>
+                                </p><br/><br/>
                                 <p>
-                                    <a class="btn orange col s2" href="citizen.php?action=removeRoll&roll=orga&cID={$page.citizen.id}"><i class="small material-icons">delete</i>Orga</a>
-                                    <a class="btn blue col s2" href="citizen.php?action=removeRoll&roll=police&cID={$page.citizen.id}"><i class="small material-icons">delete</i>Police</a>
-                                    <a class="btn pink col s2" href="citizen.php?action=removeRoll&roll=parliament&cID={$page.citizen.id}"><i class="small material-icons">delete</i>Parliament</a>
+                                    <a class="btn orange col s2 tooltipped" href="citizen.php?action=removeRoll&roll=orga&cID={$page.citizen.id}" data-position="bottom" data-delay="50" data-tooltip="Orga"><i class="small material-icons">delete</i></a>
+                                    <a class="btn blue col s2 tooltipped" href="citizen.php?action=removeRoll&roll=police&cID={$page.citizen.id}" data-position="bottom" data-delay="50" data-tooltip="Polizei"><i class="small material-icons">delete</i></a>
+                                    <a class="btn pink col s2 tooltipped" href="citizen.php?action=removeRoll&roll=parliament&cID={$page.citizen.id}" data-position="bottom" data-delay="50" data-tooltip="Parlament"><i class="small material-icons">delete</i></a>
                                 </p>
                             {/if}
+                            <br/><br/>
                         </div>
                     </div>
                     <div class="col s12 offset-m1 m6">
