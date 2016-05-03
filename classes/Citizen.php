@@ -866,7 +866,29 @@ class Citizen {
             array_push($data, self::fromCID($citizen)->getCitizenPassportData("work"));
         }
         return self::printPassport($data, 'W', 'work');
+    }
 
+    public static function printTestPassportPage($mode){
+        $data = [];
+        array_push($data, [
+            "name" => "Rapp",
+            "firstname" => "Janik",
+            "barcode" => 0000000000000,
+            "roll" => ["", ""]
+        ]);
+        array_push($data, [
+            "name" => "Rapp",
+            "firstname" => "Janik",
+            "barcode" => 0000000000000,
+            "roll" => ["System-Administrator", ""]
+        ]);
+        array_push($data, [
+            "name" => "Rapp",
+            "firstname" => "Janik",
+            "barcode" => 0000000000000,
+            "roll" => ["System-Administrator", "Technik & IT"]
+        ]);
+        return self::printPassport($data, 'T', $mode);
     }
 
     /**

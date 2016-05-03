@@ -25,6 +25,7 @@ $dwoo = new Dwoo\Core();
 $action = $_GET['action'];
 $cID    = $_GET['cID'];
 $group    = $_GET['group'];
+$mode  =$_GET['mode'];
 
 if($action == "exportClasslist") {
     if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
@@ -60,6 +61,16 @@ if($action == "exportClasslist") {
 } elseif($action == "printPassportWorkers") {
     if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
         $link = \Entrance\Citizen::printPassportWorkers();
+        \Entrance\Util::forwardTo(str_replace("/var/customers/webs/Chaos234/yannick9906/", "http://entrance.yannickfelix.tk/", $link));
+        exit; //To not show the list
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
+        $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
+    }
+} elseif($action == "printPassportTest") {
+    if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
+        $link = \Entrance\Citizen::printTestPassportPage($mode);
         \Entrance\Util::forwardTo(str_replace("/var/customers/webs/Chaos234/yannick9906/", "http://entrance.yannickfelix.tk/", $link));
         exit; //To not show the list
     } else {
