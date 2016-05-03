@@ -13,6 +13,7 @@
                     <div class="card-action">
                         <a onclick="update('exportClasslist')" href="#">Klassenliste</a>
                         <a onclick="update('exportPassports')" href="#">Alle Ausweise</a>
+                        <a href="export.php?action=printPassportWorkers">Dienstausweise</a>
                     </div>
                 </div>
             </div>

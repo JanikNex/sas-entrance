@@ -19,6 +19,7 @@ function update(hash) {
     else if(hash == "exportPassports") exportPassport();
     else if(hash == "exportOnePassport") exportOnePassport();
     else if(hash == "exportPassportGroup") exportPassportGroup();
+    else if(hash == "exportPassportOfficial") exportPassportOfficial();
     else showNormal();
 }
 
@@ -33,6 +34,17 @@ function exportClass() {
     $("#normal").fadeOut(500, function() {
         $("#waiting").fadeIn(500);
         $.getJSON("export.php?action=exportClasslist", null, function(data) {
+            $("#waiting").fadeOut(500, function() {
+                $("#finishedClasslist").fadeIn(500);
+            });
+        });
+    });
+}
+
+function exportPassportOfficial() {
+    $("#normal").fadeOut(500, function() {
+        $("#waiting").fadeIn(500);
+        $.getJSON("export.php?action=printPassportWorkers", null, function(data) {
             $("#waiting").fadeOut(500, function() {
                 $("#finishedClasslist").fadeIn(500);
             });

@@ -799,22 +799,23 @@ class Citizen {
 
     /**
      * Returns the citizens passport data
+     * @param string $mode
      * @return array
      */
-    public function getCitizenPassportData(){
+    public function getCitizenPassportData($mode = "normal"){
         if($this->getClasslevel() != 15){
             $data = [
                 "name" => $this->lastname,
-                "firstname" => $this->firstname,
+                "firstname" => explode(" ", $this->firstname)[0],
                 "barcode" => $this->barcode,
-                "roll" => $this->getRoll()
+                "roll" => $this->getRoll($mode)
             ];
         }elseif($this->getClasslevel() == 15){
             $data = [
                 "name" => $this->firstname,
                 "firstname" => $this->lastname,
                 "barcode" => $this->barcode,
-                "roll" => $this->getRoll()
+                "roll" => $this->getRoll($mode)
             ];
         }
 
@@ -840,6 +841,11 @@ class Citizen {
         return self::printPassport($data);
     }
 
+    /**
+     * Print all passports for a specific group of citizens
+     * @param $group
+     * @return string
+     */
     public static function printPassportGroup($group){
         $citizens = self::getAllCitizen("", "Stufe".$group);
         $data = [];
@@ -850,10 +856,27 @@ class Citizen {
     }
 
     /**
+     * Print special passworts for all official workers
+     * @return string
+     */
+    public static function printPassportWorkers(){
+        $citizens = self::getAllOfficial();
+        $data = [];
+        foreach ($citizens as $citizen){
+            array_push($data, self::fromCID($citizen)->getCitizenPassportData("work"));
+        }
+        return self::printPassport($data, 'W', 'work');
+
+    }
+
+    /**
      * Prints passport(s) from given citizenpassportdata
      * @param array[] $data
+     * @param int $group
+     * @param string $mode
+     * @return string URL of saved PDF
      */
-    public static function printPassport($data, $group = 0){
+    public static function printPassport($data, $group = 0, $mode = 'normal'){
         $size = sizeof($data);
         $pages = ceil($size/10);
         $dwoo = new \Dwoo\Core();
@@ -864,14 +887,16 @@ class Citizen {
             foreach($pgsdata as $page) {
                 $pgdata = [
                     "size" => sizeof($page),
-                    "data" => $page
+                    "data" => $page,
+                    "mode" => $mode
                 ];
                 $html .= $dwoo->get($tpl, $pgdata);
             }
         }else{
             $pgdata = [
                 "size" => $size,
-                "data" => $data
+                "data" => $data,
+                "mode" => $mode
             ];
             $html = $dwoo->get($tpl, $pgdata);
         }
@@ -899,17 +924,29 @@ class Citizen {
         return $studentData;
     }
 
-    public function getRoll(){
+    public function getRoll($mode){
         $roll = "";
         $array = [];
-        if ($this->isOrga()){
+        $permissions = "";
+        // Es werden jeweils die Befugnisse der höchsten Rolle genommen -> daher ifs nach Rollenwichtigkeit sortieren
+        //Ränge, die immer sichtbar sein sollen
+        if ($this->isOrga()) {
             array_push($array, "Orga-Team");
+            $permissions = "Alles";
         }
-        if ($this->isPolizei()){
-            array_push($array, "Polizei");
-        }
-        if ($this->isParlament()){
+        if ($this->isParlament()) {
             array_push($array, "Parlament");
+            if ($permissions == "") {
+                $permissions = "xxx";
+            }
+        }
+        if ($mode == "work") {  //Dienstausweise bzw. Ränge, welche nur auf Dienstausweisen sichtbar sein sollen
+            if ($this->isPolizei()) {
+                array_push($array, "Polizei");
+                if ($permissions == "") {
+                    $permissions = "xxx";
+                }
+            }
         }
         if ($this->isCourrier()){
             array_push($array, "Kurier");
@@ -918,6 +955,7 @@ class Citizen {
         foreach ($array as $part) {
             if($part != $array[0]) $roll .=", ".$part;
         }
+        $roll = [$roll, $permissions];
         return $roll;
     }
 
@@ -1000,6 +1038,19 @@ class Citizen {
         $array = json_decode(Util::getGlobal("roll.parliament"));
         if(!is_array($array)) $array = [];
         return in_array($this->getCID(), $array);
+    }
+
+    /**
+     * Returns the cIDs of all official state workers
+     * @return mixed
+     */
+    public static function getAllOfficial(){
+        $citizens = [];
+        array_push($citizens, json_decode(Util::getGlobal("roll.orga")));
+        array_push($citizens, json_decode(Util::getGlobal("roll.police")));
+        array_push($citizens, json_decode(Util::getGlobal("roll.parliament")));
+
+        return array_unique($citizens);
     }
 
 
