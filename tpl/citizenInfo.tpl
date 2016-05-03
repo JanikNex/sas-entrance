@@ -15,8 +15,11 @@
                                 {elseif $page.citizen.classlevel==15}Visum
                                 {else}Kurier{/if}
                             </p>
-                            {if $page.citizen.roll != ""}
-                                <p><b>Rollen:</b> {$page.citizen.roll}</p>
+                            {if $page.citizen.roll[0] != ""}
+                                <p><b>Rollen:</b> {$page.citizen.roll[0]}</p>
+                            {/if}
+                            {if $page.citizen.roll[1] != ""}
+                                <p><b>Weisungsbefugnisse:</b> {$page.citizen.roll[1]}</p>
                             {/if}
                             <p><b>Barcode:</b> {$page.citizen.barcode}</p>
                             <div id="bcTarget"></div>
