@@ -886,7 +886,7 @@ class Citizen {
             "name" => "Rapp",
             "firstname" => "Janik",
             "barcode" => 0000000000000,
-            "roll" => ["System-Administrator", "Technik & IT"]
+            "roll" => ["System-Administrator", "Technik"]
         ]);
         return self::printPassport($data, 'T', $mode);
     }
@@ -1068,9 +1068,9 @@ class Citizen {
      */
     public static function getAllOfficial(){
         $citizens = [];
-        array_push($citizens, json_decode(Util::getGlobal("roll.orga")));
+        //array_push($citizens, json_decode(Util::getGlobal("roll.orga")));
         array_push($citizens, json_decode(Util::getGlobal("roll.police")));
-        array_push($citizens, json_decode(Util::getGlobal("roll.parliament")));
+        //array_push($citizens, json_decode(Util::getGlobal("roll.parliament")));
 
         return array_unique($citizens);
     }
