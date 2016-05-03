@@ -1068,13 +1068,12 @@ class Citizen {
      */
     public static function getAllOfficial(){
         $citizens = [];
-        foreach(json_decode(Util::getGlobal("roll.orga")) as $item)
-            array_push($citizens, intval($item));
-        foreach(json_decode(Util::getGlobal("roll.parliament")) as $item)
-            array_push($citizens, intval($item));
+        //foreach(json_decode(Util::getGlobal("roll.orga")) as $item)
+        //    array_push($citizens, intval($item));
+        //foreach(json_decode(Util::getGlobal("roll.parliament")) as $item)
+        //    array_push($citizens, intval($item));
         foreach(json_decode(Util::getGlobal("roll.police")) as $item)
             array_push($citizens, intval($item));
-        var_dump($citizens);
         return array_unique($citizens);
     }
 
