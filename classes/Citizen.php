@@ -861,6 +861,7 @@ class Citizen {
      */
     public static function printPassportWorkers(){
         $citizens = self::getAllOfficial();
+        var_dump($citizens);
         $data = [];
         foreach ($citizens as $citizen){
             array_push($data, self::fromCID($citizen)->getCitizenPassportData("work"));
@@ -1068,10 +1069,13 @@ class Citizen {
      */
     public static function getAllOfficial(){
         $citizens = [];
-        array_push($citizens, json_decode(Util::getGlobal("roll.orga")));
-        array_push($citizens, json_decode(Util::getGlobal("roll.police")));
-        array_push($citizens, json_decode(Util::getGlobal("roll.parliament")));
-
+        foreach(json_decode(Util::getGlobal("roll.orga")) as $item)
+            array_push($citizens, intval($item));
+        foreach(json_decode(Util::getGlobal("roll.parliament")) as $item)
+            array_push($citizens, intval($item));
+        foreach(json_decode(Util::getGlobal("roll.police")) as $item)
+            array_push($citizens, intval($item));
+        var_dump($citizens);
         return array_unique($citizens);
     }
 

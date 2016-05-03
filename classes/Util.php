@@ -210,8 +210,7 @@ namespace Entrance;
          $html2pdf->pdf->SetAuthor('SaSEntrance 2016');
          $html2pdf->pdf->SetTitle('SaSEntrance Export'.date("Y-m-d_H-i"));
          $html2pdf->pdf->SetSubject('SaSEntrance 2016');
-         //$html = utf8_encode($html);
-         echo $html;
+
          $html2pdf->writeHTML($html, false);
          $html2pdf->Output($filename,"F");
      }
