@@ -14,6 +14,7 @@
                         <a class="btn waves-effect waves-light col s5 offset-s2 red" style="margin-top:15px;" href="check.php?action=checkOut">
                             <i class="material-icons">close</i>
                         </a>
+                        <audio src="mp3/error.mp3" autoplay />
                     </form>
                 </div>
             </div>
