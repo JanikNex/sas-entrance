@@ -37,6 +37,7 @@ function exportClass() {
             $("#waiting").fadeOut(500, function() {
                 $("#finishedClasslist").fadeIn(500);
             });
+            $("#csvdatei").attr("href", data["link"]);
         });
     });
 }

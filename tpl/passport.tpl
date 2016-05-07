@@ -11,8 +11,8 @@
                             {if $data[0].roll[1] == ""}<br/>{/if}
                             <span style="font-size: 5mm">{$data[0].name}</span><br/>
                             <span style="font-size: 5mm">{$data[0].firstname}</span><br/><br/>
-                            {if $data[0].roll[0] != ""}<span style="font-size: 3mm">{$data[0].roll[0]}</span><br/><br/>{/if}
-                            {if $data[0].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[0].roll[1]}</span><br/><br/>{/if}
+                            {if $data[0].roll[0] != ""}<span style="font-size: 3mm">{$data[0].roll[0]}</span><br/>{/if}
+                            {if $data[0].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[0].roll[1]}</span><br/>{/if}<br/>
                             {if $mode == "normal"}<barcode type="CODABAR" value="{$data[0].barcode}" label="label" style="width:31mm; height:13mm; color: #000000; font-size: 3mm"></barcode>
                             {else}<span style="font-size: 5mm; font-weight: bold;">DIENSTAUSWEIS</span>
                             {/if}
@@ -34,8 +34,8 @@
                             {if $data[1].roll[1] == ""}<br/>{/if}
                             <span style="font-size: 5mm">{$data[1].name}</span><br/>
                             <span style="font-size: 5mm">{$data[1].firstname}</span><br/><br/>
-                            {if $data[1].roll[0] != ""}<span style="font-size: 3mm">{$data[1].roll[0]}</span><br/><br/>{/if}
-                            {if $data[1].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[1].roll[1]}</span><br/><br/>{/if}
+                            {if $data[1].roll[0] != ""}<span style="font-size: 3mm">{$data[1].roll[0]}</span><br/>{/if}
+                            {if $data[1].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[1].roll[1]}</span><br/>{/if}<br/>
                             {if $mode == "normal"}<barcode type="CODABAR" value="{$data[1].barcode}" label="label" style="width:31mm; height:13mm; color: #000000; font-size: 3mm"></barcode>
                             {else}<span style="font-size: 5mm; font-weight: bold;">DIENSTAUSWEIS</span>
                             {/if}
@@ -60,8 +60,8 @@
                             {if $data[2].roll[1] == ""}<br/>{/if}
                             <span style="font-size: 5mm">{$data[2].name}</span><br/>
                             <span style="font-size: 5mm">{$data[2].firstname}</span><br/><br/>
-                            {if $data[2].roll[0] != ""}<span style="font-size: 3mm">{$data[2].roll[0]}</span><br/><br/>{/if}
-                            {if $data[2].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[2].roll[1]}</span><br/><br/>{/if}
+                            {if $data[2].roll[0] != ""}<span style="font-size: 3mm">{$data[2].roll[0]}</span><br/>{/if}
+                            {if $data[2].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[2].roll[1]}</span><br/>{/if}<br/>
                             {if $mode == "normal"}<barcode type="CODABAR" value="{$data[2].barcode}" label="label" style="width:31mm; height:13mm; color: #000000; font-size: 3mm"></barcode>
                             {else}<span style="font-size: 5mm; font-weight: bold;">DIENSTAUSWEIS</span>
                             {/if}
@@ -83,8 +83,8 @@
                             {if $data[3].roll[1] == ""}<br/>{/if}
                             <span style="font-size: 5mm">{$data[3].name}</span><br/>
                             <span style="font-size: 5mm">{$data[3].firstname}</span><br/><br/>
-                            {if $data[3].roll[0] != ""}<span style="font-size: 3mm">{$data[3].roll[0]}</span><br/><br/>{/if}
-                            {if $data[3].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[3].roll[1]}</span><br/><br/>{/if}
+                            {if $data[3].roll[0] != ""}<span style="font-size: 3mm">{$data[3].roll[0]}</span><br/>{/if}
+                            {if $data[3].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[3].roll[1]}</span><br/>{/if}<br/>
                             {if $mode == "normal"}<barcode type="CODABAR" value="{$data[3].barcode}" label="label" style="width:31mm; height:13mm; color: #000000; font-size: 3mm"></barcode>
                             {else}<span style="font-size: 5mm; font-weight: bold;">DIENSTAUSWEIS</span>
                             {/if}
@@ -109,8 +109,8 @@
                             {if $data[4].roll[1] == ""}<br/>{/if}
                             <span style="font-size: 5mm">{$data[4].name}</span><br/>
                             <span style="font-size: 5mm">{$data[4].firstname}</span><br/><br/>
-                            {if $data[4].roll[0] != ""}<span style="font-size: 3mm">{$data[4].roll[0]}</span><br/><br/>{/if}
-                            {if $data[4].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[4].roll[1]}</span><br/><br/>{/if}
+                            {if $data[4].roll[0] != ""}<span style="font-size: 3mm">{$data[4].roll[0]}</span><br/>{/if}
+                            {if $data[4].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[4].roll[1]}</span><br/>{/if}<br/>
                             {if $mode == "normal"}<barcode type="CODABAR" value="{$data[4].barcode}" label="label" style="width:31mm; height:13mm; color: #000000; font-size: 3mm"></barcode>
                             {else}<span style="font-size: 5mm; font-weight: bold;">DIENSTAUSWEIS</span>
                             {/if}
@@ -132,8 +132,8 @@
                             {if $data[5].roll[1] == ""}<br/>{/if}
                             <span style="font-size: 5mm">{$data[5].name}</span><br/>
                             <span style="font-size: 5mm">{$data[5].firstname}</span><br/><br/>
-                            {if $data[5].roll[0] != ""}<span style="font-size: 3mm">{$data[5].roll[0]}</span><br/><br/>{/if}
-                            {if $data[5].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[5].roll[1]}</span><br/><br/>{/if}
+                            {if $data[5].roll[0] != ""}<span style="font-size: 3mm">{$data[5].roll[0]}</span><br/>{/if}
+                            {if $data[5].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[5].roll[1]}</span><br/>{/if}<br/>
                             {if $mode == "normal"}<barcode type="CODABAR" value="{$data[5].barcode}" label="label" style="width:31mm; height:13mm; color: #000000; font-size: 3mm"></barcode>
                             {else}<span style="font-size: 5mm; font-weight: bold;">DIENSTAUSWEIS</span>
                             {/if}
@@ -158,8 +158,8 @@
                             {if $data[6].roll[1] == ""}<br/>{/if}
                             <span style="font-size: 5mm">{$data[6].name}</span><br/>
                             <span style="font-size: 5mm">{$data[6].firstname}</span><br/><br/>
-                            {if $data[6].roll[0] != ""}<span style="font-size: 3mm">{$data[6].roll[0]}</span><br/><br/>{/if}
-                            {if $data[6].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[6].roll[1]}</span><br/><br/>{/if}
+                            {if $data[6].roll[0] != ""}<span style="font-size: 3mm">{$data[6].roll[0]}</span><br/>{/if}
+                            {if $data[6].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[6].roll[1]}</span><br/>{/if}<br/>
                             {if $mode == "normal"}<barcode type="CODABAR" value="{$data[6].barcode}" label="label" style="width:31mm; height:13mm; color: #000000; font-size: 3mm"></barcode>
                             {else}<span style="font-size: 5mm; font-weight: bold;">DIENSTAUSWEIS</span>
                             {/if}
@@ -181,8 +181,8 @@
                             {if $data[7].roll[1] == ""}<br/>{/if}
                             <span style="font-size: 5mm">{$data[7].name}</span><br/>
                             <span style="font-size: 5mm">{$data[7].firstname}</span><br/><br/>
-                            {if $data[7].roll[0] != ""}<span style="font-size: 3mm">{$data[7].roll[0]}</span><br/><br/>{/if}
-                            {if $data[7].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[7].roll[1]}</span><br/><br/>{/if}
+                            {if $data[7].roll[0] != ""}<span style="font-size: 3mm">{$data[7].roll[0]}</span><br/>{/if}
+                            {if $data[7].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[7].roll[1]}</span><br/>{/if}<br/>
                             {if $mode == "normal"}<barcode type="CODABAR" value="{$data[7].barcode}" label="label" style="width:31mm; height:13mm; color: #000000; font-size: 3mm"></barcode>
                             {else}<span style="font-size: 5mm; font-weight: bold;">DIENSTAUSWEIS</span>
                             {/if}
@@ -207,8 +207,8 @@
                             {if $data[8].roll[1] == ""}<br/>{/if}
                             <span style="font-size: 5mm">{$data[8].name}</span><br/>
                             <span style="font-size: 5mm">{$data[8].firstname}</span><br/><br/>
-                            {if $data[8].roll[0] != ""}<span style="font-size: 3mm">{$data[8].roll[0]}</span><br/><br/>{/if}
-                            {if $data[8].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[8].roll[1]}</span><br/><br/>{/if}
+                            {if $data[8].roll[0] != ""}<span style="font-size: 3mm">{$data[8].roll[0]}</span><br/>{/if}
+                            {if $data[8].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[8].roll[1]}</span><br/>{/if}<br/>
                             {if $mode == "normal"}<barcode type="CODABAR" value="{$data[8].barcode}" label="label" style="width:31mm; height:13mm; color: #000000; font-size: 3mm"></barcode>
                             {else}<span style="font-size: 5mm; font-weight: bold;">DIENSTAUSWEIS</span>
                             {/if}
@@ -230,8 +230,8 @@
                             {if $data[9].roll[1] == ""}<br/>{/if}
                             <span style="font-size: 5mm">{$data[9].name}</span><br/>
                             <span style="font-size: 5mm">{$data[9].firstname}</span><br/><br/>
-                            {if $data[9].roll[0] != ""}<span style="font-size: 3mm">{$data[9].roll[0]}</span><br/><br/>{/if}
-                            {if $data[9].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[9].roll[1]}</span><br/><br/>{/if}
+                            {if $data[9].roll[0] != ""}<span style="font-size: 3mm">{$data[9].roll[0]}</span><br/>{/if}
+                            {if $data[9].roll[1] != ""}<span style="font-size: 3mm">Weisungsbefugt: {$data[9].roll[1]}</span><br/>{/if}<br/>
                             {if $mode == "normal"}<barcode type="CODABAR" value="{$data[9].barcode}" label="label" style="width:31mm; height:13mm; color: #000000; font-size: 3mm"></barcode>
                             {else}<span style="font-size: 5mm; font-weight: bold;">DIENSTAUSWEIS</span>
                             {/if}
