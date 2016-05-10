@@ -952,10 +952,7 @@ class Citizen {
         $permissions = "";
         // Es werden jeweils die Befugnisse der höchsten Rolle genommen -> daher ifs nach Rollenwichtigkeit sortieren
         //Ränge, die immer sichtbar sein sollen
-        if ($this->isOrga()) {
-            array_push($array, "Orga-Team");
-            $permissions = "Alles";
-        }
+
         if ($this->isParlament()) {
             array_push($array, "Parlament");
             if ($permissions == "") {
@@ -963,11 +960,15 @@ class Citizen {
             }
         }
         if ($mode == "work") {  //Dienstausweise bzw. Ränge, welche nur auf Dienstausweisen sichtbar sein sollen
-            if ($this->isPolizei()) {
+            if ($this->isPolice()) {
                 array_push($array, "Polizei");
                 if ($permissions == "") {
                     $permissions = "xxx";
                 }
+            }
+            if ($this->isOrga()) {
+                array_push($array, "Orga-Team");
+                $permissions = "Alles";
             }
         }
         if ($this->isCourrier()){
@@ -991,7 +992,7 @@ class Citizen {
             array_push($array, $this->getCID());
             Util::setGlobal("roll.orga", json_encode($array));
         }
-        elseif ($roll == "police" && !$this->isPolizei()){
+        elseif ($roll == "police" && !$this->isPolice()){
             $array = json_decode(Util::getGlobal("roll.police"));
             array_push($array, $this->getCID());
             Util::setGlobal("roll.police", json_encode($array));
@@ -1046,7 +1047,7 @@ class Citizen {
      * Returns wether this citizen is in Police
      * @return bool
      */
-    public function isPolizei(){
+    public function isPolice(){
         $array = json_decode(Util::getGlobal("roll.police"));
         if(!is_array($array)) $array = [];
         return in_array($this->getCID(), $array);
@@ -1068,8 +1069,8 @@ class Citizen {
      */
     public static function getAllOfficial(){
         $citizens = [];
-        //foreach(json_decode(Util::getGlobal("roll.orga")) as $item)
-        //    array_push($citizens, intval($item));
+        foreach(json_decode(Util::getGlobal("roll.orga")) as $item)
+            array_push($citizens, intval($item));
         //foreach(json_decode(Util::getGlobal("roll.parliament")) as $item)
         //    array_push($citizens, intval($item));
         foreach(json_decode(Util::getGlobal("roll.police")) as $item)
