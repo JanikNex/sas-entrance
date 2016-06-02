@@ -78,6 +78,16 @@ if($action == "exportClasslist") {
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
         exit;
     }
+} elseif($action == "printPassportSpecial") {
+    if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
+        $link = \Entrance\Citizen::printPassportSpecials($group);
+        \Entrance\Util::forwardTo(str_replace("/var/customers/webs/Chaos234/yannick9906/", "http://entrance.yannickfelix.tk/", $link));
+        exit; //To not show the list
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
+        $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
+    }
 }
 
 if($user->isActionAllowed(PERM_ADMIN_EXPORT)) {

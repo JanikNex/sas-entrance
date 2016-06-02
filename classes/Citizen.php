@@ -805,20 +805,30 @@ class Citizen {
     public function getCitizenPassportData($mode = "normal"){
         if($this->getClasslevel() != 15){
             $data = [
-                "name" => $this->lastname,
+                "name" => explode(" ", $this->lastname)[0]." ".explode(" ", $this->lastname)[1],
                 "firstname" => explode(" ", $this->firstname)[0],
                 "barcode" => $this->barcode,
-                "roll" => $this->getRoll($mode)
+                "roll" => $this->getRoll($mode),
+                "classlevel" => $this->classlevel
             ];
+            if($this->lastname == "Borroni Meyenschein"){
+                $data = [
+                    "name" => explode(" ", $this->lastname)[0],
+                    "firstname" => explode(" ", $this->firstname)[0],
+                    "barcode" => $this->barcode,
+                    "roll" => $this->getRoll($mode),
+                    "classlevel" => $this->classlevel
+                ];
+            }
         }elseif($this->getClasslevel() == 15){
             $data = [
                 "name" => $this->firstname,
                 "firstname" => $this->lastname,
                 "barcode" => $this->barcode,
-                "roll" => $this->getRoll($mode)
+                "roll" => $this->getRoll($mode),
+                "classlevel" => $this->classlevel
             ];
         }
-
         return $data;
     }
 
@@ -850,11 +860,46 @@ class Citizen {
         $citizens = self::getAllCitizen("", "Stufe".$group);
         $data = [];
         foreach ($citizens as $citizen){
-            array_push($data, $citizen->getCitizenPassportData());
+            if($citizen->getsWhitePassport()) {
+                array_push($data, $citizen->getCitizenPassportData());
+            }
         }
         return self::printPassport($data, $group);
     }
 
+    /**
+     * Print special passworts for a specific group
+     * @return string
+     */
+    public static function printPassportSpecials($group){
+        $citizens = self::getAllSpecials($group);
+        $data = [];
+        $mode = 'work';
+        foreach ($citizens as $citizen){
+            $citizenobject = self::fromCID($citizen);
+            if ($group == 'courrier') {
+                if ($citizenobject->isCourrier())
+                    $mode = 'normal';
+                    array_push($data, $citizenobject->getCitizenPassportData($mode));
+            }elseif ($group == 'orga') {
+                if($citizenobject->isOrga())
+                    $mode = 'work';
+                    array_push($data, $citizenobject->getCitizenPassportData($mode));
+            }elseif ($group == 'police') {
+                if($citizenobject->isPolice())
+                    $mode = 'work';
+                    array_push($data, $citizenobject->getCitizenPassportData($mode));
+            }elseif ($group == 'parliament') {
+                if($citizenobject->isParlament())
+                    $mode = 'normal';
+                    array_push($data, $citizenobject->getCitizenPassportData($mode));
+            }elseif ($group == 'administrator') {
+                $mode = 'normal';
+                array_push($data, $citizenobject->getCitizenPassportData($mode));
+            }
+        }
+        return self::printPassport($data, 'S', $mode);
+    }
     /**
      * Print special passworts for all official workers
      * @return string
@@ -873,19 +918,19 @@ class Citizen {
         array_push($data, [
             "name" => "Rapp",
             "firstname" => "Janik",
-            "barcode" => 0000000000000,
+            "barcode" => 2016041311164,
             "roll" => ["", ""]
         ]);
         array_push($data, [
             "name" => "Rapp",
             "firstname" => "Janik",
-            "barcode" => 0000000000000,
+            "barcode" => 2016041311164,
             "roll" => ["System-Administrator", ""]
         ]);
         array_push($data, [
             "name" => "Rapp",
             "firstname" => "Janik",
-            "barcode" => 0000000000000,
+            "barcode" => 2016041311164,
             "roll" => ["System-Administrator", "Technik"]
         ]);
         return self::printPassport($data, 'T', $mode);
@@ -957,6 +1002,12 @@ class Citizen {
             array_push($array, "Parlament");
             if ($permissions == "") {
                 $permissions = "xxx";
+            }
+        }
+        if ($this->isAdministrator()) {
+            array_push($array, "Administrator");
+            if ($permissions == "") {
+                $permissions = "Entrance";
             }
         }
         if ($mode == "work") {  //Dienstausweise bzw. Ränge, welche nur auf Dienstausweisen sichtbar sein sollen
@@ -1064,6 +1115,16 @@ class Citizen {
     }
 
     /**
+     * Returns wether this citizen is an Administrator
+     * @return bool
+     */
+    public function isAdministrator(){
+        $array = json_decode(Util::getGlobal("roll.administrator"));
+        if(!is_array($array)) $array = [];
+        return in_array($this->getCID(), $array);
+    }
+
+    /**
      * Returns the cIDs of all official state workers
      * @return mixed
      */
@@ -1071,13 +1132,48 @@ class Citizen {
         $citizens = [];
         foreach(json_decode(Util::getGlobal("roll.orga")) as $item)
             array_push($citizens, intval($item));
-        //foreach(json_decode(Util::getGlobal("roll.parliament")) as $item)
-        //    array_push($citizens, intval($item));
+        foreach(json_decode(Util::getGlobal("roll.parliament")) as $item)
+            array_push($citizens, intval($item));
         foreach(json_decode(Util::getGlobal("roll.police")) as $item)
+            array_push($citizens, intval($item));
+        foreach(json_decode(Util::getGlobal("roll.administrator")) as $item)
             array_push($citizens, intval($item));
         return array_unique($citizens);
     }
 
+    public static function getAllSpecials($group = 'all'){
+        $citizens = [];
+        if($group == 'all' or $group == 'orga') {
+            foreach (json_decode(Util::getGlobal("roll.orga")) as $item)
+                array_push($citizens, intval($item));
+        }
+        if($group == 'all' or $group == 'parliament') {
+            foreach (json_decode(Util::getGlobal("roll.parliament")) as $item)
+                array_push($citizens, intval($item));
+        }
+        if($group == 'all' or $group == 'police') {
+            foreach (json_decode(Util::getGlobal("roll.police")) as $item)
+                array_push($citizens, intval($item));
+        }
+        if($group == 'all' or $group == 'administrator') {
+            foreach (json_decode(Util::getGlobal("roll.administrator")) as $item)
+                array_push($citizens, intval($item));
+        }
+        if($group == 'all' or $group == 'courrier') {
+            array_push($citizens, self::getAllCitizen($filter = 'Kurer'));
+        }
+        return array_unique($citizens);
+    }
+
+    /**
+     * Return if this citizen gets an white passport
+     * @return bool
+     */
+    public function getsWhitePassport(){
+        if ($this->isAdministrator()) return false;
+        if ($this->isParlament()) return false;
+        return true;
+    }
 
     /**
      * @return Error
