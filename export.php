@@ -37,6 +37,16 @@ if($action == "exportClasslist") {
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
         exit;
     }
+}elseif($action == "exportBadCitizenToday") {
+    if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
+        \Entrance\Citizen::createBadCitizenListAsCSV();
+        echo json_encode(["success" => true]);
+        exit; //To not show the list
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
+        $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
+    }
 }elseif($action == "exportPassportGroup" and is_numeric($group)) {
     if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
         $link = \Entrance\Citizen::printPassportGroup($group);

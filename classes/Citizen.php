@@ -787,6 +787,36 @@ class Citizen {
         return $list;
     }
 
+    /**
+     * Creates an array with all bad students today
+     * @return array
+     */
+    public static function createBadCitizenListsAsArray(){
+        $students = Citizen::getAllStudents($sort="ascBarcode");
+        $list = [["Stand: ".date("H:i_d.m.Y")]];
+        $currentClass = [0,0];
+        $label = ["cID", "Vorname", "Nachname", "Klassenstufe", "Barcode", date("d.m.Y")];
+        array_push($list, $label);
+        foreach ($students as $student){
+            if(!$student->wasInStateToday()) {
+                if ($student->getClasslevel() <= 10) {
+                    if (!((substr($student->getBarcode(), 8, 2) == $currentClass[0]) && (substr($student->getBarcode(), 10, 1) == $currentClass[1]))) {
+                        $currentClass = [substr($student->getBarcode(), 8, 2), substr($student->getBarcode(), 10, 1)];
+                        array_push($list, ["Klasse", $currentClass[0], $currentClass[1]]);
+                    }
+                } else {
+                    if (!((substr($student->getBarcode(), 8, 2) == $currentClass[0]))) {
+                        $currentClass = [substr($student->getBarcode(), 8, 2), 0];
+                        array_push($list, ["Klasse", $currentClass[0]]);
+                    }
+                }
+                array_push($list, $student->badTimeAsArray());
+            }
+        }
+
+        return $list;
+    }
+
 
     /**
      *Sends the Classlist as Array to the CSV creator
@@ -794,7 +824,23 @@ class Citizen {
     public static function createClasslistAsCSV(){
         $array = self::createClassListsAsArray();
         Util::writeCSV($array, "/var/customers/webs/Chaos234/yannick9906/csv/classlist".date("Y-m-d_H-i").".csv");
-        Util::writeCSV($array, "/var/customers/webs/Chaos234/yannick9906/janik/csv/classlist".date("Y-m-d_H-i").".csv");
+    }
+
+    /**
+     *Sends the bad citizen list as Array to the CSV creator
+     */
+    public static function createBadCitizenListAsCSV(){
+        $array = self::createBadCitizenListsAsArray();
+        Util::writeCSV($array, "/var/customers/webs/Chaos234/yannick9906/csv/badcitizenlist".date("Y-m-d_H-i").".csv");
+    }
+
+    /**
+     * Returns if this citizen was already in state today
+     * @return bool
+     */
+    public function wasInStateToday(){
+        if($this->getTimePerDay(date("Y-m-d")) > 0) return true;
+        else return false;
     }
 
     /**
@@ -988,6 +1034,22 @@ class Citizen {
             array_push($studentData, Util::seconds_to_time($this->getTimePerDay($day)));
         }
         array_push($studentData, Util::seconds_to_time($this->getTimePerProject()));
+        return $studentData;
+    }
+
+    /**
+     * Returns an array with all important student informations and his times for this day
+     * @return array
+     */
+    public function badTimeAsArray(){
+        $studentData = [
+            "id" => $this->cID,
+            "firstname" => $this->firstname,
+            "lastname" => $this->lastname,
+            "classlevel" => $this->classlevel,
+            "barcode" => $this->barcode,
+            "time" => "Nicht anwesend"
+        ];
         return $studentData;
     }
 
