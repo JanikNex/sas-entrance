@@ -449,7 +449,7 @@ class Citizen {
             "birthdayNice" => date("d. M Y", strtotime($this->birthday))." (".Util::getAge($this->birthday).")",
             "age" => Util::getAge($this->birthday),
             "barcode" => $this->barcode,
-            "roll" => $this->getRoll(),
+            "roll" => $this->getRoll('work'),
             "inState" => $this->isCitizenInState(),
             "isWanted" => $this->isCitizenWanted() ? 1:0,
             "locked" => $this->isCitizenLocked() ? 1:0,
@@ -839,7 +839,7 @@ class Citizen {
      * @return bool
      */
     public function wasInStateToday(){
-        if($this->getTimePerDay(date("Y-m-d")) > 0) return true;
+        if(($this->getTimePerDay(date("Y-m-d")) > 0) or ($this->isCitizenInState() == 0)) return true;
         else return false;
     }
 
@@ -941,6 +941,34 @@ class Citizen {
                     array_push($data, $citizenobject->getCitizenPassportData($mode));
             }elseif ($group == 'administrator') {
                 $mode = 'normal';
+                array_push($data, $citizenobject->getCitizenPassportData($mode));
+            }
+            elseif ($group == 'centralbank') {
+                $mode = 'work';
+                array_push($data, $citizenobject->getCitizenPassportData($mode));
+            }
+            elseif ($group == 'borderguards') {
+                $mode = 'work';
+                array_push($data, $citizenobject->getCitizenPassportData($mode));
+            }
+            elseif ($group == 'factoryinspectorate') {
+                $mode = 'work';
+                array_push($data, $citizenobject->getCitizenPassportData($mode));
+            }
+            elseif ($group == 'government') {
+                $mode = 'normal';
+                array_push($data, $citizenobject->getCitizenPassportData($mode));
+            }
+            elseif ($group == 'monarch') {
+                $mode = 'normal';
+                array_push($data, $citizenobject->getCitizenPassportData($mode));
+            }
+            elseif ($group == 'justice') {
+                $mode = 'normal';
+                array_push($data, $citizenobject->getCitizenPassportData($mode));
+            }
+            elseif ($group == 'warehouse') {
+                $mode = 'work';
                 array_push($data, $citizenobject->getCitizenPassportData($mode));
             }
         }
@@ -1060,8 +1088,20 @@ class Citizen {
         // Es werden jeweils die Befugnisse der höchsten Rolle genommen -> daher ifs nach Rollenwichtigkeit sortieren
         //Ränge, die immer sichtbar sein sollen
 
+        if ($this->isMonarch()) {
+            array_push($array, "Monarch");
+            if ($permissions == "") {
+                $permissions = "xxx";
+            }
+        }
         if ($this->isParlament()) {
             array_push($array, "Parlament");
+            if ($permissions == "") {
+                $permissions = "xxx";
+            }
+        }
+        if ($this->isGovernment()) {
+            array_push($array, "Regierung");
             if ($permissions == "") {
                 $permissions = "xxx";
             }
@@ -1070,6 +1110,18 @@ class Citizen {
             array_push($array, "Administrator");
             if ($permissions == "") {
                 $permissions = "Entrance";
+            }
+        }
+        if ($this->isJustice()) {
+            array_push($array, "Justiz");
+            if ($permissions == "") {
+                $permissions = "xxx";
+            }
+        }
+        if ($this->isConstitutional()) {
+            array_push($array, "Verfassungsrat");
+            if ($permissions == "") {
+                $permissions = "xxx";
             }
         }
         if ($mode == "work") {  //Dienstausweise bzw. Ränge, welche nur auf Dienstausweisen sichtbar sein sollen
@@ -1082,6 +1134,22 @@ class Citizen {
             if ($this->isOrga()) {
                 array_push($array, "Orga-Team");
                 $permissions = "Alles";
+            }
+            if ($this->isCentralBank()) {
+                array_push($array, "Zentralbank");
+                $permissions = "xxx";
+            }
+            if ($this->isBorderGuard()) {
+                array_push($array, "Grenzschutz");
+                $permissions = "xxx";
+            }
+            if ($this->isWarehouse()) {
+                array_push($array, "Warenlager");
+                $permissions = "xxx";
+            }
+            if ($this->isFactoryInspectorare()) {
+                array_push($array, "Gewerbeaufsicht");
+                $permissions = "xxx";
             }
         }
         if ($this->isCourrier()){
@@ -1115,6 +1183,46 @@ class Citizen {
             array_push($array, $this->getCID());
             Util::setGlobal("roll.parliament", json_encode($array));
         }
+        elseif ($roll == "monarch" && !$this->isMonarch()){
+            $array = json_decode(Util::getGlobal("roll.monarch"));
+            array_push($array, $this->getCID());
+            Util::setGlobal("roll.monarch", json_encode($array));
+        }
+        elseif ($roll == "government" && !$this->isGovernment()){
+            $array = json_decode(Util::getGlobal("roll.government"));
+            array_push($array, $this->getCID());
+            Util::setGlobal("roll.government", json_encode($array));
+        }
+        elseif ($roll == "centralbank" && !$this->isCentralBank()){
+            $array = json_decode(Util::getGlobal("roll.centralbank"));
+            array_push($array, $this->getCID());
+            Util::setGlobal("roll.centralbank", json_encode($array));
+        }
+        elseif ($roll == "factoryinspectorare" && !$this->isFactoryInspectorare()){
+            $array = json_decode(Util::getGlobal("roll.factoryinspectorare"));
+            array_push($array, $this->getCID());
+            Util::setGlobal("roll.factoryinspectorare", json_encode($array));
+        }
+        elseif ($roll == "warehouse" && !$this->isWarehouse()){
+            $array = json_decode(Util::getGlobal("roll.warehouse"));
+            array_push($array, $this->getCID());
+            Util::setGlobal("roll.warehouse", json_encode($array));
+        }
+        elseif ($roll == "constitutional" && !$this->isConstitutional()){
+            $array = json_decode(Util::getGlobal("roll.constitutional"));
+            array_push($array, $this->getCID());
+            Util::setGlobal("roll.constitutional", json_encode($array));
+        }
+        elseif ($roll == "justice" && !$this->isJustice()){
+            $array = json_decode(Util::getGlobal("roll.justice"));
+            array_push($array, $this->getCID());
+            Util::setGlobal("roll.justice", json_encode($array));
+        }
+        elseif ($roll == "borderguard" && !$this->isBorderGuard()){
+            $array = json_decode(Util::getGlobal("roll.borderguard"));
+            array_push($array, $this->getCID());
+            Util::setGlobal("roll.borderguard", json_encode($array));
+        }
     }
 
     /**
@@ -1122,20 +1230,60 @@ class Citizen {
      * @param $roll
      */
     public function removeRoll($roll){
-        if ($roll == "orga"){
+        if ($roll == "orga" && $this->isOrga()){
             $array = json_decode(Util::getGlobal("roll.orga"));
             $array = self::array_remove($array, $this->getCID());
             Util::setGlobal("roll.orga", json_encode($array));
         }
-        elseif ($roll == "police"){
+        elseif ($roll == "police" && $this->isPolice()){
             $array = json_decode(Util::getGlobal("roll.police"));
             $array = self::array_remove($array, $this->getCID());
             Util::setGlobal("roll.police", json_encode($array));
         }
-        elseif ($roll == "parliament"){
+        elseif ($roll == "parliament" && $this->isParlament()){
             $array = json_decode(Util::getGlobal("roll.parliament"));
             $array = self::array_remove($array, $this->getCID());
             Util::setGlobal("roll.parliament", json_encode($array));
+        }
+        elseif ($roll == "monarch" && $this->isMonarch()){
+            $array = json_decode(Util::getGlobal("roll.monarch"));
+            $array = self::array_remove($array, $this->getCID());
+            Util::setGlobal("roll.monarch", json_encode($array));
+        }
+        elseif ($roll == "government" && $this->isGovernment()){
+            $array = json_decode(Util::getGlobal("roll.government"));
+            $array = self::array_remove($array, $this->getCID());
+            Util::setGlobal("roll.government", json_encode($array));
+        }
+        elseif ($roll == "centralbank" && $this->isCentralBank()){
+            $array = json_decode(Util::getGlobal("roll.centralbank"));
+            $array = self::array_remove($array, $this->getCID());
+            Util::setGlobal("roll.centralbank", json_encode($array));
+        }
+        elseif ($roll == "factoryinspectorare" && $this->isFactoryInspectorare()){
+            $array = json_decode(Util::getGlobal("roll.factoryinspectorare"));
+            $array = self::array_remove($array, $this->getCID());
+            Util::setGlobal("roll.factoryinspectorare", json_encode($array));
+        }
+        elseif ($roll == "warehouse" && $this->isWarehouse()){
+            $array = json_decode(Util::getGlobal("roll.warehouse"));
+            $array = self::array_remove($array, $this->getCID());
+            Util::setGlobal("roll.warehouse", json_encode($array));
+        }
+        elseif ($roll == "constitutional" && $this->isConstitutional()){
+            $array = json_decode(Util::getGlobal("roll.constitutional"));
+            $array = self::array_remove($array, $this->getCID());
+            Util::setGlobal("roll.constitutional", json_encode($array));
+        }
+        elseif ($roll == "justice" && $this->isJustice()){
+            $array = json_decode(Util::getGlobal("roll.justice"));
+            $array = self::array_remove($array, $this->getCID());
+            Util::setGlobal("roll.justice", json_encode($array));
+        }
+        elseif ($roll == "borderguard" && $this->isBorderGuard()){
+            $array = json_decode(Util::getGlobal("roll.borderguard"));
+            $array = self::array_remove($array, $this->getCID());
+            Util::setGlobal("roll.borderguard", json_encode($array));
         }
     }
 
@@ -1187,6 +1335,86 @@ class Citizen {
     }
 
     /**
+     * Returns wether this citizen is the monarch
+     * @return bool
+     */
+    public function isMonarch(){
+        $array = json_decode(Util::getGlobal("roll.monarch"));
+        if(!is_array($array)) $array = [];
+        return in_array($this->getCID(), $array);
+    }
+
+    /**
+     * Returns wether this citizen is in government
+     * @return bool
+     */
+    public function isGovernment(){
+        $array = json_decode(Util::getGlobal("roll.government"));
+        if(!is_array($array)) $array = [];
+        return in_array($this->getCID(), $array);
+    }
+
+    /**
+     * Returns wether this citizen is in central bank
+     * @return bool
+     */
+    public function isCentralBank(){
+        $array = json_decode(Util::getGlobal("roll.centralbank"));
+        if(!is_array($array)) $array = [];
+        return in_array($this->getCID(), $array);
+    }
+
+    /**
+     * Returns wether this citizen is in government
+     * @return bool
+     */
+    public function isFactoryInspectorare(){
+        $array = json_decode(Util::getGlobal("roll.factoryinspectorare"));
+        if(!is_array($array)) $array = [];
+        return in_array($this->getCID(), $array);
+    }
+
+    /**
+     * Returns wether this citizen is in warehouse
+     * @return bool
+     */
+    public function isWarehouse(){
+        $array = json_decode(Util::getGlobal("roll.warehouse"));
+        if(!is_array($array)) $array = [];
+        return in_array($this->getCID(), $array);
+    }
+
+    /**
+     * Returns wether this citizen is an constitutional
+     * @return bool
+     */
+    public function isConstitutional(){
+        $array = json_decode(Util::getGlobal("roll.constitutional"));
+        if(!is_array($array)) $array = [];
+        return in_array($this->getCID(), $array);
+    }
+
+    /**
+     * Returns wether this citizen is in Justice
+     * @return bool
+     */
+    public function isJustice(){
+        $array = json_decode(Util::getGlobal("roll.justice"));
+        if(!is_array($array)) $array = [];
+        return in_array($this->getCID(), $array);
+    }
+
+    /**
+     * Returns wether this citizen is an BorderGuard
+     * @return bool
+     */
+    public function isBorderGuard(){
+        $array = json_decode(Util::getGlobal("roll.borderguard"));
+        if(!is_array($array)) $array = [];
+        return in_array($this->getCID(), $array);
+    }
+
+    /**
      * Returns the cIDs of all official state workers
      * @return mixed
      */
@@ -1199,6 +1427,22 @@ class Citizen {
         foreach(json_decode(Util::getGlobal("roll.police")) as $item)
             array_push($citizens, intval($item));
         foreach(json_decode(Util::getGlobal("roll.administrator")) as $item)
+            array_push($citizens, intval($item));
+        foreach(json_decode(Util::getGlobal("roll.monarch")) as $item)
+            array_push($citizens, intval($item));
+        foreach(json_decode(Util::getGlobal("roll.government")) as $item)
+            array_push($citizens, intval($item));
+        foreach(json_decode(Util::getGlobal("roll.centralbank")) as $item)
+            array_push($citizens, intval($item));
+        foreach(json_decode(Util::getGlobal("roll.factoryinspectorare")) as $item)
+            array_push($citizens, intval($item));
+        foreach(json_decode(Util::getGlobal("roll.warehouse")) as $item)
+            array_push($citizens, intval($item));
+        foreach(json_decode(Util::getGlobal("roll.constitutional")) as $item)
+            array_push($citizens, intval($item));
+        foreach(json_decode(Util::getGlobal("roll.justice")) as $item)
+            array_push($citizens, intval($item));
+        foreach(json_decode(Util::getGlobal("roll.borderguard")) as $item)
             array_push($citizens, intval($item));
         return array_unique($citizens);
     }
@@ -1221,8 +1465,40 @@ class Citizen {
             foreach (json_decode(Util::getGlobal("roll.administrator")) as $item)
                 array_push($citizens, intval($item));
         }
+        if($group == 'all' or $group == 'monarch') {
+            foreach (json_decode(Util::getGlobal("roll.monarch")) as $item)
+                array_push($citizens, intval($item));
+        }
+        if($group == 'all' or $group == 'government') {
+            foreach (json_decode(Util::getGlobal("roll.government")) as $item)
+                array_push($citizens, intval($item));
+        }
+        if($group == 'all' or $group == 'centralbank') {
+            foreach (json_decode(Util::getGlobal("roll.centralbank")) as $item)
+                array_push($citizens, intval($item));
+        }
+        if($group == 'all' or $group == 'factoryinspectorare') {
+            foreach (json_decode(Util::getGlobal("roll.factoryinspectorare")) as $item)
+                array_push($citizens, intval($item));
+        }
+        if($group == 'all' or $group == 'warehouse') {
+            foreach (json_decode(Util::getGlobal("roll.warehouse")) as $item)
+                array_push($citizens, intval($item));
+        }
+        if($group == 'all' or $group == 'constitutional') {
+            foreach (json_decode(Util::getGlobal("roll.constitutional")) as $item)
+                array_push($citizens, intval($item));
+        }
+        if($group == 'all' or $group == 'justice') {
+            foreach (json_decode(Util::getGlobal("roll.justice")) as $item)
+                array_push($citizens, intval($item));
+        }
+        if($group == 'all' or $group == 'borderguard') {
+            foreach (json_decode(Util::getGlobal("roll.borderguard")) as $item)
+                array_push($citizens, intval($item));
+        }
         if($group == 'all' or $group == 'courrier') {
-            array_push($citizens, self::getAllCitizen($filter = 'Kurer'));
+            array_push($citizens, self::getAllCitizen($filter = 'Kurier'));
         }
         return array_unique($citizens);
     }
@@ -1234,6 +1510,9 @@ class Citizen {
     public function getsWhitePassport(){
         if ($this->isAdministrator()) return false;
         if ($this->isParlament()) return false;
+        if ($this->isMonarch()) return false;
+        if ($this->isGovernment()) return false;
+        if ($this->isJustice()) return false;
         return true;
     }
 
