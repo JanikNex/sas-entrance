@@ -56,7 +56,7 @@
                                     <a class="btn cyan lighten-4 col s2 tooltipped" href="citizen.php?action=addRoll&roll=borderguard&cID={$page.citizen.id}"         data-position="top" data-delay="50" data-tooltip="Grenzschutz"><i class="small material-icons">library_add</i></a>
                                     <a class="btn grey col s2 tooltipped" href="citizen.php?action=addRoll&roll=factoryinspectorare&cID={$page.citizen.id}" data-position="top" data-delay="50" data-tooltip="Gewerbeaufsicht"><i class="small material-icons">library_add</i></a>
                                     <a class="btn light-green lighten-1 col s2 tooltipped" href="citizen.php?action=addRoll&roll=warehouse&cID={$page.citizen.id}"           data-position="top" data-delay="50" data-tooltip="Warenlager"><i class="small material-icons">library_add</i></a>
-                                    <a class="btn white col s2 tooltipped" href="citizen.php?action=addRoll&roll=orga&cID={$page.citizen.id}"              data-position="top" data-delay="50" data-tooltip="Orga"><i class="small material-icons">library_add</i></a>
+                                    <a class="btn white black-text col s2 tooltipped" href="citizen.php?action=addRoll&roll=orga&cID={$page.citizen.id}"              data-position="top" data-delay="50" data-tooltip="Orga"><i class="small material-icons">library_add</i></a>
                                 </p><br/><br/><br/>
                                 <p>
                                     <a class="btn red col s2 tooltipped" href="citizen.php?action=removeRoll&roll=monarch&cID={$page.citizen.id}"          data-position="bottom" data-delay="50" data-tooltip="Monarch"><i class="small material-icons">delete</i></a>
@@ -69,7 +69,7 @@
                                     <a class="btn cyan lighten-4 col s2 tooltipped" href="citizen.php?action=removeRoll&roll=borderguard&cID={$page.citizen.id}"      data-position="bottom" data-delay="50" data-tooltip="Grenzschutz"><i class="small material-icons">delete</i></a>
                                     <a class="btn grey col s2 tooltipped" href="citizen.php?action=removeRoll&roll=factoryinspectorare&cID={$page.citizen.id}" data-position="bottom" data-delay="50" data-tooltip="Gewerbeaufsicht"><i class="small material-icons">delete</i></a>
                                     <a class="btn light-green lighten-1 col s2 tooltipped" href="citizen.php?action=removeRoll&roll=warehouse&cID={$page.citizen.id}"        data-position="bottom" data-delay="50" data-tooltip="Warenlager"><i class="small material-icons">delete</i></a>
-                                    <a class="btn white col s2 tooltipped" href="citizen.php?action=removeRoll&roll=orga&cID={$page.citizen.id}"           data-position="bottom" data-delay="50" data-tooltip="Orga"><i class="small material-icons">delete</i></a>
+                                    <a class="btn white black-text col s2 tooltipped" href="citizen.php?action=removeRoll&roll=orga&cID={$page.citizen.id}"           data-position="bottom" data-delay="50" data-tooltip="Orga"><i class="small material-icons">delete</i></a>
                                 </p>
                             {/if}
                             <br/><br/>
