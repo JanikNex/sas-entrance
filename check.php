@@ -84,7 +84,7 @@ if(\Entrance\Util::isStateOpen()) {
             if (\Entrance\Citizen::doesBarcodeExist($_POST["barcode"])) {
                 $citizen = \Entrance\Citizen::fromBarcode($_POST["barcode"]);
                 if(!$citizen->isCitizenWanted()) {
-                    if ($citizen->hasCitizenEnoughTime() or $_POST["force"] == "true") {
+                    if ($citizen->hasCitizenEnoughTime() or $_POST["force"] == "true" or $citizen->getClasslevel() >= 11) {
                         if ($citizen->tryCheckOut($user)) {
                             $pgdata["page"]["scan"]["success"] = 1;
                             $pgdata["page"]["citizen"] = $citizen->asArray();
