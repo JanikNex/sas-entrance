@@ -14,6 +14,7 @@
                         <a onclick="update('exportClasslist')" href="#">Klassenliste</a>
                         <a onclick="update('exportPassports')" href="#">Alle Ausweise</a>
                         <a href="export.php?action=printPassportWorkers">Dienstausweise</a>
+                        <a href="export.php?action=exportBadCitizenToday">10Uhr-Liste</a>
                     </div>
                 </div>
             </div>
