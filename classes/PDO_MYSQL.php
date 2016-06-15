@@ -9,7 +9,7 @@
 namespace Entrance;
 
 use PDO;
-require_once 'classes/passwords.php'; //DB Pdw
+require_once 'passwords.php'; //DB Pdw
 
 class PDO_MYSQL {
     /**
@@ -18,11 +18,17 @@ class PDO_MYSQL {
      * @var string host, pass, user, dbname
      * @var int port
      */
-    private $host   = 'localhost';
+    /*private $host   = 'localhost';
     private $port   = 3306;
     private $pass   = "";
     private $user   = 'Chaos234sql34';
     private $dbname = 'Chaos234sql34';
+*/
+    private $host   = 'localhost';
+    private $port   = 3306;
+    private $pass   = "";
+    private $user   = 'root';
+    private $dbname = 'entrance';
 
     /**
      * @return PDO PDO-Object

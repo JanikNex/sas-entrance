@@ -823,7 +823,7 @@ class Citizen {
      */
     public static function createClasslistAsCSV(){
         $array = self::createClassListsAsArray();
-        Util::writeCSV($array, "/var/customers/webs/Chaos234/yannick9906/csv/classlist".date("Y-m-d_H-i").".csv");
+        Util::writeCSV($array, "/var/www/html/entrance/csv/classlist".date("Y-m-d_H-i").".csv");
     }
 
     /**
@@ -831,7 +831,7 @@ class Citizen {
      */
     public static function createBadCitizenListAsCSV(){
         $array = self::createBadCitizenListsAsArray();
-        Util::writeCSV($array, "/var/customers/webs/Chaos234/yannick9906/csv/badcitizenlist".date("Y-m-d_H-i").".csv");
+        Util::writeCSV($array, "/var/www/html/entrance/csv/badcitizenlist".date("Y-m-d_H-i").".csv");
     }
 
     /**
@@ -1041,7 +1041,7 @@ class Citizen {
             ];
             $html = $dwoo->get($tpl, $pgdata);
         }
-        $link = "/var/customers/webs/Chaos234/yannick9906/pdf/passports-".$group."-".date("Y-m-d_H-i-s").".pdf";
+        $link = "/var/www/html/entrance/pdf/passports-".$group."-".date("Y-m-d_H-i-s").".pdf";
         Util::writePDF($html, $link);
         return $link;
     }

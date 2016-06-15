@@ -50,7 +50,7 @@ if($action == "exportClasslist") {
 }elseif($action == "exportPassportGroup" and is_numeric($group)) {
     if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
         $link = \Entrance\Citizen::printPassportGroup($group);
-        echo json_encode(["success" => true, "link" => str_replace("/var/customers/webs/Chaos234/yannick9906/", "http://entrance.yannickfelix.tk/", $link)]);
+        echo json_encode(["success" => true, "link" => str_replace("/var/www/html/", "/", $link)]);
         exit; //To not show the list
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
@@ -61,7 +61,7 @@ if($action == "exportClasslist") {
     if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
         $citizen= \Entrance\Citizen::fromCID($cID);
         $link = $citizen->printThisCitizenPassport();
-        \Entrance\Util::forwardTo(str_replace("/var/customers/webs/Chaos234/yannick9906/", "http://entrance.yannickfelix.tk/", $link));
+        \Entrance\Util::forwardTo(str_replace("/var/www/html/", "/", $link));
         exit; //To not show the list
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
@@ -71,7 +71,7 @@ if($action == "exportClasslist") {
 } elseif($action == "printPassportWorkers") {
     if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
         $link = \Entrance\Citizen::printPassportWorkers();
-        \Entrance\Util::forwardTo(str_replace("/var/customers/webs/Chaos234/yannick9906/", "http://entrance.yannickfelix.tk/", $link));
+        \Entrance\Util::forwardTo(str_replace("/var/www/html/", "/", $link));
         exit; //To not show the list
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
@@ -81,7 +81,7 @@ if($action == "exportClasslist") {
 } elseif($action == "printPassportTest") {
     if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
         $link = \Entrance\Citizen::printTestPassportPage($mode);
-        \Entrance\Util::forwardTo(str_replace("/var/customers/webs/Chaos234/yannick9906/", "http://entrance.yannickfelix.tk/", $link));
+        \Entrance\Util::forwardTo(str_replace("/var/www/html/", "/", $link));
         exit; //To not show the list
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
@@ -91,7 +91,7 @@ if($action == "exportClasslist") {
 } elseif($action == "printPassportSpecial") {
     if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
         $link = \Entrance\Citizen::printPassportSpecials($group);
-        \Entrance\Util::forwardTo(str_replace("/var/customers/webs/Chaos234/yannick9906/", "http://entrance.yannickfelix.tk/", $link));
+        \Entrance\Util::forwardTo(str_replace("/var/www/html/", "/", $link));
         exit; //To not show the list
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
