@@ -458,6 +458,25 @@ class Citizen {
         ];
     }
 
+    /**
+     * Converts the object into an optimised array
+     *
+     * @return array
+     */
+    public function asArrayOptimized() {
+        return [
+            "id" => $this->cID,
+            "firstname" => $this->firstname,
+            "lastname" => $this->lastname,
+            "classlevel" => $this->classlevel,
+            "inState" => $this->isCitizenInState(),
+            "isWanted" => $this->isCitizenWanted() ? 1:0,
+            "locked" => $this->isCitizenLocked() ? 1:0,
+            "timeToday" => $this->getTimePerDay(date("Y-m-d")) != 0 ? gmdate("H\h i\m s\s",$this->getTimePerDay(date("Y-m-d"))) : "<i>Nicht anwesend</i>",
+            "timeProject" =>$this->getTimePerProject() != 0 ? Util::seconds_to_time($this->getTimePerProject()) : "<i>Nicht anwesend</i>"
+        ];
+    }
+
     public function asString() {
         return json_encode($this->asArray());
     }

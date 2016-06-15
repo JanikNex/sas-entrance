@@ -83,7 +83,7 @@ if($action == "users") {
     if($action == "citizenInState") {
         $citizens = \Entrance\Citizen::getAllCitizenInState($sort, $filter, $_GET["page"], $pageSize, $_GET["search"]);
         foreach($citizens as $citizen) {
-            array_push($toEncode["citizens"], $citizen->asArray());
+            array_push($toEncode["citizens"], $citizen->asArrayOptimized());
         }
         $currCount = \Entrance\Citizen::getCurrentCitizenCount($sort, $filter, $_GET["search"]);
         $toEncode["page"] = $_GET["page"];
@@ -93,7 +93,7 @@ if($action == "users") {
     elseif($action == "citizenBad") {
         $citizens = \Entrance\Citizen::getAllBadCitizen($sort, $filter, $_GET["page"], $pageSize, $_GET["search"]);
         foreach ($citizens as $citizen) {
-            array_push($toEncode["citizens"], $citizen->asArray());
+            array_push($toEncode["citizens"], $citizen->asArrayOptimized());
         }
         $currCount = \Entrance\Citizen::getCurrentBadCitizenCount($sort, $filter, $_GET["search"]);
         $toEncode["page"] = $_GET["page"];
@@ -102,7 +102,7 @@ if($action == "users") {
     } elseif($action == "citizenWanted") {
         $citizens = \Entrance\Citizen::getAllWantedCitizens($_GET["page"], $pageSize, $_GET["search"]);
         foreach($citizens as $citizen) {
-            array_push($toEncode["citizens"], $citizen->asArray());
+            array_push($toEncode["citizens"], $citizen->asArrayOptimized());
         }
         $currCount = \Entrance\Citizen::getCurrentWantedCount($_GET["search"]);
         $toEncode["page"] = $_GET["page"];
@@ -111,7 +111,7 @@ if($action == "users") {
     } elseif($action == "citizen") {
         $citizens = \Entrance\Citizen::getAllCitizen($sort, $filter, $_GET["page"], $pageSize, $_GET["search"]);
         foreach($citizens as $citizen) {
-            array_push($toEncode["citizens"], $citizen->asArray());
+            array_push($toEncode["citizens"], $citizen->asArrayOptimized());
         }
         $currCount = \Entrance\Citizen::getTotalCitizenCount($sort, $filter, $_GET["search"]);
         $toEncode["page"] = $_GET["page"];
