@@ -80,17 +80,16 @@ if($action == "users") {
     exit;
 } elseif($action == "citizen" or $action == "citizenInState" or $action == "citizenBad" or $action == "citizenWanted") {
     $toEncode = ["citizens" => []];
-    if($action == "citizenInState") {
+    if ($action == "citizenInState") {
         $citizens = \Entrance\Citizen::getAllCitizenInState($sort, $filter, $_GET["page"], $pageSize, $_GET["search"]);
-        foreach($citizens as $citizen) {
+        foreach ($citizens as $citizen) {
             array_push($toEncode["citizens"], $citizen->asArrayOptimized());
         }
         $currCount = \Entrance\Citizen::getCurrentCitizenCount($sort, $filter, $_GET["search"]);
         $toEncode["page"] = $_GET["page"];
         $toEncode["maxpage"] = ceil($currCount / $pageSize);
         $toEncode["size"] = $currCount;
-    }
-    elseif($action == "citizenBad") {
+    } elseif ($action == "citizenBad") {
         $citizens = \Entrance\Citizen::getAllBadCitizen($sort, $filter, $_GET["page"], $pageSize, $_GET["search"]);
         foreach ($citizens as $citizen) {
             array_push($toEncode["citizens"], $citizen->asArrayOptimized());
@@ -99,18 +98,18 @@ if($action == "users") {
         $toEncode["page"] = $_GET["page"];
         $toEncode["maxpage"] = ceil($currCount / $pageSize);
         $toEncode["size"] = $currCount;
-    } elseif($action == "citizenWanted") {
+    } elseif ($action == "citizenWanted") {
         $citizens = \Entrance\Citizen::getAllWantedCitizens($_GET["page"], $pageSize, $_GET["search"]);
-        foreach($citizens as $citizen) {
+        foreach ($citizens as $citizen) {
             array_push($toEncode["citizens"], $citizen->asArrayOptimized());
         }
         $currCount = \Entrance\Citizen::getCurrentWantedCount($_GET["search"]);
         $toEncode["page"] = $_GET["page"];
         $toEncode["maxpage"] = ceil($currCount / $pageSize);
         $toEncode["size"] = $currCount;
-    } elseif($action == "citizen") {
+    } elseif ($action == "citizen") {
         $citizens = \Entrance\Citizen::getAllCitizen($sort, $filter, $_GET["page"], $pageSize, $_GET["search"]);
-        foreach($citizens as $citizen) {
+        foreach ($citizens as $citizen) {
             array_push($toEncode["citizens"], $citizen->asArrayOptimized());
         }
         $currCount = \Entrance\Citizen::getTotalCitizenCount($sort, $filter, $_GET["search"]);
@@ -122,6 +121,22 @@ if($action == "users") {
     $jsoncode = json_encode($toEncode);
     echo $jsoncode;
     exit;
+} elseif($action == "citizenSimple" or $action == "citizenInStateSimple" or $action == "citizenBadSimple" or $action == "citizenWantedSimple") {
+        $toEncode = ["citizens" => []];
+
+        if($action == "citizenSimple") {
+            $citizens = \Entrance\Citizen::getAllCitizenSimple($sort, $filter, $_GET["page"], $pageSize, $_GET["search"]);
+            #print_r($citizens);
+            $toEncode["citizens"] = $citizens;
+            $currCount = \Entrance\Citizen::getTotalCitizenCount($sort, $filter, $_GET["search"]);
+            $toEncode["page"] = $_GET["page"];
+            $toEncode["maxpage"] = ceil($currCount / $pageSize);
+            $toEncode["size"] = $currCount;
+        }
+
+        $jsoncode = json_encode($toEncode);
+        echo $jsoncode;
+        exit;
 } elseif($action == "tracings") {
     $toEncode = ["tracings" => []];
     $tracings = \Entrance\TracingEntry::getAllTracings($sort, $filter);

@@ -125,7 +125,7 @@ if($action == "new") {
         exit;
     }
 } elseif($action == "citizeninfo") {
-    if($user->isActionAllowed(PERM_CITIZEN_INFO_SPECIFIC) and is_numeric($cID)) {
+    if ($user->isActionAllowed(PERM_CITIZEN_INFO_SPECIFIC) and is_numeric($cID)) {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Schülerinfo", $user, true, false, "citizen.php");
         $citizenToView = \Entrance\Citizen::fromCID($cID);
         $pgdata["page"]["citizen"] = $citizenToView->asArray();
@@ -136,14 +136,24 @@ if($action == "new") {
         }
 
         $days = \Entrance\LogEntry::getProjectDays();
-        for($i = 0; $i < sizeof($days); $i++) {
+        for ($i = 0; $i < sizeof($days); $i++) {
             $pgdata["page"]["times"][$i]["date"] = $days[$i];
-            $pgdata["page"]["times"][$i]["time"] = $citizenToView->getTimePerDay($days[$i]) != 0 ? gmdate("H\h i\m s\s",$citizenToView->getTimePerDay($days[$i])) : "<i>Nicht anwesend</i>";
+            $pgdata["page"]["times"][$i]["time"] = $citizenToView->getTimePerDay($days[$i]) != 0 ? gmdate("H\h i\m s\s", $citizenToView->getTimePerDay($days[$i])) : "<i>Nicht anwesend</i>";
         }
 
         $pgdata["page"]["timeTotal"] = $citizenToView->getTimePerProject() != 0 ? \Entrance\Util::seconds_to_time($citizenToView->getTimePerProject()) : "<i>Nicht anwesend</i>";
 
         $dwoo->output("tpl/citizenInfo.tpl", $pgdata);
+        exit;
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Personen", $user);
+        $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
+    }
+} elseif($action == "citizeninfosimple") {
+    if ($user->isActionAllowed(PERM_CITIZEN_INFO_SPECIFIC) and is_numeric($cID)) {
+        $citizenToView = \Entrance\Citizen::fromCID($cID);
+        echo json_encode($citizenToView->asArray());
         exit;
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Personen", $user);

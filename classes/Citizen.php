@@ -140,7 +140,7 @@ class Citizen {
      */
     public static function getTotalCitizenCount($sort, $filter, $search) {
         $pdo = new PDO_MYSQL();
-        if($search != "") $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE MATCH(firstname, lastname) AGAINST('".$search."' IN BOOLEAN MODE) ".CFILTERING[$filter].CSORTING[$sort];
+        if($search != "") $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname)) LIKE LOWER('%".$_GET["search"]."%')".CFILTERING[$filter].CSORTING[$sort];
         else $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE cID != 0".CFILTERING[$filter].CSORTING[$sort];
 
         $res = $pdo->query($query);
@@ -163,7 +163,7 @@ class Citizen {
             if($search != "") {
                 $startElem = ($page-1) * $pagesize;
                 $endElem = $startElem + $pagesize;
-                $query = "SELECT cID FROM entrance_citizen WHERE MATCH(firstname, lastname) AGAINST('".$_GET["search"]."' IN BOOLEAN MODE) ".CFILTERING[$filter].CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
+                $query = "SELECT cID FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname)) LIKE LOWER('%".$_GET["search"]."%')".CFILTERING[$filter].CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
                 $stmt = $pdo->queryMulti($query);
                 return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
             } else {
@@ -171,6 +171,58 @@ class Citizen {
                 $endElem = $startElem + $pagesize;
                 $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE cID != 0 " . CFILTERING[$filter] . CSORTING[$sort]." LIMIT ".$startElem.','.$endElem);
                 return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+            }
+        } else {
+            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen " . CSORTING[$sort]);
+            $array = $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+            $r_citizen = [];
+            foreach($array as $citizen) {
+                if($citizen->isCitizenLocked())
+                    array_push($r_citizen, $citizen);
+            }
+            return $r_citizen;
+        }
+    }
+
+    /**
+     * Returns all Citizen in the db
+     *
+     * @param string $sort
+     * @param string $filter
+     * @param int $page
+     * @param int $pagesize
+     * @param string $search
+     * @return Citizen[]
+     */
+    public static function getAllCitizenSimple($sort = "", $filter = "", $page = 1, $pagesize = 999999, $search = "") {
+        $pdo = new PDO_MYSQL();
+        if($filter != "Gesperrt") {
+            if($search != "") {
+                $startElem = ($page-1) * $pagesize;
+                $endElem = $pagesize;
+                $query = "SELECT cID, firstname, lastname FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname)) LIKE LOWER('%".$_GET["search"]."%') ".CFILTERING[$filter].CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
+                $stmt = $pdo->queryMulti($query);
+                $hits = [];
+                while($row = $stmt->fetch()) {
+                    $keys["id"] = $row["cID"];
+                    $keys["fname"] = utf8_encode($row["firstname"]);
+                    $keys["lname"] = utf8_encode($row["lastname"]);
+                    array_push($hits, $keys);
+                }
+                return $hits;
+            } else {
+                $startElem = ($page-1) * $pagesize;
+                $endElem = $pagesize;
+                $stmt = $pdo->queryMulti("SELECT cID, firstname, lastname, state FROM entrance_citizen WHERE cID != 0 " . CFILTERING[$filter] . CSORTING[$sort]." LIMIT ".$startElem.','.$endElem);
+                $hits = [];
+                while($row = $stmt->fetch()) {
+                    $keys["id"] = $row["cID"];
+                    $keys["fname"] = utf8_encode($row["firstname"]);
+                    $keys["lname"] = utf8_encode($row["lastname"]);
+                    $keys["st"] = utf8_encode($row["state"]);
+                    array_push($hits, $keys);
+                }
+                return $hits;
             }
         } else {
             $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen " . CSORTING[$sort]);
@@ -200,7 +252,7 @@ class Citizen {
             if($search != "") {
                 $startElem = ($page-1) * $pagesize;
                 $endElem = $startElem + $pagesize;
-                $query = "SELECT cID FROM entrance_citizen WHERE MATCH(firstname, lastname) AGAINST('".$_GET["search"]."' IN BOOLEAN MODE) AND state = 0".CFILTERING[$filter].CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
+                $query = "SELECT cID FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname)) LIKE LOWER('%".$_GET["search"]."%') AND state = 0".CFILTERING[$filter].CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
                 $stmt = $pdo->queryMulti($query);
                 return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
             } else {
@@ -231,7 +283,7 @@ class Citizen {
      */
     public static function getCurrentCitizenCount($sort, $filter, $search) {
         $pdo = new PDO_MYSQL();
-        if($search != "") $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE MATCH(firstname, lastname) AGAINST('".$search."' IN BOOLEAN MODE) AND state = 0".CFILTERING[$filter].CSORTING[$sort];
+        if($search != "") $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname)) LIKE LOWER('%".$_GET["search"]."%') AND state = 0".CFILTERING[$filter].CSORTING[$sort];
         else $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE state = 0".CFILTERING[$filter].CSORTING[$sort];
 
         $res = $pdo->query($query);
