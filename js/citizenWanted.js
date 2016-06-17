@@ -8,15 +8,53 @@ var filter = "Alle";
 var requestPage = 1;
 var searchString = "";
 var modalID = 0;
+var list = {};
+var keys = [];
+var listElemTmplt = `
+            <li class="collection-item avatar">
+                <i class="material-icons circle {{color}}">person</i>
+                <span class="title">{{firstname}} {{lastname}}</span>
+                <p> {{{locked}}}
+                    {{classlvl}}<br/>
+                    Zeit heute: {{{timeToday}}} | Zeit gesamt: {{{timeProject}}}
+                </p>
+                <span class="secondary-content">
+                    <a class="waves-effect waves-circle" href="citizen.php?action=edit&cID={{id}}">
+                        <i class="material-icons grey-text text-darken-1" style="margin: 0px 5px;">create</i>
+                    </a>
+                    <a class="waves-effect waves-circle" href="citizen.php?action=citizeninfo&cID={{id}}" style="margin: 0px 5px;">
+                        <i class="material-icons grey-text text-darken-1">reorder</i>
+                    </a>
+                    <a class="waves-effect waves-circle waves-red" onclick="openModal({{modalid}})" style="margin: 0px 5px;">
+                        <i class="material-icons grey-text text-darken-1">delete</i>
+                    </a>
+                </span>
+                <div id="modal{{modalid}}" class="modal">
+                    <div class="modal-content black-text">
+                        <h4>L&ouml;schen</h4>
+                        <p>M&ouml;chtest Du die Person "{{firstname}} {{lastname}}" wirklich l&ouml;schen?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat"  onclick="window.openHTTPs = 0;">Abbrechen</a>
+                        <a href="citizen.php?action=del&cID={{id}}" class="modal-action modal-close waves-effect waves-green btn-flat red-text">L&ouml;schen</a>
+                    </div>
+                </div>
+            </li>
+        `;
+var template = Handlebars.compile(listElemTmplt);
 
 function setFilter(afilter) {
     filter = afilter;
+    list = {};
+    keys = [];
     updateSortnFilter();
     update();
 }
 
 function setSort(asort) {
     sort = asort;
+    list = {};
+    keys = [];
     updateSortnFilter();
     update();
 }
@@ -61,6 +99,8 @@ function updatePages(currPage, maxPage) {
 
 function setPage(apage) {
     requestPage = apage;
+    list = {};
+    keys = [];
     update();
 }
 
@@ -69,6 +109,9 @@ $(document).ready(function(){
     $('.modal-trigger').leanModal();
     $("#filter").keyup(function () {
         searchString = $(this).val();
+        list = {};
+        keys = [];
+        oldData = "";
         update();
     });
 
@@ -102,64 +145,23 @@ $(document).ready(function(){
     })();
     updateSortnFilter();
     updateCaller();
+    refreshList();
 });
 
 function update() {
-    var listElemTmplt = `
-            <li class="collection-item avatar">
-                <i class="material-icons circle {{color}}">person</i>
-                <span class="title">{{firstname}} {{lastname}}</span>
-                <p> {{{locked}}}
-                    {{classlvl}}<br/>
-                    Zeit heute: {{{timeToday}}} | Zeit gesamt: {{{timeProject}}}
-                </p>
-                <span class="secondary-content">
-                    <a class="waves-effect waves-circle" href="citizen.php?action=edit&cID={{id}}">
-                        <i class="material-icons grey-text text-darken-1" style="margin: 0px 5px;">create</i>
-                    </a>
-                    <a class="waves-effect waves-circle" href="citizen.php?action=citizeninfo&cID={{id}}" style="margin: 0px 5px;">
-                        <i class="material-icons grey-text text-darken-1">reorder</i>
-                    </a>
-                    <a class="waves-effect waves-circle waves-red" onclick="$('#modal{{modalid}}').openModal();" style="margin: 0px 5px;">
-                        <i class="material-icons grey-text text-darken-1">delete</i>
-                    </a>
-                </span>
-                <div id="modal{{modalid}}" class="modal">
-                    <div class="modal-content black-text">
-                        <h4>L&ouml;schen</h4>
-                        <p>M&ouml;chtest Du die Person "{{firstname}} {{lastname}}" wirklich l&ouml;schen?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat"  onclick="window.openHTTPs = 0;">Abbrechen</a>
-                        <a href="citizen.php?action=del&cID={{id}}" class="modal-action modal-close waves-effect waves-green btn-flat red-text">L&ouml;schen</a>
-                    </div>
-                </div>
-            </li>
-        `;
-    template = Handlebars.compile(listElemTmplt);
     finishedString = [];
     if(requestPage == 0)requestPage = 1;
-    $.getJSON("getLists.php?action=citizenWanted&search="+searchString+"&page="+requestPage+"&filter="+filter+"&sort="+sort, function (data) {
+    $.getJSON("getLists.php?action=citizenWantedSimple&search="+searchString+"&page="+requestPage+"&filter="+filter+"&sort="+sort, function (data) {
         if(!(JSON.stringify(oldData) == JSON.stringify(data))) {
-            $("ul#citizens").html("");
             data["citizens"].forEach(function (element, index, array) {
-                if(element["inState"] == 0) color = "green";
-                else if(element["inState"] == 1) color = "red";
-                else color = "grey";
-
-                if(element["locked"] == 1 && element["isWanted"] == 1) locked = "<span class=\"red-text\"><b>!</b> Person gesperrt | Fahndung aktiv</span><br/>";
-                else if(element["locked"] == 1) locked = "<span class=\"red-text\"><b>!</b> Person gesperrt</span><br/>";
-                else if(element["isWanted"] == 1) locked = "<span class=\"red-text\"><b>!</b> Fahndung aktiv</span><br/>";
-                else locked = "";
-
-                if(element["classlevel"] <= 13) classlevel = "Klassenstufe " + element["classlevel"];
-                else if(element["classlevel"] == 14) classlevel = "Lehrer";
-                else if(element["classlevel"] == 15) classlevel = "Visum";
-                else classlevel = "Kurier";
-
-                html = template({modalid: modalID, id: element["id"], firstname: element["firstname"], lastname: element["lastname"], locked: locked, classlvl: classlevel, timeToday: element["timeToday"], timeProject: element["timeProject"], color: color});
-                $("ul#citizens").append(html);
+                html = template({modalid: modalID, id: element["id"], firstname: element["fname"], lastname: element["lname"], locked: "...", classlvl: "...", timeToday: "...", timeProject: "..."});
+                list[(element["id"]+"#")] = html;
+                keys.push(element["id"]);
                 modalID++;
+
+                $.getJSON("citizen.php?action=citizeninfosimple&cID="+element["id"], function(data) {
+                    updateRow(element["id"], data)
+                });
             });
             updatePages(data["page"], data["maxpage"]);
             console.log("update");
@@ -170,9 +172,55 @@ function update() {
     $('.modal-trigger').leanModal();
 }
 
+function updateEntries() {
+    keys.forEach(function(key) {
+        $.getJSON("citizen.php?action=citizeninfosimple&cID=" + key, function (data) {
+            updateRow(key, data)
+        });
+    });
+}
+
 function updateCaller(){
-    if(window.openHTTPs == 0) update();
+    if(window.openHTTPs == 0) {
+        update();
+        //updateEntries();
+    }
     window.setTimeout("updateCaller()", 1000);
+}
+
+function openModal(id) {
+    window.openHTTPs = 1000;
+    $('#modal'+id).openModal();
+}
+
+function updateRow(id, data) {
+    if(data["inState"] == 0) color = "green";
+    else if(data["inState"] == 1) color = "red";
+    else color = "grey";
+
+    if(data["locked"] == 1 && data["isWanted"] == 1) locked = "<span class=\"red-text\"><b>!</b> Person gesperrt | Fahndung aktiv</span><br/>";
+    else if(data["locked"] == 1) locked = "<span class=\"red-text\"><b>!</b> Person gesperrt</span><br/>";
+    else if(data["isWanted"] == 1) locked = "<span class=\"red-text\"><b>!</b> Fahndung aktiv</span><br/>";
+    else locked = "";
+
+    if(data["classlevel"] <= 10) classlevel = "Klassenstufe " + data["classlevel"];
+    else if(data["classlevel"] <= 13) classlevel = "Oberstufe " + data["classlevel"];
+    else if(data["classlevel"] == 14) classlevel = "Lehrer";
+    else if(data["classlevel"] == 15) classlevel = "Visum";
+    else if(data["classlevel"] == 16) classlevel = "Kurier";
+    else classlevel = "...";
+
+    html = template({modalid: modalID, id: data["id"], firstname: data["firstname"], lastname: data["lastname"], locked: locked, classlvl: classlevel, timeToday: data["timeToday"], timeProject: data["timeProject"], color: color});
+    list[(id+"#")] = html;
+    modalID++;
+}
+
+function refreshList() {
+    $("ul#citizens").html("");
+    keys.forEach(function(key) {
+        $("ul#citizens").append(list[(key+"#")]);
+    });
+    window.setTimeout("refreshList()", 500);
 }
 
 $('.dropdown-button').dropdown({
