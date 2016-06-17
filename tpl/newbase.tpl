@@ -3,7 +3,7 @@
     <head>
         <title>Sas Entrance - {$args.title}</title>
         <!--Import Google Icon Font-->
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <!--<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">-->
         <link href='https://fonts.googleapis.com/css?family=Roboto+Condensed:400,700' rel='stylesheet' type='text/css'>
         <link href='https://fonts.googleapis.com/css?family=Roboto+Mono' rel='stylesheet' type='text/css'>
         <!--Import materialize.css-->
@@ -23,7 +23,7 @@
         <script type="text/javascript" src="libs/jquery-2.2.1.min.js"></script>
         <script type="text/javascript" src="libs/materialize/js/materialize.min.js"></script>
         <script type="text/javascript" src="libs/jquery-barcode.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.5/handlebars.min.js"></script>
+        <script type="text/javascript" src="js/handlebars.js"></script>
 
         <!-- Dropdown Structure -->
         <ul id="dropdown1" class="dropdown-content">

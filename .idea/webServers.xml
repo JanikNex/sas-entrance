@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="379f3607-4595-4068-ac5f-909a56ee2816" name="ChaosFTP" url="http://entrance.yannickfelix.tk">
+        <fileTransfer host="entrance.yannickfelix.tk" port="21" password="dfc7dfdadfc1dfc0dfd0dfd3dfc3dfd2dfcddfd8" username="Chaos234ftp8">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+      <webServer id="a69ddb96-803f-4a2a-b6b6-05f2a9ddf7fd" name="meiner" url="http://192.168.2.47">
+        <fileTransfer host="192.168.2.47" port="22" privateKey="C:\Users\yanni\.ssh\id_rsa" rootFolder="/var/www/html" accessType="SFTP" passphrase="dfecdfcfdfd3dfcbdf98df9adf9bdf98" username="sadmin" keyPair="true">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

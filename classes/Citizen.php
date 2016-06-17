@@ -801,7 +801,7 @@ class Citizen {
     }
 
     /**
-     * Returns true if the citizen was over 6 hours in state today
+     * Retur1ns true if the citizen was over 6 hours in state today
      *
      * @return bool
      */
