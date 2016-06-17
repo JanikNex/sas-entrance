@@ -109,6 +109,9 @@ $(document).ready(function(){
     $('.modal-trigger').leanModal();
     $("#filter").keyup(function () {
         searchString = $(this).val();
+        list = {};
+        keys = [];
+        oldData = "";
         update();
     });
 
