@@ -478,7 +478,7 @@ class Citizen {
 
     /**
      * Count of @see getAllVisitorsInState()
-     *
+     * 
      * @return int
      */
     public static function getCurrentVisitorCount($sort = "", $search = "") {
