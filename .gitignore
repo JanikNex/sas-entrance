@@ -1,11 +1,7 @@
 # Created by .ignore support plugin (hsz.mobi)
 
-libs
-.idea/copyright/
-.idea/deployment.xml
-.idea/inspectionProfiles/
-.idea/modules.xml
-.idea/sas-entrance.iml
-.idea/workspace.xml
+libs/
+.idea/
 Schlopolis.png
 csv/
+pdf/
