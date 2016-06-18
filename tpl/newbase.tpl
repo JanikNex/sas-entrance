@@ -137,7 +137,7 @@
                         <li class="divider"></li>
                         <li style="height: 100px"></li>
                         <li class="indigo" style="position: fixed; width: 240px; bottom: 0px; font-size: 12px; line-height: 16px; padding:10px">
-                            Entrance Version 0.5.5b<br/>© 2016 Yannick Félix & Janik Rapp
+                            Entrance Version 0.6.1b<br/>© 2016 Yannick Félix & Janik Rapp
                         </li>
                         {/if}
                     </ul>
