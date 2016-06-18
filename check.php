@@ -1,172 +1,96 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: yanni
- * Date: 09.03.2016
- * Time: 23:01
- */
+    /**
+     * Created by PhpStorm.
+     * User: yanni
+     * Date: 18.06.2016
+     * Time: 01:02
+     */
 
-error_reporting(E_ERROR);
-ini_set("diplay_errors", "on");
+    error_reporting(E_ERROR);
+    ini_set("diplay_errors", "on");
 
-require_once 'classes/PDO_MYSQL.php'; //DB Anbindung
-require_once 'libs/dwoo/lib/Dwoo/Autoloader.php'; //Dwoo Laden
-require_once 'classes/User.php';
-require_once 'classes/Permissions.php';
-require_once 'classes/Util.php';
-require_once 'classes/Citizen.php';
-require_once 'classes/TracingEntry.php';
-require_once 'classes/LogEntry.php';
-require_once 'classes/Error.php';
-$user = \Entrance\Util::checkSession();
-$pdo = new \Entrance\PDO_MYSQL();
-Dwoo\Autoloader::register();
-$dwoo = new Dwoo\Core();
+    require_once 'classes/PDO_MYSQL.php'; //DB Anbindung
+    require_once 'classes/User.php';
+    require_once 'classes/Permissions.php';
+    require_once 'classes/Util.php';
+    require_once 'classes/Citizen.php';
+    require_once 'classes/TracingEntry.php';
+    require_once 'classes/LogEntry.php';
+    require_once 'classes/Error.php';
+    $user = \Entrance\Util::checkSession();
+    $pdo = new \Entrance\PDO_MYSQL();
 
-$action = $_GET['action'];
-if(\Entrance\Util::isStateOpen()) {
-    if ($action == "checkInScan") {
-        if ($user->isActionAllowed(PERM_CITIZEN_LOGIN)) {
-            $pgdata = \Entrance\Util::getEditorPageDataStub("Einbuchen", $user);
-            $pgdata["header"]["switchmode"] = 1;
-            $pgdata["header"]["switchmodeTo"] = "check.php?action=checkOut";
-            if (\Entrance\Citizen::doesBarcodeExist($_POST["barcode"])) {
-                $citizen = \Entrance\Citizen::fromBarcode($_POST["barcode"]);
-                if ($citizen->tryCheckIn($user)) {
-                    if($citizen->isCitizenWanted()){
-                        $pgdata["page"]["scan"]["success"] = 4;
-                    }else {
-                        $pgdata["page"]["scan"]["success"] = 1;
-                    }
-                    $pgdata["page"]["citizen"] = $citizen->asArray();
+    $action = $_GET['action'];
+
+    if($action == "barcodeInfo") {
+        $barcode = $_GET["barcode"];
+        $toEncode["success"] = false;
+
+        if(is_numeric($barcode)) {
+            if(\Entrance\Citizen::doesBarcodeExist($barcode)) {
+                $citizen = \Entrance\Citizen::fromBarcode($barcode);
+                if ($citizen instanceof \Entrance\Citizen) {
+                    $toEncode["success"] = true;
+                    $toEncode["cID"] = $citizen->getCID();
+                    $toEncode["fname"] = $citizen->getFirstname();
+                    $toEncode["lname"] = $citizen->getLastname();
+                    $toEncode["classlvl"] = $citizen->getClasslevel();
+                    $toEncode["enoughTime"] = $citizen->hasCitizenEnoughTime();
+                    $toEncode["timeToday"] = $citizen->getTimePerDay(date("Y-m-d")) != 0 ? gmdate("H\h i\m s\s",$citizen->getTimePerDay(date("Y-m-d"))) : "<i>Nicht anwesend</i>";
+                    $toEncode["locked"] = $citizen->isCitizenLocked();
+                    $toEncode["wanted"] = $citizen->isCitizenWanted();
+                    $toEncode["inState"] = $citizen->isCitizenInState();
                     $itsLogs = \Entrance\LogEntry::getAllLogsPerCID($citizen->getCID());
                     for ($i = 0; $i < sizeof($itsLogs); $i++) {
-                        $pgdata["page"]["logs"][$i] = $itsLogs[$i]->asArray();
+                        $toEncode["log"][$i] = $itsLogs[$i]->asArray();
                         if ($i >= 1) break;
                     }
-                } else {
-                    goto cError;
-                }
-            } else {
-                \Entrance\Error::createError(0, 8);
-                $citizen = \Entrance\Citizen::fromCID(0);
-                goto cError;
-            }
-            goto output;
-            cError: {
-                if($citizen->isCitizenWanted()){
-                    $pgdata["page"]["scan"]["success"] = 5;
-                }else {
-                    $pgdata["page"]["scan"]["success"] = 2;
-                }
-                $pgdata["page"]["citizen"] = $citizen->asArray();
-                $itsLogs = \Entrance\LogEntry::getAllLogsPerCID($citizen->getCID());
-                for ($i = 0; $i < sizeof($itsLogs); $i++) {
-                    $pgdata["page"]["logs"][$i] = $itsLogs[$i]->asArray();
-                    if ($i >= 1) break;
-                }
-                $pgdata["page"]["error"] = $citizen->getLastError()->asArray();
-            }
+                } else $toEncode["error"] = "UnknownBarcode";
+            } else $toEncode["error"] = "UnknownBarcode";
+        } else $toEncode["error"] = "WrongBarcodeFormat";
+        echo json_encode($toEncode);
+        exit;
+    } elseif($action == "confirmCheckIn") {
+        $cID = $_GET["cID"];
+        $toEncode["success"] = false;
 
-            output: {
-                $dwoo->output("tpl/checkIn.tpl", $pgdata);
-            }
-        } else {
-            $pgdata = \Entrance\Util::getEditorPageDataStub("Einbuchen", $user);
-            $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
-        }
-    } elseif ($action == "checkOutScan") {
-        if ($user->isActionAllowed(PERM_CITIZEN_LOGOUT)) {
-            $pgdata = \Entrance\Util::getEditorPageDataStub("Ausbuchen", $user);
-            $pgdata["header"]["switchmode"] = 1;
-            $pgdata["header"]["switchmodeTo"] = "check.php?action=checkIn";
-
-            if (\Entrance\Citizen::doesBarcodeExist($_POST["barcode"])) {
-                $citizen = \Entrance\Citizen::fromBarcode($_POST["barcode"]);
-                if(!$citizen->isCitizenWanted()) {
-                    if ($citizen->hasCitizenEnoughTime() or $_POST["force"] == "true" or $citizen->getClasslevel() >= 11) {
-                        if ($citizen->tryCheckOut($user)) {
-                            $pgdata["page"]["scan"]["success"] = 1;
-                            $pgdata["page"]["citizen"] = $citizen->asArray();
-                            $itsLogs = \Entrance\LogEntry::getAllLogsPerCID($citizen->getCID());
-                            for ($i = 0; $i < sizeof($itsLogs); $i++) {
-                                $pgdata["page"]["logs"][$i] = $itsLogs[$i]->asArray();
-                                if ($i >= 1) break;
-                            }
-                        } else goto cError;
+        if ($user->isActionAllowed(PERM_CITIZEN_LOGIN)) {
+            if (is_numeric($cID)) {
+                $citizen = \Entrance\Citizen::fromCID($cID);
+                if($citizen instanceof \Entrance\Citizen) {
+                    if($citizen->tryCheckIn($user)) {
+                        $toEncode["success"] = true;
                     } else {
-                        $pgdata["page"]["barcode"] = $_POST["barcode"];
-                        $pgdata["page"]["citizen"] = $citizen->asArray();
-                        $dwoo->output("tpl/checkOutConfirm.tpl", $pgdata);
-                        exit;
+                        $toEncode["error"] = $citizen->getLastError()->asArray();
                     }
-                }else{
-                    $pgdata["page"]["scan"]["success"] = 4;
-                    $pgdata["page"]["citizen"] = $citizen->asArray();
-                    $itsLogs = \Entrance\LogEntry::getAllLogsPerCID($citizen->getCID());
-                    for ($i = 0; $i < sizeof($itsLogs); $i++) {
-                        $pgdata["page"]["logs"][$i] = $itsLogs[$i]->asArray();
-                        if ($i >= 1) break;
-                    }
-                }
-            } else {
-                \Entrance\Error::createError(0, 9);
-                $citizen = \Entrance\Citizen::fromCID(0);
-                goto cErroor;
-            }
-            goto outpuut;
-            cErroor: {
-                $pgdata["page"]["scan"]["success"] = 2;
-                $pgdata["page"]["citizen"] = $citizen->asArray();
-                $itsLogs = \Entrance\LogEntry::getAllLogsPerCID($citizen->getCID());
-                for ($i = 0; $i < sizeof($itsLogs); $i++) {
-                    $pgdata["page"]["logs"][$i] = $itsLogs[$i]->asArray();
-                    if ($i >= 1) break;
-                }
-                $pgdata["page"]["error"] = $citizen->getLastError()->asArray();
-            }
+                } else $toEncode["error"] = "UnknownCitizenID";
+            } else $toEncode["error"] = "WrongCIDFormat";
+        } else $toEncode["error"] = "NoPermission";
 
-            outpuut: {
-                $dwoo->output("tpl/checkOut.tpl", $pgdata);
-            }
-        } else {
-            $pgdata = \Entrance\Util::getEditorPageDataStub("Ausbuchen", $user);
-            $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
-        }
+        echo json_encode($toEncode);
+        exit;
+    } elseif($action == "confirmCheckOut") {
+        $cID = $_GET["cID"];
+        $toEncode["success"] = false;
 
-        // -------------------------------------------------------------------------
-
-    } elseif ($action == "checkIn") {
-        if ($user->isActionAllowed(PERM_CITIZEN_LOGIN)) {
-            $pgdata = \Entrance\Util::getEditorPageDataStub("Einbuchen", $user);
-            $pgdata["header"]["switchmode"] = 1;
-            $pgdata["header"]["switchmodeTo"] = "check.php?action=checkOut";
-
-            $dwoo->output("tpl/checkIn.tpl", $pgdata);
-        } else {
-            $pgdata = \Entrance\Util::getEditorPageDataStub("Einbuchen", $user);
-            $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
-        }
-    } elseif ($action == "checkOut") {
         if ($user->isActionAllowed(PERM_CITIZEN_LOGOUT)) {
-            $pgdata = \Entrance\Util::getEditorPageDataStub("Ausbuchen", $user);
-            $pgdata["header"]["switchmode"] = 1;
-            $pgdata["header"]["switchmodeTo"] = "check.php?action=checkIn";
+            if (is_numeric($cID)) {
+                $citizen = \Entrance\Citizen::fromCID($cID);
+                if($citizen instanceof \Entrance\Citizen) {
+                    if($citizen->tryCheckOut($user)) {
+                        $toEncode["success"] = true;
+                    } else {
+                        $toEncode["success"] = false;
+                        $toEncode["error"] = $citizen->getLastError()->asArray();
+                    }
+                } else $toEncode["error"] = "UnknownCitizenID";
+            } else $toEncode["error"] = "WrongCIDFormat";
+        } else $toEncode["error"] = "NoPermission";
 
-            $dwoo->output("tpl/checkOut.tpl", $pgdata);
-        } else {
-            $pgdata = \Entrance\Util::getEditorPageDataStub("Ausbuchen", $user);
-            $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
-        }
+        echo json_encode($toEncode);
+        exit;
+    } elseif($action == "stateInfo") {
+        $toEncode["stateState"] = \Entrance\Util::isStateOpen();
+        echo json_encode($toEncode);
+        exit;
     }
-} else{
-    if($action == "checkIn" or $action == "checkInScan"){
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Einbuchen", $user);
-        $pgdata["page"]["scan"]["success"] = 3;
-        $dwoo->output("tpl/checkIn.tpl", $pgdata);
-    } else {
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Ausbuchen", $user);
-        $pgdata["page"]["scan"]["success"] = 3;
-        $dwoo->output("tpl/checkOut.tpl", $pgdata);
-    }
-}

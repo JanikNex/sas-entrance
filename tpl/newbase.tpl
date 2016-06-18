@@ -34,12 +34,12 @@
         <div class="navbar-fixed">
             <nav>
                 <div class="nav-wrapper indigo">
-                    <a href="#!" class="brand-logo hide-on-med-and-down" style="padding-left: 250px;">Sas Entrance - {$args.title}</a>
-                    <a href="#!" class="brand-logo hide-on-large-only" style="">Sas - {$args.title}</a>
+                    <a href="#!" class="brand-logo hide-on-med-and-down" style="padding-left: 250px;">Sas Entrance - <span id="title">{$args.title}</span></a>
+                    <a href="#!" class="brand-logo hide-on-large-only" style="">Sas - <span id="title">{$args.title}</span></a>
                     <ul class="right">
                         <!-- Dropdown Trigger -->
                         {if $args.switchmode == 1}
-                            <li><a href="{$args.switchmodeTo}"><i class="material-icons">cached</i></a></li>
+                            <li><a onClick="switchMode()"><i class="material-icons">cached</i></a></li>
                         {/if}
                         {if $args.editor == 1}
                         <li><a href="{$args.undoUrl}"><i class="material-icons">clear</i></a></li>
@@ -63,15 +63,14 @@
                             </ul>
                         </li>
                         <li class="divider"></li>
-                        {if $args.perm.citizen_login == 1 or $args.perm.citizen_logout == 1}
+                        {if $args.perm.citizen_login == 1 or $args.perm.citizen_correcterrors == 1 or $args.perm.citizen_ignoreerrors == 1}
                         <li class="no-padding">
                             <ul class="collapsible collapsible-accordion">
                                 <li>
                                     <a class="collapsible-header">Ein/Ausbuchen<i class="mdi-navigation-arrow-drop-down"></i></a>
                                     <div class="collapsible-body">
                                         <ul>
-                                            {if $args.perm.citizen_login == 1}<li><a href="check.php?action=checkIn">Einbuchen</a></li>{/if}
-                                            {if $args.perm.citizen_logout == 1}<li><a href="check.php?action=checkOut">Ausbuchen</a></li>{/if}
+                                            {if $args.perm.citizen_login == 1 and $args.perm.citizen_logout == 1}<li><a href="checkn.php">Ein/Ausbuchen</a></li>{/if}
                                             {if $args.perm.citizen_correcterrors == 1}<li><a href="errors.php?action=correct">Fehler korrigieren</a></li>{/if}
                                             {if $args.perm.citizen_ignoreerrors == 1}<li><a href="errors.php?action=ignore">Fehler ignorieren</a></li>{/if}
                                         </ul>

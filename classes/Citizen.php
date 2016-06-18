@@ -478,7 +478,7 @@ class Citizen {
 
     /**
      * Count of @see getAllVisitorsInState()
-     * 
+     *
      * @return int
      */
     public static function getCurrentVisitorCount($sort = "", $search = "") {
@@ -702,7 +702,7 @@ class Citizen {
     /**
      * Returns the time this citizen spend in state for a specific date in seconds
      *
-     * @param date $date
+     * @param string $date
      * @return int
      */
     public function getTimePerDay($date){
