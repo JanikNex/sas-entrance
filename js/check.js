@@ -104,6 +104,7 @@ function prepare() {
     $("#scanLocked").hide();
     $("#scanWanted").hide();
     $("#name").html("...");
+    $("#iname").html("...");
     $("#classlvl").html("...");
     $("ul#logs").html('<li class="collection-item avatar"><i class="material-icons circle grey">code</i> <span class="title">Warte auf Scan....</span> <p> </p> </li>');
 
