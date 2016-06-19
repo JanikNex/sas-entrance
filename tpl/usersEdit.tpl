@@ -6,7 +6,7 @@
             <form method="post" action="users.php?action=postEdit&field=all&uID={$edit.id}">
                 <div class="input-field col s6">
                     <label for="username">Benutzername</label>
-                    <input id="username" {if $header.uID == $edit.id}disabled{else}required{/if} value="{$edit.usrname}" type="text" name="firstname" length="255"/>
+                    <input id="username" {if $header.uID == $edit.id}disabled{else}required{/if} value="{$edit.usrname}" type="text" name="username" length="255"/>
                 </div>
                 <div class="input-field col s6">
                     <select id="type" title="Type" name="lvl">

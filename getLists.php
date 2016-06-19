@@ -5,7 +5,7 @@
  * Date: 09.04.2016
  * Time: 22:50
  */
-    error_reporting(E_ERROR);
+    error_reporting(E_ALL & ~E_NOTICE);
     ini_set("diplay_errors", "on");
 
 require_once "classes/Util.php";

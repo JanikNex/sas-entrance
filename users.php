@@ -6,7 +6,7 @@
  * Time: 02:01
  */
 
-error_reporting(E_ERROR);
+error_reporting(E_ALL & ~E_NOTICE);
 ini_set("diplay_errors", "on");
 
 require_once 'classes/PDO_MYSQL.php'; //DB Anbindung
@@ -62,7 +62,7 @@ if($action == "new") {
         $userToEdit = \Entrance\User::fromUID($uID);
         switch($_GET['field']) {
             case "all":
-                if($_POST['usrname'] != null)$userToEdit->setUName($_POST['usrname']);
+                if($_POST['username'] != null)$userToEdit->setUName($_POST['username']);
                 if($_POST['email'] != null)$userToEdit->setUEmail($_POST['email']);
                 $userToEdit->setUPrefix($_POST['lvl']);
                 break;

@@ -46,10 +46,10 @@ class User {
      */
     private function __construct($uID, $uName, $uEmail, $uPassHash, $level) {
         $this->uID = $uID;
-        $this->uName = $uName;
-        $this->uEmail = $uEmail;
+        $this->uName = utf8_encode($uName);
+        $this->uEmail = utf8_encode($uEmail);
         $this->uPassHash = $uPassHash;
-        $this->uPrefix = $level;
+        $this->uPrefix = utf8_encode($level);
     } // 0- Schleuser | 1- Orga | 2-Admin
 
 
