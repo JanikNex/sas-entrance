@@ -29,8 +29,8 @@ $mode  =$_GET['mode'];
 
 if($action == "exportClasslist") {
     if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
-        \Entrance\Citizen::createClasslistAsCSV();
-        echo json_encode(["success" => true]);
+        $link = \Entrance\Citizen::createClasslistAsCSV();
+        echo json_encode(["success" => true, "link" => str_replace("/var/www/html/", "/", $link)]);
         exit; //To not show the list
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
@@ -39,8 +39,8 @@ if($action == "exportClasslist") {
     }
 }elseif($action == "exportBadCitizenToday") {
     if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
-        \Entrance\Citizen::createBadCitizenListAsCSV();
-        echo json_encode(["success" => true]);
+        $link = \Entrance\Citizen::createBadCitizenListAsCSV();
+        echo json_encode(["success" => true, "link" => str_replace("/var/www/html/", "/", $link)]);
         exit; //To not show the list
     } else {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);

@@ -973,6 +973,7 @@ class Citizen {
     public static function createClasslistAsCSV(){
         $array = self::createClassListsAsArray();
         Util::writeCSV($array, "/var/www/html/entrance/csv/classlist".date("Y-m-d_H-i").".csv");
+        return "/var/www/html/entrance/csv/classlist".date("Y-m-d_H-i").".csv";
     }
 
     /**
@@ -981,6 +982,7 @@ class Citizen {
     public static function createBadCitizenListAsCSV(){
         $array = self::createBadCitizenListsAsArray();
         Util::writeCSV($array, "/var/www/html/entrance/csv/badcitizenlist".date("Y-m-d_H-i").".csv");
+        return "/var/www/html/entrance/csv/badcitizenlist".date("Y-m-d_H-i").".csv";
     }
 
     /**

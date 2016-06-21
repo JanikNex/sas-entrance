@@ -16,6 +16,7 @@ $(document).ready(function() {
 function update(hash) {
     console.log(hash);
     if(hash == "exportClasslist") exportClass();
+    else if(hash == "exportClasslist10h") exportClass();
     else if(hash == "exportPassports") exportPassport();
     else if(hash == "exportOnePassport") exportOnePassport();
     else if(hash == "exportPassportGroup") exportPassportGroup();
@@ -34,6 +35,18 @@ function exportClass() {
     $("#normal").fadeOut(500, function() {
         $("#waiting").fadeIn(500);
         $.getJSON("export.php?action=exportClasslist", null, function(data) {
+            $("#waiting").fadeOut(500, function() {
+                $("#finishedClasslist").fadeIn(500);
+            });
+            $("#csvdatei").attr("href", data["link"]);
+        });
+    });
+}
+
+function exportClass10h() {
+    $("#normal").fadeOut(500, function() {
+        $("#waiting").fadeIn(500);
+        $.getJSON("export.php?action=exportBadCitizenToday", null, function(data) {
             $("#waiting").fadeOut(500, function() {
                 $("#finishedClasslist").fadeIn(500);
             });
