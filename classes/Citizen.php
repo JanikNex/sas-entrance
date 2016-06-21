@@ -21,31 +21,31 @@ const CSORTING = [
 ];
 
 const CFILTERING = [
-    ""          => "",
-    "Alle"      => "",
-    "Stufe5"   => " AND classLevel = 5 ",
-    "Stufe6"   => " AND classLevel = 6 ",
-    "Stufe7"   => " AND classLevel = 7 ",
-    "Stufe8"   => " AND classLevel = 8 ",
-    "Stufe9"   => " AND classLevel = 9 ",
-    "Stufe05"   => " AND classLevel = 5 ",
-    "Stufe06"   => " AND classLevel = 6 ",
-    "Stufe07"   => " AND classLevel = 7 ",
-    "Stufe08"   => " AND classLevel = 8 ",
-    "Stufe09"   => " AND classLevel = 9 ",
-    "Stufe10"   => " AND classLevel = 10 ",
-    "Stufe11"   => " AND classLevel = 11 ",
-    "Stufe12"   => " AND classLevel = 12 ",
-    "Stufe13"   => " AND classLevel = 13 ",
-    "Stufe14"   => " AND classLevel = 14 ",
-    "Stufe15"   => " AND classLevel = 15 ",
-    "Stufe16"   => " AND classLevel = 16 ",
-    "Schüler"   => " AND classLevel < 14 ",
-    "ohneVisumK"=> " AND classLevel < 15 ",
-    "Visum"     => " AND classLevel = 15 ",
-    "Lehrer"    => " AND classLevel = 14 ",
-    "Kurier"    => " AND classLevel = 16 ",
-    "ohneKurier"=> " AND classLevel < 16"
+    ""          => " AND cID != 0",
+    "Alle"      => " AND cID != 0",
+    "Stufe5"    => " AND cID != 0 AND classLevel = 5 ",
+    "Stufe6"    => " AND cID != 0 AND classLevel = 6 ",
+    "Stufe7"    => " AND cID != 0 AND classLevel = 7 ",
+    "Stufe8"    => " AND cID != 0 AND classLevel = 8 ",
+    "Stufe9"    => " AND cID != 0 AND classLevel = 9 ",
+    "Stufe05"   => " AND cID != 0 AND classLevel = 5 ",
+    "Stufe06"   => " AND cID != 0 AND classLevel = 6 ",
+    "Stufe07"   => " AND cID != 0 AND classLevel = 7 ",
+    "Stufe08"   => " AND cID != 0 AND classLevel = 8 ",
+    "Stufe09"   => " AND cID != 0 AND classLevel = 9 ",
+    "Stufe10"   => " AND cID != 0 AND classLevel = 10 ",
+    "Stufe11"   => " AND cID != 0 AND classLevel = 11 ",
+    "Stufe12"   => " AND cID != 0 AND classLevel = 12 ",
+    "Stufe13"   => " AND cID != 0 AND classLevel = 13 ",
+    "Stufe14"   => " AND cID != 0 AND classLevel = 14 ",
+    "Stufe15"   => " AND cID != 0 AND classLevel = 15 ",
+    "Stufe16"   => " AND cID != 0 AND classLevel = 16 ",
+    "Schüler"   => " AND cID != 0 AND classLevel < 14 ",
+    "ohneVisumK"=> " AND cID != 0 AND classLevel < 15 ",
+    "Visum"     => " AND cID != 0 AND classLevel = 15 ",
+    "Lehrer"    => " AND cID != 0 AND classLevel = 14 ",
+    "Kurier"    => " AND cID != 0 AND classLevel = 16 ",
+    "ohneKurier"=> " AND cID != 0 AND classLevel < 16"
 ];
 
 
@@ -202,13 +202,15 @@ class Citizen {
             if($search != "") {
                 $startElem = ($page-1) * $pagesize;
                 $endElem = $pagesize;
-                $query = "SELECT cID, firstname, lastname FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname,' ',barcode)) LIKE LOWER('%".$_GET["search"]."%') ".CFILTERING[$filter].CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
+                $query = "SELECT cID, firstname, lastname, state FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname,' ',barcode)) LIKE LOWER('%".$_GET["search"]."%') ".CFILTERING[$filter].CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
                 $stmt = $pdo->queryMulti($query);
                 $hits = [];
                 while($row = $stmt->fetch()) {
                     $keys["id"] = $row["cID"];
                     $keys["fname"] = utf8_encode($row["firstname"]);
                     $keys["lname"] = utf8_encode($row["lastname"]);
+                    $keys["st"] = utf8_encode($row["state"]);
+                    $keys["check"] = md5($keys["id"]+$keys["fname"]+$keys["lname"]+$keys["st"]);
                     array_push($hits, $keys);
                 }
                 return $hits;
@@ -222,6 +224,7 @@ class Citizen {
                     $keys["fname"] = utf8_encode($row["firstname"]);
                     $keys["lname"] = utf8_encode($row["lastname"]);
                     $keys["st"] = utf8_encode($row["state"]);
+                    $keys["check"] = md5($keys["id"]+$keys["fname"]+$keys["lname"]+$keys["st"]);
                     array_push($hits, $keys);
                 }
                 return $hits;
@@ -236,6 +239,7 @@ class Citizen {
                     $keys["fname"] = utf8_encode($citizen->getFirstname());
                     $keys["lname"] = utf8_encode($citizen->getLastname());
                     $keys["st"] = utf8_encode($citizen->isCitizenInState() ? 1 : 0);
+                    $keys["check"] = md5($keys["id"]+$keys["fname"]+$keys["lname"]+$keys["st"]);
                     array_push($hits, $keys);
                 }
             }
@@ -259,7 +263,7 @@ class Citizen {
             if($search != "") {
                 $startElem = ($page-1) * $pagesize;
                 $endElem = $startElem + $pagesize;
-                $query = "SELECT cID FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname,' ',barcode)) LIKE LOWER('%".$_GET["search"]."%') AND state = 0".CFILTERING[$filter].CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
+                $query = "SELECT cID, firstname, lastname, state FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname,' ',barcode)) LIKE LOWER('%".$_GET["search"]."%') AND state = 0".CFILTERING[$filter].CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
                 $stmt = $pdo->queryMulti($query);
                 $hits = [];
                 while($row = $stmt->fetch()) {
@@ -267,23 +271,25 @@ class Citizen {
                     $keys["fname"] = utf8_encode($row["firstname"]);
                     $keys["lname"] = utf8_encode($row["lastname"]);
                     $keys["st"] = utf8_encode($row["state"]);
+                    $keys["check"] = md5($keys["id"]+$keys["fname"]+$keys["lname"]+$keys["st"]);
                     array_push($hits, $keys);
                 }
                 return $hits;            } else {
                 $startElem = ($page-1) * $pagesize;
                 $endElem = $startElem + $pagesize;
-                $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE state = 0" . CFILTERING[$filter] . CSORTING[$sort]." LIMIT ".$startElem.','.$endElem);
+                $stmt = $pdo->queryMulti("SELECT cID, firstname, lastname, state FROM entrance_citizen WHERE state = 0" . CFILTERING[$filter] . CSORTING[$sort]." LIMIT ".$startElem.','.$endElem);
                 $hits = [];
                 while($row = $stmt->fetch()) {
                     $keys["id"] = $row["cID"];
                     $keys["fname"] = utf8_encode($row["firstname"]);
                     $keys["lname"] = utf8_encode($row["lastname"]);
                     $keys["st"] = utf8_encode($row["state"]);
+                    $keys["check"] = md5($keys["id"]+$keys["fname"]+$keys["lname"]+$keys["st"]);
                     array_push($hits, $keys);
                 }
                 return $hits;            }
         } else {
-            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen state = 0" . CSORTING[$sort]);
+            $stmt = $pdo->queryMulti("SELECT cID, firstname, lastname, state FROM entrance_citizen state = 0" . CSORTING[$sort]);
             $array = $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
             $hits = [];
             foreach($array as $citizen) {
@@ -292,6 +298,7 @@ class Citizen {
                     $keys["fname"] = utf8_encode($citizen->getFirstname());
                     $keys["lname"] = utf8_encode($citizen->getLastname());
                     $keys["st"] = utf8_encode($citizen->isCitizenInState() ? 1 : 0);
+                    $keys["check"] = md5($keys["id"]+$keys["fname"]+$keys["lname"]+$keys["st"]);
                     array_push($hits, $keys);
                 }
             }
@@ -329,7 +336,7 @@ class Citizen {
         if($search != "") {
             $startElem = ($page-1) * $pagesize;
             $endElem = $startElem + $pagesize;
-            $query = "SELECT cID FROM entrance_tracing WHERE LOWER(CONCAT(firstname,' ', lastname,' ',barcode)) LIKE LOWER('%".$_GET["search"]."%') WHERE active = 1 LIMIT ".$startElem.','.$endElem;
+            $query = "SELECT cID, firstname, lastname, state FROM entrance_tracing WHERE LOWER(CONCAT(firstname,' ', lastname,' ',barcode)) LIKE LOWER('%".$_GET["search"]."%') WHERE active = 1 LIMIT ".$startElem.','.$endElem;
             $stmt = $pdo->queryMulti($query);
             $hits = [];
             while($row = $stmt->fetch()) {
@@ -337,19 +344,21 @@ class Citizen {
                 $keys["fname"] = utf8_encode($row["firstname"]);
                 $keys["lname"] = utf8_encode($row["lastname"]);
                 $keys["st"] = utf8_encode($row["state"]);
+                $keys["check"] = md5($keys["id"]+$keys["fname"]+$keys["lname"]+$keys["st"]);
                 array_push($hits, $keys);
             }
             return $hits;
         } else {
             $startElem = ($page-1) * $pagesize;
             $endElem = $startElem + $pagesize;
-            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_tracing WHERE active = 1 LIMIT ".$startElem.','.$endElem);
+            $stmt = $pdo->queryMulti("SELECT cID, firstname, lastname, state FROM entrance_tracing WHERE active = 1 LIMIT ".$startElem.','.$endElem);
             $hits = [];
             while($row = $stmt->fetch()) {
                 $keys["id"] = $row["cID"];
                 $keys["fname"] = utf8_encode($row["firstname"]);
                 $keys["lname"] = utf8_encode($row["lastname"]);
                 $keys["st"] = utf8_encode($row["state"]);
+                $keys["check"] = md5($keys["id"]+$keys["fname"]+$keys["lname"]+$keys["st"]);
                 array_push($hits, $keys);
             }
             return $hits;
@@ -387,7 +396,7 @@ class Citizen {
             if($search != "") {
                 $startElem = ($page-1) * $pagesize;
                 $endElem = $startElem + $pagesize;
-                $query = "SELECT cID FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname,' ',barcode)) LIKE LOWER('%".$_GET["search"]."%') AND isBad = 1".CFILTERING[$filter].CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
+                $query = "SELECT cID, firstname, lastname, state FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname,' ',barcode)) LIKE LOWER('%".$_GET["search"]."%') AND isBad = 1".CFILTERING[$filter].CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
                 $stmt = $pdo->queryMulti($query);
                 $hits = [];
                 while($row = $stmt->fetch()) {
@@ -395,25 +404,27 @@ class Citizen {
                     $keys["fname"] = utf8_encode($row["firstname"]);
                     $keys["lname"] = utf8_encode($row["lastname"]);
                     $keys["st"] = utf8_encode($row["state"]);
+                    $keys["check"] = md5($keys["id"]+$keys["fname"]+$keys["lname"]+$keys["st"]);
                     array_push($hits, $keys);
                 }
                 return $hits;
             } else {
                 $startElem = ($page-1) * $pagesize;
                 $endElem = $startElem + $pagesize;
-                $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE isBad = 1". CFILTERING[$filter] . CSORTING[$sort]." LIMIT ".$startElem.','.$endElem);
+                $stmt = $pdo->queryMulti("SELECT cID, firstname, lastname, state FROM entrance_citizen WHERE isBad = 1". CFILTERING[$filter] . CSORTING[$sort]." LIMIT ".$startElem.','.$endElem);
                 $hits = [];
                 while($row = $stmt->fetch()) {
                     $keys["id"] = $row["cID"];
                     $keys["fname"] = utf8_encode($row["firstname"]);
                     $keys["lname"] = utf8_encode($row["lastname"]);
                     $keys["st"] = utf8_encode($row["state"]);
+                    $keys["check"] = md5($keys["id"]+$keys["fname"]+$keys["lname"]+$keys["st"]);
                     array_push($hits, $keys);
                 }
                 return $hits;
             }
         } else {
-            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE isBad = 1" . CSORTING[$sort]);
+            $stmt = $pdo->queryMulti("SELECT cID, firstname, lastname, state FROM entrance_citizen WHERE isBad = 1" . CSORTING[$sort]);
             $array = $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
             $hits = [];
             foreach($array as $citizen) {
@@ -421,7 +432,8 @@ class Citizen {
                     $keys["id"] = $row["cID"];
                     $keys["fname"] = utf8_encode($citizen->getFirstname());
                     $keys["lname"] = utf8_encode($citizen->getLastname());
-                    $keys["st"] = utf8_encode($citizen->isCitizenInState() ? 1 : 0);
+                    $keys["st"] = utf8_encode($citizen->isCitizenInState() ? 0 : 1);
+                    $keys["check"] = md5($keys["id"]+$keys["fname"]+$keys["lname"]+$keys["st"]);
                     array_push($hits, $keys);
                 }
             }
@@ -573,9 +585,6 @@ class Citizen {
             "firstname" => $this->firstname,
             "lastname" => $this->lastname,
             "classlevel" => $this->classlevel,
-            "birthday" => $this->birthday,
-            "birthdayNice" => date("d. M Y", strtotime($this->birthday))." (".Util::getAge($this->birthday).")",
-            "age" => Util::getAge($this->birthday),
             "barcode" => $this->barcode,
             "roll" => $this->getRoll('work'),
             "inState" => $this->isCitizenInState(),

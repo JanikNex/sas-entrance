@@ -17,7 +17,8 @@
                     </div>
                 </div>
             </form>
-            {if $page.type != "Wanted" and $page.type != "Tracing" and $page.type != "bad"}<div class="col offset-s4 s4 offset-m1 m2 right-align">
+            {if $page.type != "Wanted" and $page.type != "Tracing" and $page.type != "bad"}
+                <div class="col s5 offset-m1 m2 center-align">
                 <br class="hide-on-small-only"/>
                 <!-- Dropdown Trigger -->
                 <a id="sortCurr" class='dropdown-button btn indigo' href='#' data-activates='dropdown0'><i class="mdi mdi-sort"></i></a>
@@ -30,7 +31,7 @@
                     <li><a onclick="setSort('descID');">  <i class="mdi mdi-sort-descending"></i> ID</a></li>
                 </ul>
             </div>
-            <div class="col s4 m2 right-align">
+            <div class="col offset-s2 s5 m2 center-align">
                 <br class="hide-on-small-only"/>
                 <!-- Dropdown Trigger -->
                 <a id="filterCurr" class='dropdown-button btn indigo' href='#' data-activates='dropdown'><i class="mdi mdi-filter"></i></a>
@@ -52,7 +53,7 @@
                     <li> <a onclick="setFilter('Kurier');">Kurier    </a></li>
                 </ul>
             </div>{elseif $page.type == "Tracing"}
-                <div class="col offset-s4 s4 offset-m1 m2 right-align">
+                <div class="col s5 offset-m1 m2 center-align">
                     <br class="hide-on-small-only"/>
                     <!-- Dropdown Trigger -->
                     <a id="currSort" class='dropdown-button btn indigo' href='#' data-activates='dropdown0'></a>
@@ -65,7 +66,7 @@
                         <li><a onclick="setSort('descID')">  <i class="mdi mdi-sort-descending"></i> ID</a></li>
                     </ul>
                 </div>
-                <div class="col s4 m2 right-align">
+                <div class="col offest-s2 s5 m2 center-align">
                     <br class="hide-on-small-only"/>
                     <!-- Dropdown Trigger -->
                     <a id="currFilter" class='dropdown-button btn indigo' href='#' data-activates='dropdown'></a>
@@ -80,7 +81,7 @@
                     </ul>
                 </div>
             {elseif $page.type == "bad"}
-                <div class="col offset-s4 s4 offset-m1 m2 right-align">
+                <div class="col s5 offset-m1 m2 center-align">
                     <br class="hide-on-small-only"/>
                     <!-- Dropdown Trigger -->
                     <a id="sortCurr" class='dropdown-button btn indigo' href='#' data-activates='dropdown0'></a>
@@ -93,7 +94,7 @@
                         <li><a onclick="setSort('descID')">  <i class="mdi mdi-sort-descending"></i> ID</a></li>
                     </ul>
                 </div>
-                <div class="col s4 m2 right-align">
+                <div class="col offset-s2 s5 m2 center-align">
                     <br class="hide-on-small-only"/>
                     <!-- Dropdown Trigger -->
                     <a id="filterCurr" class='dropdown-button btn indigo' href='#' data-activates='dropdown'></a>
@@ -114,7 +115,7 @@
                     </ul>
                 </div>
             {/if}
-            <ul id="pages" class="pagination col s12 center">
+            <ul id="pages" class="pagination col s12 center center-align">
             </ul>
             <div id="modals">
 
