@@ -16,6 +16,7 @@ const CSORTING = [
     "descName"     => " ORDER BY lastname DESC",
     "descID"       => " ORDER BY cID DESC",
     "ascBarcode"   => " ORDER BY barcode ASC",
+    "ascClassD"    => " ORDER BY classLevel, classDetail ASC",
     "" => ""
 ];
 
@@ -49,7 +50,7 @@ const CFILTERING = [
 
 
 class Citizen {
-    private $cID, $firstname, $lastname, $classlevel, $birthday, $barcode;
+    private $cID, $firstname, $lastname, $classlevel, $classdetail, $birthday, $barcode;
 
     /**
      * Citizen constructor.
@@ -60,11 +61,12 @@ class Citizen {
      * @param $birthday
      * @param $barcode
      */
-    public function __construct($cID, $firstname, $lastname, $classlevel, $birthday, $barcode) {
+    public function __construct($cID, $firstname, $lastname, $classlevel,$classdetail, $birthday, $barcode) {
         $this->cID = $cID;
         $this->firstname = utf8_encode($firstname);
         $this->lastname = utf8_encode($lastname);
         $this->classlevel = $classlevel;
+        $this->classdetail = $classdetail;
         $this->birthday = $birthday;
         $this->barcode = $barcode;
     }
@@ -78,7 +80,7 @@ class Citizen {
     public static function fromCID($cID) {
         $pdo = new PDO_MYSQL();
         $res = $pdo->query("SELECT * FROM entrance_citizen WHERE cID = :cid", [":cid" => $cID]);
-        return new Citizen($res->cID, $res->firstname, $res->lastname, $res->classLevel, $res->birthday, $res -> barcode);
+        return new Citizen($res->cID, $res->firstname, $res->lastname, $res->classLevel, $res->classDetail, $res->birthday, $res -> barcode);
     }
 
     /**
@@ -91,7 +93,7 @@ class Citizen {
     public static function fromBarcode($barcode) {
         $pdo = new PDO_MYSQL();
         $res = $pdo->query("SELECT * FROM entrance_citizen WHERE barcode = :barcode", [":barcode" => $barcode]);
-        return new Citizen($res->cID, $res->firstname, $res->lastname, $res->classLevel, $res->birthday, $res -> barcode);
+        return new Citizen($res->cID, $res->firstname, $res->lastname, $res->classLevel, $res->classDetail, $res->birthday, $res -> barcode);
     }
 
     /**
@@ -905,7 +907,8 @@ class Citizen {
      * @return array
      */
     public static function createClassListsAsArray(){
-        $students = Citizen::getAllStudents($sort="ascBarcode");
+        $CLASS = ["a","b","c","d","e","f"];
+        $students = Citizen::getAllStudents($sort="ascClassD");
         $list = [];
         $currentClass = [0,0];
         $label = ["cID", "Vorname", "Nachname", "Klassenstufe", "Barcode"];
@@ -915,15 +918,15 @@ class Citizen {
         array_push($label, "Gesamtzeit");
         array_push($list, $label);
         foreach ($students as $student){
-            if($student->getClasslevel()<= 10){
-                if(!((substr($student->getBarcode(), 8, 2) == $currentClass[0]) && (substr($student->getBarcode(), 10, 1) == $currentClass[1]))){
+            if ($student->getClasslevel() <= 10) {
+                if (!((substr($student->getBarcode(), 8, 2) == $currentClass[0]) && (substr($student->getBarcode(), 10, 1) == $currentClass[1]))) {
                     $currentClass = [substr($student->getBarcode(), 8, 2), substr($student->getBarcode(), 10, 1)];
-                    array_push($list, ["Klasse", $currentClass[0], $currentClass[1]]);
+                    array_push($list, ["Klasse", $currentClass[0], $CLASS[$currentClass[1]]]);
                 }
-            } else{
-                if(!((substr($student->getBarcode(), 8, 2) == $currentClass[0]))){
-                    $currentClass = [substr($student->getBarcode(), 8, 2), 0];
-                    array_push($list, ["Klasse", $currentClass[0]]);
+            } else {
+                if (!((substr($student->getBarcode(), 8, 2) == $currentClass[0]) && (substr($student->getClassdetail(), 2) == $currentClass[1]))) {
+                    $currentClass = [substr($student->getClassdetail(), 0, 2), substr($student->getClassdetail(), 2)];
+                    array_push($list, ["Kurs", $currentClass[0], $currentClass[1]]);
                 }
             }
             array_push($list, $student->timeAsArray());
@@ -937,7 +940,8 @@ class Citizen {
      * @return array
      */
     public static function createBadCitizenListsAsArray(){
-        $students = Citizen::getAllStudents($sort="ascBarcode");
+        $CLASS = ["a","b","c","d","e","f"];
+        $students = Citizen::getAllStudents($sort="ascClassD");
         $list = [["Stand: ".date("H:i_d.m.Y")]];
         $currentClass = [0,0];
         $label = ["cID", "Vorname", "Nachname", "Klassenstufe", "Barcode", date("d.m.Y")];
@@ -947,12 +951,12 @@ class Citizen {
                 if ($student->getClasslevel() <= 10) {
                     if (!((substr($student->getBarcode(), 8, 2) == $currentClass[0]) && (substr($student->getBarcode(), 10, 1) == $currentClass[1]))) {
                         $currentClass = [substr($student->getBarcode(), 8, 2), substr($student->getBarcode(), 10, 1)];
-                        array_push($list, ["Klasse", $currentClass[0], $currentClass[1]]);
+                        array_push($list, ["Klasse", $currentClass[0], $CLASS[$currentClass[1]]]);
                     }
                 } else {
-                    if (!((substr($student->getBarcode(), 8, 2) == $currentClass[0]))) {
-                        $currentClass = [substr($student->getBarcode(), 8, 2), 0];
-                        array_push($list, ["Klasse", $currentClass[0]]);
+                    if (!((substr($student->getBarcode(), 8, 2) == $currentClass[0]) && (substr($student->getClassdetail(), 2) == $currentClass[1]))) {
+                        $currentClass = [substr($student->getClassdetail(), 0, 2), substr($student->getClassdetail(), 2)];
+                        array_push($list, ["Kurs", $currentClass[0], $currentClass[1]]);
                     }
                 }
                 array_push($list, $student->badTimeAsArray());
@@ -1750,5 +1754,19 @@ class Citizen {
      */
     public function setBirthday($birthday) {
         $this->birthday = $birthday;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getClassdetail() {
+        return $this->classdetail;
+    }
+
+    /**
+     * @param mixed $classdetail
+     */
+    public function setClassdetail($classdetail) {
+        $this->classdetail = $classdetail;
     }
 }

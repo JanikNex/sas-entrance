@@ -116,8 +116,23 @@
             {/if}
             <ul id="pages" class="pagination col s12 center">
             </ul>
-            <ul class="collection col s12" id="citizens">
-            </ul>
+            <div id="modals">
+
+            </div>
+            <table class="highlight">
+                <thead>
+                <tr>
+                    <th data-field="id">ID</th>
+                    <th data-field="name">Name</th>
+                    <th data-field="classlvl">Klassenstufe</th>
+                    <th data-field="timeToday">Zeit heute</th>
+                    <th data-field="timeAll">Zeit gesamt</th>
+                </tr>
+                </thead>
+                <tbody id="citizens">
+
+                </tbody>
+            </table>
         </div>
     </div>
 </main>

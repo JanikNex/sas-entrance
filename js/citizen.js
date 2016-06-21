@@ -8,40 +8,41 @@ var filter = "Alle";
 var requestPage = 1;
 var searchString = "";
 var modalID = 0;
+var lastRefresh = 0;
+var lastReload = 0;
 var list = {};
 var keys = [];
 var listElemTmplt = `
-            <li class="collection-item avatar">
-                <i class="material-icons circle {{color}}">person</i>
-                <span class="title">{{firstname}} {{lastname}}</span>
-                <p> {{{locked}}}
-                    {{classlvl}}<br/>
-                    Zeit heute: {{{timeToday}}} | Zeit gesamt: {{{timeProject}}}
-                </p>
-                <span class="secondary-content">
-                    <a class="waves-effect waves-circle" href="citizen.php?action=edit&cID={{id}}">
-                        <i class="material-icons grey-text text-darken-1" style="margin: 0px 5px;">create</i>
-                    </a>
-                    <a class="waves-effect waves-circle" href="citizen.php?action=citizeninfo&cID={{id}}" style="margin: 0px 5px;">
-                        <i class="material-icons grey-text text-darken-1">reorder</i>
-                    </a>
-                    <a class="waves-effect waves-circle waves-red" onclick="openModal({{modalid}})" style="margin: 0px 5px;">
-                        <i class="material-icons grey-text text-darken-1">delete</i>
-                    </a>
-                </span>
-                <div id="modal{{modalid}}" class="modal">
-                    <div class="modal-content black-text">
-                        <h4>L&ouml;schen</h4>
-                        <p>M&ouml;chtest Du die Person "{{firstname}} {{lastname}}" wirklich l&ouml;schen?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat"  onclick="window.openHTTPs = 0;">Abbrechen</a>
-                        <a href="citizen.php?action=del&cID={{id}}" class="modal-action modal-close waves-effect waves-green btn-flat red-text">L&ouml;schen</a>
-                    </div>
-                </div>
-            </li>
+    <tr class="{{color}} clickable">
+        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{id}}</td>
+        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{{locked}}} {{firstname}} {{lastname}}</td>
+        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{classlvl}}</td>
+        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{{timeToday}}}</td>
+        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{{timeProject}}}</td>
+        <td>
+            <a class="waves-effect waves-circle" href="citizen.php?action=edit&cID={{id}}">
+                <i class="material-icons grey-text text-darken-1" style="margin: 0px 5px;">create</i>
+            </a>
+            <a class="waves-effect waves-circle waves-red" onclick="openModal({{modalid}})" style="margin: 0px 5px;">
+                <i class="material-icons grey-text text-darken-1">delete</i>
+            </a>
+        </td>
+    </tr>
         `;
+var listModalTmplt = `
+            <div id="modal{{modalid}}" class="modal">
+                <div class="modal-content black-text">
+                    <h4>L&ouml;schen</h4>
+                    <p>M&ouml;chtest Du die Person "{{firstname}} {{lastname}}" wirklich l&ouml;schen?</p>
+                </div>
+                <div class="modal-footer">
+                    <a href="#!" class=" modal-action modal-close waves-effect waves-red btn-flat"  onclick="window.openHTTPs = 0;">Abbrechen</a>
+                    <a href="citizen.php?action=del&cID={{id}}" class="modal-action modal-close waves-effect waves-green btn-flat red-text">L&ouml;schen</a>
+                </div>
+            </div>
+`;
 var template = Handlebars.compile(listElemTmplt);
+var templateModal = Handlebars.compile(listModalTmplt);
 
 function setFilter(afilter) {
     filter = afilter;
@@ -150,6 +151,7 @@ $(document).ready(function(){
 
 function update() {
     finishedString = [];
+    lastReload = new Date().getTime();
     if(requestPage == 0)requestPage = 1;
     $.getJSON("getLists.php?action=citizenSimple&search="+searchString+"&page="+requestPage+"&filter="+filter+"&sort="+sort, function (data) {
         if(!(JSON.stringify(oldData) == JSON.stringify(data))) {
@@ -185,6 +187,10 @@ function updateCaller(){
         update();
         //updateEntries();
     }
+    if(lastRefresh != lastReload) {
+        update();
+        refreshList();
+    }
     window.setTimeout("updateCaller()", 1000);
 }
 
@@ -194,9 +200,9 @@ function openModal(id) {
 }
 
 function updateRow(id, data) {
-    if(data["inState"] == 0) color = "green";
-    else if(data["inState"] == 1) color = "red";
-    else color = "grey";
+    if(data["inState"] == 0) color = "green lighten-4";
+    else if(data["inState"] == 1) color = "red lighten-4";
+    else color = "";
 
     if(data["locked"] == 1 && data["isWanted"] == 1) locked = "<span class=\"red-text\"><b>!</b> Person gesperrt | Fahndung aktiv</span><br/>";
     else if(data["locked"] == 1) locked = "<span class=\"red-text\"><b>!</b> Person gesperrt</span><br/>";
@@ -211,14 +217,17 @@ function updateRow(id, data) {
     else classlevel = "...";
 
     html = template({modalid: modalID, id: data["id"], firstname: data["firstname"], lastname: data["lastname"], locked: locked, classlvl: classlevel, timeToday: data["timeToday"], timeProject: data["timeProject"], color: color});
+    modal = templateModal({modalid: modalID, id: data["id"], firstname: data["firstname"], lastname: data["lastname"]});
     list[(id+"#")] = html;
+    $("#modals").append(modal);
     modalID++;
 }
 
 function refreshList() {
-    $("ul#citizens").html("");
+    lastRefresh = lastReload;
+    $("tbody#citizens").html("");
     keys.forEach(function(key) {
-        $("ul#citizens").append(list[(key+"#")]);
+        $("tbody#citizens").append(list[(key+"#")]);
     });
     window.setTimeout("refreshList()", 500);
 }
