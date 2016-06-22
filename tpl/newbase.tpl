@@ -23,7 +23,7 @@
         <script type="text/javascript" src="libs/jquery-2.2.1.min.js"></script>
         <script type="text/javascript" src="libs/materialize/js/materialize.min.js"></script>
         <script type="text/javascript" src="libs/jquery-barcode.min.js"></script>
-        <script type="text/javascript" src="js/handlebars.js"></script>
+        <script type="text/javascript" src="libs/handlebars.js"></script>
 
         <!-- Dropdown Structure -->
         <ul id="dropdown1" class="dropdown-content">
@@ -128,6 +128,7 @@
                                             {if $args.perm.admin_kickall == 1}<li><a href="citizen.php?action=kickall">Alle Rausschmeißen</a></li>{/if}
                                             {if $args.perm.admin_tracing == 1}<li><a href="citizen.php?action=allTracings">Alle Fahndungen</a></li>{/if}
                                             {if $args.perm.admin_state_dashboard == 1}<li><a href="dashboard.php">Staats Dashboard</a></li>{/if}
+                                            {if $args.perm.admin_state_dashboard == 1}<li><a href="stats.php">Statistik</a></li>{/if}
                                             {if $args.perm.admin_export == 1}<li><a href="export.php">Exportieren</a></li>{/if}
                                         </ul>
                                     </div>

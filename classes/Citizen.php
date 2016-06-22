@@ -314,7 +314,7 @@ class Citizen {
      * @param string $search
      * @return int
      */
-    public static function getCurrentCitizenCount($sort, $filter, $search) {
+    public static function getCurrentCitizenCount($sort = "ascName", $filter = "Alle", $search = "") {
         $pdo = new PDO_MYSQL();
         if($search != "") $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname,' ',barcode)) LIKE LOWER('%".$_GET["search"]."%') AND state = 0".CFILTERING[$filter].CSORTING[$sort];
         else $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE state = 0".CFILTERING[$filter].CSORTING[$sort];
