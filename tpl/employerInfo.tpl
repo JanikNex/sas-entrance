@@ -10,8 +10,8 @@
                     <p><b>Name:</b> {$page.employer.name}</p>
                     <p><b>Raum:</b> {$page.employer.room}</p>
                     <h5>Mitarbeiterinformationen</h5>
-                    <p><b>Anzahl der Angestellten:</b> {$page.employer.count}</p>
-                    <p><b>davon momentan anwesend:</b> {$page.employer.activecount}</p>
+                    <p><b>Anzahl der Angestellten:</b> {$page.employer.staffCount}</p>
+                    <p><b>davon momentan anwesend:</b> {$page.employer.activeStaffCount}</p>
                     <h5>Betriebsleitung</h5>
                     {loop $page.chief}
                     <p><b>Name:</b> {$firstname} {$lastname}<br/>

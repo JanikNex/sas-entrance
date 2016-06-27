@@ -130,7 +130,7 @@ class Employer {
      */
     public function getActiveStaffCount(){
         $pdo = new PDO_MYSQL();
-        $res = $pdo->query("select COUNT(*) as count from entrance_employee WHERE (select state from entrance_citizen where entrance_citizen.cID = entrance_employee.cID) = 1 and emID = :emid", [":emid" => $this->emID]);
+        $res = $pdo->query("select COUNT(*) as count from entrance_employee WHERE (select state from entrance_citizen where entrance_citizen.cID = entrance_employee.cID) = 0 and emID = :emid", [":emid" => $this->emID]);
         return $res->count;
     }
 
@@ -140,7 +140,7 @@ class Employer {
      */
     public function getStaff(){
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE (select emID from entrance_employee where entrance_employee.cID = entrance_citizen.cID) = :emid", [":emid" => $this->emID]);
+        $stmt = $pdo->queryMulti("select cID from entrance_employee where emID = :emid", [":emid" => $this->emID]);
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
     }
 
