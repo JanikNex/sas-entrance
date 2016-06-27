@@ -18,6 +18,14 @@
           <option name="port" value="22" />
         </fileTransfer>
       </webServer>
+      <webServer id="cac61582-5d57-4a00-8251-c74b71c679d9" name="ServerNiendorf" url="http://mc.yannickfelix.tk">
+        <fileTransfer host="mc.yannickfelix.tk" port="22" rootFolder="/var/www/html" accessType="SFTP" password="dfd9dfc9dfc2dfc6dfc5dfd9dfd9df98df9adf9bdf9e" username="sadmin">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" />
+          </advancedOptions>
+          <option name="port" value="22" />
+        </fileTransfer>
+      </webServer>
     </option>
   </component>
 </project>

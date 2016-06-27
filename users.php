@@ -148,6 +148,9 @@ if($action == "new") {
                 $userToEdit->setPermission(PERM_TRACING_ADD, 0);
                 $userToEdit->setPermission(PERM_TRACING_REMOVE, 0);
                 $userToEdit->setPermission(PERM_TRACING_LIST, 0);
+
+                $userToEdit->setPermission(PERM_EMPLOYER_LIST, 0);
+                $userToEdit->setPermission(PERM_EMPLOYER_INFO, 0);
                 break;
             case 1:
                 $userToEdit->setPermission(PERM_DB_LOGIN, 0);
@@ -185,6 +188,9 @@ if($action == "new") {
                 $userToEdit->setPermission(PERM_TRACING_ADD, 0);
                 $userToEdit->setPermission(PERM_TRACING_REMOVE, 0);
                 $userToEdit->setPermission(PERM_TRACING_LIST, 0);
+
+                $userToEdit->setPermission(PERM_EMPLOYER_LIST, 0);
+                $userToEdit->setPermission(PERM_EMPLOYER_INFO, 0);
                 break;
             case 2:
                 $userToEdit->setPermission(PERM_DB_LOGIN, 0);
@@ -222,6 +228,9 @@ if($action == "new") {
                 $userToEdit->setPermission(PERM_TRACING_ADD, 1);
                 $userToEdit->setPermission(PERM_TRACING_REMOVE, 1);
                 $userToEdit->setPermission(PERM_TRACING_LIST, 1);
+
+                $userToEdit->setPermission(PERM_EMPLOYER_LIST, 0);
+                $userToEdit->setPermission(PERM_EMPLOYER_INFO, 0);
                 break;
             case 3:
                 $userToEdit->setPermission(PERM_DB_LOGIN, 0);
@@ -259,6 +268,9 @@ if($action == "new") {
                 $userToEdit->setPermission(PERM_TRACING_ADD, 0);
                 $userToEdit->setPermission(PERM_TRACING_REMOVE, 0);
                 $userToEdit->setPermission(PERM_TRACING_LIST, 1);
+
+                $userToEdit->setPermission(PERM_EMPLOYER_LIST, 1);
+                $userToEdit->setPermission(PERM_EMPLOYER_INFO, 1);
                 break;
             case 4:
                 $userToEdit->setPermission(PERM_DB_LOGIN, 1);
@@ -296,6 +308,9 @@ if($action == "new") {
                 $userToEdit->setPermission(PERM_TRACING_ADD, 1);
                 $userToEdit->setPermission(PERM_TRACING_REMOVE, 1);
                 $userToEdit->setPermission(PERM_TRACING_LIST, 1);
+
+                $userToEdit->setPermission(PERM_EMPLOYER_LIST, 1);
+                $userToEdit->setPermission(PERM_EMPLOYER_INFO, 1);
                 break;
             default:
                 breaK;

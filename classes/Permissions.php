@@ -43,3 +43,6 @@ define("PERM_CITIZEN_VIEW", "citizen.view");
 define("PERM_TRACING_ADD", "citizen.tracing.add");
 define("PERM_TRACING_REMOVE", "citizen.tracing.remove");
 define("PERM_TRACING_LIST", "citizen.tracing.list");
+
+define("PERM_EMPLOYER_LIST", "employer.list");
+define("PERM_EMPLOYER_INFO", "employer.info");

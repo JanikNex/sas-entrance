@@ -115,6 +115,21 @@
                         </li>
                         <li class="divider"></li>
                         {/if}
+                        {if $args.perm.employer_list == 1}
+                            <li class="no-padding">
+                                <ul class="collapsible collapsible-accordion">
+                                    <li>
+                                        <a class="collapsible-header">Betriebe<i class="mdi-navigation-arrow-drop-down"></i></a>
+                                        <div class="collapsible-body">
+                                            <ul>
+                                                <li><a href="employer.php">Betriebsliste</a></li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="divider"></li>
+                        {/if}
                         {if $args.perm.users_view == 1 or $args.perm.admin_database}
                         <li class="no-padding">
                             <ul class="collapsible collapsible-accordion">

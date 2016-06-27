@@ -102,6 +102,10 @@
                         <tr><td>Personeninfo ansehen              </td><td><div class="switch"><label>Off<input type="checkbox" id="cb14" {if $perm.citizen_info_specific   == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh14" type="hidden" value="0" name="citizen.info.specific"/>   </td></tr>
                         <tr><td>Böse Schüler ansehen              </td><td><div class="switch"><label>Off<input type="checkbox" id="cb15" {if $perm.citizen_info_difference == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh15" type="hidden" value="0" name="citizen.info.difference"/> </td></tr>
 
+                        <tr><td><b>Betriebsinfosinfos</b></td></tr>
+                        <tr><td>Betriebsliste ansehen</td><td><div class="switch"><label>Off<input type="checkbox" id="cb32" {if $perm.employer_list  == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh32" type="hidden" value="0" name="employer.list"/>  </td></tr>
+                        <tr><td>Betriebsinfo ansehen</td><td><div class="switch"><label>Off<input type="checkbox" id="cb31" {if $perm.employer_info    == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh31" type="hidden" value="0" name="employer.info"/>    </td></tr>
+
                         <tr><td><b>Sonstige</b></td></tr>
                         <tr><td>Datenbank               </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb16" {if $perm.admin_database        == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh16" type="hidden" value="0" name="admin.database"/>        </td></tr>
                         <tr><td>Fehler ansehen          </td> <td><div class="switch"><label>Off<input type="checkbox" id="cb17" {if $perm.admin_errors          == 1}checked{/if}><span class="lever"></span>On</label></div><input id="hh17" type="hidden" value="0" name="admin.errors"/>          </td></tr>

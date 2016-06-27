@@ -19,6 +19,7 @@ require_once 'classes/Permissions.php';
 require_once 'classes/Util.php';
 require_once 'classes/TracingEntry.php';
 require_once 'classes/LogEntry.php';
+require_once 'classes/Employer.php';
 
 $error = \Entrance\Util::checkSession();
 $pdo = new \Entrance\PDO_MYSQL();
@@ -156,6 +157,19 @@ if($action == "users") {
     foreach($logs as $log) {
         array_push($toEncode["logs"], $log->asArray());
     }
+    $jsoncode = json_encode($toEncode);
+    echo $jsoncode;
+    exit;
+
+} elseif($action == "employer") {
+    $toEncode = ["citizens" => []];
+    $citizens = \Entrance\Employer::getAllEmployers($_GET["page"], $pageSize, $_GET["search"]);
+    $toEncode["citizens"] = $citizens;
+    $currCount = \Entrance\Employer::getTotalEmployerCount($_GET["search"]);
+    $toEncode["page"] = $_GET["page"];
+    $toEncode["maxpage"] = ceil($currCount / $pageSize);
+    $toEncode["size"] = $currCount;
+
     $jsoncode = json_encode($toEncode);
     echo $jsoncode;
     exit;
