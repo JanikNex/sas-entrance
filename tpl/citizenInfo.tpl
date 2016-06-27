@@ -6,9 +6,6 @@
                         <div class="card-panel">
                             <h5>Person</h5>
                             <p><b>Name:</b> {$page.citizen.firstname} {$page.citizen.lastname}</p>
-                            {if $page.citizen.age <= 100}
-                            <p><b>Geburtstag:</b> {$page.citizen.birthdayNice}</p>
-                            {/if}
                             <p><b>Klassenstufe:</b>
                                 {if $page.citizen.classlevel<=13}{$page.citizen.classlevel}
                                 {elseif $page.citizen.classlevel==14}Lehrer

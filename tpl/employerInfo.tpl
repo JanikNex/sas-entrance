@@ -34,8 +34,19 @@
             <div class="col s12 offset-m1 m6">
                 <div class="card-panel">
                     <ul class="collection">
-                        {loop $page.logs}
-                            <!-- Mitarbeiter -> Yannicks Problem -->
+                        {loop $page.employees}
+                            <li class="collection-item avatar">
+                                <i class="material-icons circle grey">perm_identity</i>
+                                <span class="title">{$firstname} {$lastname}</span>
+                                <p>Klassenstufe: {$classlevel}<br/>
+                                    {if $classlevel != 14}
+                                        Status:
+                                        {if $inState == 0}<span class="green-text">Anwesend</span>
+                                        {else}<span class="red-text">Nicht Anwesend</span>
+                                        {/if}
+                                    {/if}
+                                </p>
+                            </li>
                         {/loop}
                     </ul>
                 </div>

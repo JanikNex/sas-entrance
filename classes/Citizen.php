@@ -587,6 +587,7 @@ class Citizen {
             "classlevel" => $this->classlevel,
             "barcode" => $this->barcode,
             "roll" => $this->getRoll('work'),
+            "employer" => $this->getEmployerData(),
             "inState" => $this->isCitizenInState(),
             "isWanted" => $this->isCitizenWanted() ? 1:0,
             "locked" => $this->isCitizenLocked() ? 1:0,
@@ -606,6 +607,7 @@ class Citizen {
             "firstname" => $this->firstname,
             "lastname" => $this->lastname,
             "classlevel" => $this->classlevel,
+            "employer" => $this->getEmployerData(),
             "inState" => $this->isCitizenInState(),
             "isWanted" => $this->isCitizenWanted() ? 1:0,
             "locked" => $this->isCitizenLocked() ? 1:0,
@@ -1674,6 +1676,25 @@ class Citizen {
         if ($this->isGovernment()) return false;
         if ($this->isJustice()) return false;
         return true;
+    }
+
+    /**
+     * Returns the Employer of this citizen
+     * @return Employer[]
+     */
+    public function getEmployer(){
+        $pdo = new PDO_MYSQL();
+        $stmt = $pdo->queryMulti("select emID from entrance_employee where cID = :cid", [":cid" => $this->cID]);
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Employer::fromEMID");
+    }
+
+    public function getEmployerData(){
+        $employers = $this->getEmployer();
+        $array = [];
+        foreach ($employers as $employer){
+            array_push($array, $employer->asArrayOptimized());
+        }
+        return $array;
     }
 
     /**

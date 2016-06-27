@@ -172,6 +172,15 @@ class Employer {
         return $array;
     }
 
+    public function getStaffInfoArray(){
+        $array = [];
+        $staff = $this->getStaff();
+        foreach ($staff as $citizen){
+            array_push($array, $citizen->asArray());
+        }
+        return $array;
+    }
+
     /**
      * @return mixed
      */

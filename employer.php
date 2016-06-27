@@ -34,6 +34,7 @@ if($action == "info" and is_numeric($emID)) {
         $employerToView = \Entrance\Employer::fromEMID($emID);
         $pgdata["page"]["employer"] = $employerToView->asArray();
         $pgdata["page"]["chief"] = $employerToView->getChiefInfoArray();
+        $pgdata["page"]["employees"] = $employerToView->getStaffInfoArray();
 
         $dwoo->output("tpl/employerInfo.tpl", $pgdata);
         exit;
