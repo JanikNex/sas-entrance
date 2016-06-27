@@ -102,13 +102,25 @@ class Employer {
             return $hits;
         }
     }
+
+    /**
+     * Returns the total count of employers
+     * @param string $search
+     * @return int
+     */
+    public static function getTotalEmployerCount($search = ""){
+        $pdo = new PDO_MYSQL();
+        $res = $pdo->query("SELECT COUNT(*) as count FROM entrance_employer WHERE LOWER(CONCAT(name,' ', kind,' ',room)) LIKE LOWER('%".$search."%')");
+        return $res->count;
+    }
+
     /**
      * Returns the count of staff members
      * @return int
      */
     public function getStaffCount(){
         $pdo = new PDO_MYSQL();
-        $res = $pdo->query("SELECT COUNT(*) as count FROM entrance_citizen WHERE emID = :emid", [":emid" => $this->emID]);
+        $res = $pdo->query("SELECT COUNT(*) as count FROM entrance_employee WHERE emID = :emid", [":emid" => $this->emID]);
         return $res->count;
     }
 
@@ -118,13 +130,7 @@ class Employer {
      */
     public function getActiveStaffCount(){
         $pdo = new PDO_MYSQL();
-        $res = $pdo->query("SELECT COUNT(*) as count FROM entrance_citizen WHERE emID = :emid AND state = 0", [":emid" => $this->emID]);
-        return $res->count;
-    }
-
-    public static function getTotalEmployerCount($search = ""){
-        $pdo = new PDO_MYSQL();
-        $res = $pdo->query("SELECT COUNT(*) as count FROM entrance_employer WHERE LOWER(CONCAT(name,' ', kind,' ',room)) LIKE LOWER('%".$search."%')");
+        $res = $pdo->query("select COUNT(*) as count from entrance_employee WHERE (select state from entrance_citizen where entrance_citizen.cID = entrance_employee.cID) = 1 and emID = :emID", [":emid" => $this->emID]);
         return $res->count;
     }
 
@@ -134,7 +140,7 @@ class Employer {
      */
     public function getStaff(){
         $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE emID = :emid", [":emid" => $this->emID]);
+        $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE (select emID from entrance_employee where entrance_employee.cID = entrance_citizen.cID) = :emid", [":emid" => $this->emID]);
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
     }
 
