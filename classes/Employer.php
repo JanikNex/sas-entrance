@@ -130,7 +130,7 @@ class Employer {
      */
     public function getActiveStaffCount(){
         $pdo = new PDO_MYSQL();
-        $res = $pdo->query("select COUNT(*) as count from entrance_employee WHERE (select state from entrance_citizen where entrance_citizen.cID = entrance_employee.cID) = 1 and emID = :emID", [":emid" => $this->emID]);
+        $res = $pdo->query("select COUNT(*) as count from entrance_employee WHERE (select state from entrance_citizen where entrance_citizen.cID = entrance_employee.cID) = 1 and emID = :emid", [":emid" => $this->emID]);
         return $res->count;
     }
 
@@ -152,6 +152,24 @@ class Employer {
         $pdo = new PDO_MYSQL();
         $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE emID = :emid AND state = 0", [":emid" => $this->emID]);
         return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+    }
+
+    /**
+     * @return Citizen[]
+     */
+    public function getChief(){
+        $pdo = new PDO_MYSQL();
+        $stmt = $pdo->queryMulti("SELECT cID FROM entrance_employee WHERE emID = :emid AND isChief = 1", [":emid" => $this->emID]);
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+    }
+
+    public function getChiefInfoArray(){
+        $array = [];
+        $chiefs = $this->getChief();
+        foreach ($chiefs as $chief){
+            array_push($array, $chief->asArray());
+        }
+        return $array;
     }
 
     /**

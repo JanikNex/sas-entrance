@@ -12,6 +12,23 @@
                     <h5>Mitarbeiterinformationen</h5>
                     <p><b>Anzahl der Angestellten:</b> {$page.employer.count}</p>
                     <p><b>davon momentan anwesend:</b> {$page.employer.activecount}</p>
+                    <h5>Betriebsleitung</h5>
+                    {loop $page.chief}
+                    <p><b>Name:</b> {$firstname} {$lastname}<br/>
+                    <b>Klassenstufe:</b>
+                        {if $classlevel<=13}{$classlevel}
+                        {elseif $classlevel==14}Lehrer
+                        {elseif $classlevel==15}Visum
+                        {else}Kurier{/if}
+                        <br/>
+                    {if $classlevel != 14}
+                    <b>Status: </b>
+                        {if $inState == 0}<span class="green-text">Anwesend</span>
+                        {else}<span class="red-text">Nicht Anwesend</span>
+                        {/if}
+                    </p>
+                    {/if}
+                    {/loop}
                 </div>
             </div>
             <div class="col s12 offset-m1 m6">
