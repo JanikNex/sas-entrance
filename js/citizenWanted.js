@@ -11,7 +11,7 @@ var pagesize = 75;
 var listElemTmplt = `
     <tr class="{{color}} clickable" id="entry{{id}}">
         <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{id}}</td>
-        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{{locked}}} {{firstname}} {{lastname}}</td>
+        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{firstname}} {{lastname}}<br/>{{{locked}}}</td>
         <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{classlvl}}</td>
         <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{{timeToday}}}</td>
         <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{{timeProject}}}</td>
@@ -27,7 +27,7 @@ var listElemTmplt = `
         `;
 var listElemTmpltU = `
         <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{id}}</td>
-        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{{locked}}} {{firstname}} {{lastname}}</td>
+        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{firstname}} {{lastname}}<br/>{{{locked}}}</td>
         <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{classlvl}}</td>
         <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{{timeToday}}}</td>
         <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{{timeProject}}}</td>

@@ -336,7 +336,7 @@ class Citizen {
         if($search != "") {
             $startElem = ($page-1) * $pagesize;
             $endElem = $startElem + $pagesize;
-            $query = "SELECT cID, firstname, lastname, state FROM entrance_tracing WHERE LOWER(CONCAT(firstname,' ', lastname,' ',barcode)) LIKE LOWER('%".$_GET["search"]."%') WHERE active = 1 LIMIT ".$startElem.','.$endElem;
+            $query = "SELECT cID, firstname, lastname, state FROM entrance_citizen WHERE cID in (select cID from entrance_tracing where active = 1) and LOWER(CONCAT(firstname,' ', lastname,' ',barcode)) LIKE LOWER('%".$_GET["search"]."%') LIMIT ".$startElem.','.$endElem;
             $stmt = $pdo->queryMulti($query);
             $hits = [];
             while($row = $stmt->fetch()) {
@@ -351,7 +351,7 @@ class Citizen {
         } else {
             $startElem = ($page-1) * $pagesize;
             $endElem = $startElem + $pagesize;
-            $stmt = $pdo->queryMulti("SELECT cID, firstname, lastname, state FROM entrance_tracing WHERE active = 1 LIMIT ".$startElem.','.$endElem);
+            $stmt = $pdo->queryMulti("SELECT cID, firstname, lastname, state FROM entrance_citizen WHERE cID in (select cID from entrance_tracing where active = 1) LIMIT ".$startElem.','.$endElem);
             $hits = [];
             while($row = $stmt->fetch()) {
                 $keys["id"] = $row["cID"];
