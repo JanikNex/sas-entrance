@@ -16,6 +16,7 @@ require_once 'classes/PDO_MYSQL.php'; //DB Anbindung
 require_once 'libs/dwoo/lib/Dwoo/Autoloader.php'; //Dwoo Laden
 require_once 'libs/html2pdf-4.5.1/html2pdf.class.php';
 require_once "classes/Permissions.php";
+require_once "classes/Employer.php";
 
 $user = \Entrance\Util::checkSession();
 $pdo = new \Entrance\PDO_MYSQL();

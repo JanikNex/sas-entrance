@@ -15,6 +15,8 @@
                                 {loop $page.employer}
                                     <a class="lbtn btn-flat left-align white black-text col s12" href="employer.php?action=info&emID={$emID}">{$emID}: {$name}</a>
                                 {/loop}
+                                    <br/><br/>
+                                {/if}
                                 {if $page.citizen.roll[0] != ""}
                                     <b>Rollen:</b> {$page.citizen.roll[0]}<br/>
                                 {/if}
@@ -22,8 +24,13 @@
                                     <b>Weisungsbefugnisse:</b> {$page.citizen.roll[1]}<br/>
                                 {/if}
                             </p>
-                            <p><b>Barcode:</b> {$page.citizen.barcode}</p>
-                            <div id="bcTarget"></div>
+                            {if $page.citizen.classlevel!=14}
+                                <p><b>Barcode:</b> {$page.citizen.barcode}</p>
+                                <div id="bcTarget"></div>
+                            {elseif $header.perm.citizen_edit == 1}
+                                <p><b>Barcode:</b> {$page.citizen.barcode}</p>
+                                <div id="bcTarget"></div>
+                            {/if}
                             {if $header.perm.citizen_info_difference == 1}
                                 <p>{loop $page.times}<b>Zeit am {$date}:</b> {$time}<br/>{/loop}</p>
                                 <p><b>Gesamt:</b> {$page.timeTotal}</p>
