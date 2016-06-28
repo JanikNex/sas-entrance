@@ -22,7 +22,7 @@
                         {else}Kurier{/if}
                         <br/>
                     {if $classlevel != 14}
-                    <b>Status: </b>
+                    <b>Status:</b>
                         {if $inState == 0}<span class="green-text">Anwesend</span>
                         {else}<span class="red-text">Nicht Anwesend</span>
                         {/if}
