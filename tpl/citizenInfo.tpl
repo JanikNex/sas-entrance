@@ -11,12 +11,10 @@
                                 {elseif $page.citizen.classlevel==14}Lehrer
                                 {elseif $page.citizen.classlevel==15}Visum
                                 {else}Kurier{/if}<br/>
-                                {if $header.perm.employer_list == 1}
                                 <b>Angestellt bei:</b><br/>
                                 {loop $page.employer}
                                     <a class="lbtn btn-flat left-align white black-text col s12" href="employer.php?action=info&emID={$emID}">{$emID}: {$name}</a>
                                 {/loop}
-                                {/if}
                                 {if $page.citizen.roll[0] != ""}
                                     <b>Rollen:</b> {$page.citizen.roll[0]}<br/>
                                 {/if}
