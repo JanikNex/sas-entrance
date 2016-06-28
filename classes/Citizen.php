@@ -1683,9 +1683,7 @@ class Citizen {
      * @return Employer[]
      */
     public function getEmployer(){
-        $pdo = new PDO_MYSQL();
-        $stmt = $pdo->queryMulti("select emID from entrance_employee where cID = :cid", [":cid" => $this->cID]);
-        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Employer::fromEMID");
+        return Employer::forCID($this->cID);
     }
 
     public function getEmployerData(){

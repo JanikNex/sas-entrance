@@ -4,24 +4,30 @@
                 <div class="row">
                     <div class="col s12 m5">
                         <div class="card-panel">
-                            <h5>Person</h5>
-                            <p><b>Name:</b> {$page.citizen.firstname} {$page.citizen.lastname}</p>
-                            <p><b>Klassenstufe:</b>
+                            <h5 class="indigo-text text-darken-2 bolden">Person</h5>
+                            <p><b>Name:</b> {$page.citizen.firstname} {$page.citizen.lastname}<br/>
+                                <b>Klassenstufe:</b>
                                 {if $page.citizen.classlevel<=13}{$page.citizen.classlevel}
                                 {elseif $page.citizen.classlevel==14}Lehrer
                                 {elseif $page.citizen.classlevel==15}Visum
-                                {else}Kurier{/if}
+                                {else}Kurier{/if}<br/>
+                                {if $header.perm.employer_list == 1}
+                                <b>Angestellt bei:</b><br/>
+                                {loop $page.employer}
+                                    <a class="lbtn btn-flat left-align white black-text col s12" href="employer.php?action=info&emID={$emID}">{$emID}: {$name}</a>
+                                {/loop}
+                                {/if}
+                                {if $page.citizen.roll[0] != ""}
+                                    <b>Rollen:</b> {$page.citizen.roll[0]}<br/>
+                                {/if}
+                                {if $page.citizen.roll[1] != ""}
+                                    <b>Weisungsbefugnisse:</b> {$page.citizen.roll[1]}<br/>
+                                {/if}
                             </p>
-                            {if $page.citizen.roll[0] != ""}
-                                <p><b>Rollen:</b> {$page.citizen.roll[0]}</p>
-                            {/if}
-                            {if $page.citizen.roll[1] != ""}
-                                <p><b>Weisungsbefugnisse:</b> {$page.citizen.roll[1]}</p>
-                            {/if}
                             <p><b>Barcode:</b> {$page.citizen.barcode}</p>
                             <div id="bcTarget"></div>
                             {if $header.perm.citizen_info_difference == 1}
-                                {loop $page.times}<p><b>Zeit am {$date}:</b> {$time}</p>{/loop}
+                                <p>{loop $page.times}<b>Zeit am {$date}:</b> {$time}<br/>{/loop}</p>
                                 <p><b>Gesamt:</b> {$page.timeTotal}</p>
                             {/if}
                             <p><b>Fahndungsstatus:</b>
@@ -31,15 +37,15 @@
                             </p>
                             {if $page.citizen.isWanted}
                                 {if $header.perm.citizen_tracing_remove == 1}
-                                    <a class="btn green" href="citizen.php?action=removeTracing&cID={$page.citizen.id}"><i class="small mdi mdi-lock-open-outline"></i> Fahndung entfernen</a>
+                                    <a class="btn green col s12" href="citizen.php?action=removeTracing&cID={$page.citizen.id}"><i class="small mdi mdi-lock-open-outline"></i> - Fahndung</a><br/><br/>
                                 {/if}
                             {else}
                                 {if $header.perm.citizen_tracing_add == 1}
-                                    <a class="btn red" href="citizen.php?action=addTracing&cID={$page.citizen.id}"><i class="small mdi mdi-lock-outline"></i> Fahndung hinzufügen</a>
+                                    <a class="btn red col s12" href="citizen.php?action=addTracing&cID={$page.citizen.id}"><i class="small mdi mdi-lock-outline"></i> + Fahndung</a><br/><br/>
                                 {/if}
-                            {/if}<br/><br/>
+                            {/if}
                             {if $header.perm.admin_export == 1}
-                                <a class="btn grey" href="export.php?action=printThisPassport&cID={$page.citizen.id}"><i class="small mdi mdi-printer"></i> Ausweis ausdrucken</a>
+                                <a class="btn grey col s12" href="export.php?action=printThisPassport&cID={$page.citizen.id}"><i class="small mdi mdi-printer"></i> Ausweis</a><br/><br/>
                             {/if}
                             {if $header.perm.citizen_edit == 1}
                                 <p>
@@ -69,7 +75,7 @@
                                     <a class="btn white black-text col s2 tooltipped" href="citizen.php?action=removeRoll&roll=orga&cID={$page.citizen.id}"           data-position="bottom" data-delay="50" data-tooltip="Orga"><i class="small material-icons">delete</i></a>
                                 </p>
                             {/if}
-                            <br/><br/>
+                            <br/><br/><br/>
                         </div>
                     </div>
                     <div class="col s12 offset-m1 m6">

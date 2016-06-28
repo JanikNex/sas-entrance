@@ -17,6 +17,7 @@ require_once 'classes/Util.php';
 require_once 'classes/Citizen.php';
 require_once 'classes/Error.php';
 require_once 'classes/TracingEntry.php';
+require_once 'classes/Employer.php';
 require_once 'classes/LogEntry.php';
 
 $user = \Entrance\Util::checkSession();
@@ -142,6 +143,8 @@ if($action == "new") {
         }
 
         $pgdata["page"]["timeTotal"] = $citizenToView->getTimePerProject() != 0 ? \Entrance\Util::seconds_to_time($citizenToView->getTimePerProject()) : "<i>Nicht anwesend</i>";
+
+        $pgdata["page"]["employer"] = $citizenToView->getEmployerData();
 
         $dwoo->output("tpl/citizenInfo.tpl", $pgdata);
         exit;

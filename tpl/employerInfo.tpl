@@ -35,7 +35,7 @@
                 <div class="card-panel">
                     <ul class="collection">
                         {loop $page.employees}
-                            <li class="collection-item avatar">
+                            <li class="collection-item avatar clickable" onclick="window.location = 'citizen.php?action=citizeninfo&cID={$id}'">
                                 <i class="material-icons circle grey">perm_identity</i>
                                 <span class="title">{$firstname} {$lastname}</span>
                                 <p>Klassenstufe: {$classlevel}<br/>

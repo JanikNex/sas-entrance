@@ -24,15 +24,21 @@ class Employer {
      */
     public function __construct($emID, $kind, $name, $room) {
         $this->emID = $emID;
-        $this->kind = $kind;
-        $this->name = $name;
-        $this->room = $room;
+        $this->kind = utf8_encode($kind);
+        $this->name = utf8_encode($name);
+        $this->room = utf8_encode($room);
     }
 
     public static function fromEMID($emid) {
         $pdo = new PDO_MYSQL();
         $res = $pdo->query("SELECT * FROM entrance_employer WHERE emID = :emid", [":emid" => $emid]);
         return new Employer($res->emID, $res->kind, $res->name, $res->room);
+    }
+
+    public static function forCID($cID) {
+        $pdo = new PDO_MYSQL();
+        $stmt = $pdo->queryMulti("select emID from entrance_employee where cID = :cid", [":cid" => $cID]);
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Employer::fromEMID");
     }
 
     /**
