@@ -24,8 +24,13 @@
                                     <b>Weisungsbefugnisse:</b> {$page.citizen.roll[1]}<br/>
                                 {/if}
                             </p>
-                            <p><b>Barcode:</b> {$page.citizen.barcode}</p>
-                            <div id="bcTarget"></div>
+                            {if $page.citizen.classlevel!=14}
+                                <p><b>Barcode:</b> {$page.citizen.barcode}</p>
+                                <div id="bcTarget"></div>
+                            {elseif $header.perm.citizen_edit == 1}
+                                <p><b>Barcode:</b> {$page.citizen.barcode}</p>
+                                <div id="bcTarget"></div>
+                            {/if}
                             {if $header.perm.citizen_info_difference == 1}
                                 <p>{loop $page.times}<b>Zeit am {$date}:</b> {$time}<br/>{/loop}</p>
                                 <p><b>Gesamt:</b> {$page.timeTotal}</p>
