@@ -396,7 +396,7 @@ class Citizen {
             if($search != "") {
                 $startElem = ($page-1) * $pagesize;
                 $endElem = $startElem + $pagesize;
-                $query = "SELECT cID, firstname, lastname, state FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname,' ',barcode)) LIKE LOWER('%".$_GET["search"]."%') AND isBad = 1".CFILTERING[$filter].CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
+                $query = "SELECT cID, firstname, lastname, state FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname,' ',barcode)) LIKE LOWER('%".$_GET["search"]."%') AND isBad = 1 AND classlevel < 13".CFILTERING[$filter].CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
                 $stmt = $pdo->queryMulti($query);
                 $hits = [];
                 while($row = $stmt->fetch()) {
@@ -411,7 +411,7 @@ class Citizen {
             } else {
                 $startElem = ($page-1) * $pagesize;
                 $endElem = $startElem + $pagesize;
-                $stmt = $pdo->queryMulti("SELECT cID, firstname, lastname, state FROM entrance_citizen WHERE isBad = 1". CFILTERING[$filter] . CSORTING[$sort]." LIMIT ".$startElem.','.$endElem);
+                $stmt = $pdo->queryMulti("SELECT cID, firstname, lastname, state FROM entrance_citizen WHERE isBad = 1 AND classlevel < 13". CFILTERING[$filter] . CSORTING[$sort]." LIMIT ".$startElem.','.$endElem);
                 $hits = [];
                 while($row = $stmt->fetch()) {
                     $keys["id"] = $row["cID"];
@@ -424,7 +424,7 @@ class Citizen {
                 return $hits;
             }
         } else {
-            $stmt = $pdo->queryMulti("SELECT cID, firstname, lastname, state FROM entrance_citizen WHERE isBad = 1" . CSORTING[$sort]);
+            $stmt = $pdo->queryMulti("SELECT cID, firstname, lastname, state FROM entrance_citizen WHERE isBad = 1 AND classlevel < 13" . CSORTING[$sort]);
             $array = $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
             $hits = [];
             foreach($array as $citizen) {
@@ -451,8 +451,8 @@ class Citizen {
      */
     public static function getCurrentBadCitizenCount($sort = "", $filter = "Schüler", $search = ""){
         $pdo = new PDO_MYSQL();
-        if($search != "") $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname,' ',barcode)) LIKE LOWER('%".$_GET["search"]."%') AND isBad = 1 ".CFILTERING[$filter].CSORTING[$sort];
-        else $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE isBad = 1".CFILTERING[$filter].CSORTING[$sort];
+        if($search != "") $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname,' ',barcode)) LIKE LOWER('%".$_GET["search"]."%') AND isBad = 1 AND classlevel < 13".CFILTERING[$filter].CSORTING[$sort];
+        else $query = "SELECT COUNT(*) as count FROM entrance_citizen WHERE isBad = 1 AND classlevel < 13".CFILTERING[$filter].CSORTING[$sort];
 
         $res = $pdo->query($query);
         return $res->count;
