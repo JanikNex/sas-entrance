@@ -16,6 +16,7 @@
                                 {loop $page.employer}
                                     <a class="lbtn btn-flat left-align white black-text col s12" href="employer.php?action=info&emID={$emID}">{$emID}: {$name}</a>
                                 {/loop}
+                                    <br/><br/>
                                 {/if}
                                 {if $page.citizen.roll[0] != ""}
                                     <b>Rollen:</b> {$page.citizen.roll[0]}<br/>
