@@ -47,7 +47,7 @@ if($action == "exportClasslist") {
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
         exit;
     }
-}elseif($action == "exportPassportGroup" and is_numeric($group)) {
+}elseif($action == "exportPassportGroup" and is_numeric($group)) { //Wird für Jahrgangsausweissätze benutzt
     if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
         $link = \Entrance\Citizen::printPassportGroup($group);
         echo json_encode(["success" => true, "link" => str_replace("/var/www/html/", "/", $link)]);
@@ -68,7 +68,7 @@ if($action == "exportClasslist") {
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
         exit;
     }
-} elseif($action == "printPassportWorkers") {
+} elseif($action == "printPassportWorkers") { // Wird nicht benutzt
     if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
         $link = \Entrance\Citizen::printPassportWorkers();
         \Entrance\Util::forwardTo(str_replace("/var/www/html/", "/", $link));

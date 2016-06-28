@@ -922,7 +922,7 @@ class Citizen {
         $students = Citizen::getAllStudents($sort="ascClassD");
         $list = [];
         $currentClass = [0,0];
-        $label = ["cID", "Vorname", "Nachname", "Klassenstufe", "Barcode"];
+        $label = ["cID", "Vorname", "Nachname", "Klassenstufe", "Barcode", "BetriebsID", "Betriebsname"];
         foreach (LogEntry::getProjectDays() as $day){
             array_push($label, $day);
         }
@@ -955,7 +955,7 @@ class Citizen {
         $students = Citizen::getAllStudents($sort="ascClassD");
         $list = [["Stand: ".date("H:i_d.m.Y")]];
         $currentClass = [0,0];
-        $label = ["cID", "Vorname", "Nachname", "Klassenstufe", "Barcode", date("d.m.Y")];
+        $label = ["cID", "Vorname", "Nachname", "Klassenstufe", "Barcode", "BetriebsID", "Betriebsname", date("d.m.Y")];
         array_push($list, $label);
         foreach ($students as $student){
             if(!$student->wasInStateToday()) {
@@ -1213,12 +1213,22 @@ class Citizen {
      * @return array
      */
     public function timeAsArray(){
+        $employerID = [];
+        $employerName = [];
+        foreach ($this->getEmployer() as $employer){
+            array_push($employerID, $employer->getEmID());
+            array_push($employerName, $employer->getName());
+        }
+        $employerIDString = implode(", ", $employerID);
+        $employerNameString = implode(", ", $employerName);
         $studentData = [
             "id" => $this->cID,
             "firstname" => $this->firstname,
             "lastname" => $this->lastname,
             "classlevel" => $this->classlevel,
-            "barcode" => $this->barcode
+            "barcode" => $this->barcode,
+            "employerID" => $employerIDString,
+            "employerName" => $employerNameString
         ];
         foreach (LogEntry::getProjectDays() as $day){
             array_push($studentData, Util::seconds_to_time($this->getTimePerDay($day)));
@@ -1232,12 +1242,22 @@ class Citizen {
      * @return array
      */
     public function badTimeAsArray(){
+        $employerID = [];
+        $employerName = [];
+        foreach ($this->getEmployer() as $employer){
+            array_push($employerID, $employer->getEmID());
+            array_push($employerName, $employer->getName());
+        }
+        $employerIDString = implode(", ", $employerID);
+        $employerNameString = implode(", ", $employerName);
         $studentData = [
             "id" => $this->cID,
             "firstname" => $this->firstname,
             "lastname" => $this->lastname,
             "classlevel" => $this->classlevel,
             "barcode" => $this->barcode,
+            "employerID" => $employerIDString,
+            "employerName" => $employerNameString,
             "time" => "Nicht anwesend"
         ];
         return $studentData;
