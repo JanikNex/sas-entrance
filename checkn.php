@@ -105,6 +105,15 @@
                 onSend();
             }
         });
+        $(window).on("keydown", function(e) {
+            if(String.fromCharCode(e.which) == 'E') {
+                toCheckIn();
+                e.preventDefault();
+            } else if(String.fromCharCode(e.which) == 'A') {
+                toCheckOut();
+                e.preventDefault();
+            }
+        });
         prepare()
     });
 </script>

@@ -194,6 +194,18 @@ function switchMode() {
     }
 }
 
+function toCheckIn() {
+    prepare();
+    if(currMode == "Out") switchMode();
+}
+
+function toCheckOut() {
+    prepare();
+    if(currMode == "In") switchMode();
+}
+
+
+
 function reloadCitizenData() {
     prepare();
     barcode = $("#barcode").val();
