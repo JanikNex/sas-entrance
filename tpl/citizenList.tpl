@@ -9,7 +9,7 @@
     <div class="container">
         <div class="row">
             <form class="col s12 {if $page.type != "Wanted"}m7{/if}" method="post" action="" id="live-search">
-                <div class="row">
+                <div class="row" id="search">
                     <div class="input-field col s12 ">
                         <i class="material-icons prefix">search</i>
                         <input id="filter" type="text" class="validate">
@@ -52,34 +52,8 @@
                     <li> <a onclick="setFilter('Visum');">Visum      </a></li>
                     <li> <a onclick="setFilter('Kurier');">Kurier    </a></li>
                 </ul>
-            </div>{elseif $page.type == "Tracing"}
-                <div class="col s5 offset-m1 m2 center-align">
-                    <br class="hide-on-small-only"/>
-                    <!-- Dropdown Trigger -->
-                    <a id="currSort" class='dropdown-button btn indigo' href='#' data-activates='dropdown0'></a>
-
-                    <!-- Dropdown Structure -->
-                    <ul id='dropdown0' class='dropdown-content'>
-                        <li><a onclick="setSort('ascDate')"> <i class="mdi mdi-sort-ascending"> </i> Datum</a></li>
-                        <li><a onclick="setSort('descDate')"><i class="mdi mdi-sort-descending"></i> Datum</a></li>
-                        <li><a onclick="setSort('ascID')">   <i class="mdi mdi-sort-ascending"> </i> ID</a></li>
-                        <li><a onclick="setSort('descID')">  <i class="mdi mdi-sort-descending"></i> ID</a></li>
-                    </ul>
-                </div>
-                <div class="col offest-s2 s5 m2 center-align">
-                    <br class="hide-on-small-only"/>
-                    <!-- Dropdown Trigger -->
-                    <a id="currFilter" class='dropdown-button btn indigo' href='#' data-activates='dropdown'></a>
-
-                    <!-- Dropdown Structure -->
-                    <ul id='dropdown' class='dropdown-content'>
-                        <li><a id="currFilter"></a></li>
-                        <li class="divider"></li>
-                        <li><a onclick="setFilter('Alle')"                  >Alle                  </a></li>
-                        <li><a onclick="setFilter('Active')"                >Aktiv                 </a></li>
-                        <li><a onclick="setFilter('Inactive')"              >Inaktiv               </a></li>
-                    </ul>
-                </div>
+            </div>
+            {elseif $page.type == "Tracing"}
             {elseif $page.type == "bad"}
                 <div class="col s5 offset-m1 m2 center-align">
                     <br class="hide-on-small-only"/>
@@ -122,13 +96,23 @@
             </div>
             <table class="highlight">
                 <thead>
-                <tr>
-                    <th data-field="id">ID</th>
-                    <th data-field="name">Name</th>
-                    <th data-field="classlvl">Klassenstufe</th>
-                    <th data-field="timeToday">Zeit heute</th>
-                    <th data-field="timeAll">Zeit gesamt</th>
-                </tr>
+                {if $page.type == "Tracing"}
+                    <tr>
+                        <th data-field="tID">ID</th>
+                        <th data-field="timestamp">Datum</th>
+                        <th data-field="name">Name</th>
+                        <th data-field="classlvl">Klassenstufe</th>
+                        <th data-field="timeToday">Benutzer</th>
+                    </tr>
+                {else}
+                    <tr>
+                        <th data-field="id">ID</th>
+                        <th data-field="name">Name</th>
+                        <th data-field="classlvl">Klassenstufe</th>
+                        <th data-field="timeToday">Zeit heute</th>
+                        <th data-field="timeAll">Zeit gesamt</th>
+                    </tr>
+                {/if}
                 </thead>
                 <tbody id="citizens">
 

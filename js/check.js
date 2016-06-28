@@ -204,8 +204,6 @@ function toCheckOut() {
     if(currMode == "In") switchMode();
 }
 
-
-
 function reloadCitizenData() {
     prepare();
     barcode = $("#barcode").val();
