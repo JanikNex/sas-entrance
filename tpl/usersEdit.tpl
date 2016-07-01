@@ -21,7 +21,7 @@
                 </div>
                 <div class="input-field col s12">
                     <label for="email">Email</label>
-                    <input id="email" required value="{$edit.email}" type="email" name="email" length="65535"/>
+                    <input id="email" value="{$edit.email}" type="email" name="email" length="65535"/>
                 </div>
                 <div class="col s12">
                     <button class="btn waves-effect waves-light btn-flat" type="submit" name="action">SETZTEN

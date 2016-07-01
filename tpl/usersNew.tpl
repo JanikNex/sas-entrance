@@ -10,7 +10,7 @@
                 </div>
                 <div class="input-field col s12">
                     <label for="email">Email</label>
-                    <input id="email" required type="email" name="email" length="65535"/>
+                    <input id="email" type="email" name="email" length="65535"/>
                 </div>
                 <div class="input-field col s6">
                     <label for="pw1">Passwort</label>
