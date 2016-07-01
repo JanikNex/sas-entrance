@@ -2,10 +2,34 @@
 <main>
             <div class="container">
                 <div class="row">
+                    <style>
+                        .viewport video {
+                            position: fixed;
+                            width: 100%;
+                            height: auto;
+                            top: 40px;
+                            left: 0;
+                            right: 0;
+                            z-index: 500;
+                        }
+
+                        .drawingBuffer {
+                            position: absolute;
+                            width: 100%;
+                            height: auto;
+                            top: 40px;
+                            left: 0;
+                            right: 0;
+                            z-index: 1000;
+                        }
+                    </style>
                     <div class="col s12 m6">
                         <div class="card-panel row">
                             <form action="errors.php?action=autoIgnore" method="post">
-                                <div class="input-field col s11">
+                                <a class="btn-flat waves-effect waves-light col s1" style="margin-top:15px;" onclick="doScan()">
+                                    <i class="mdi mdi-barcode-scan right"></i>
+                                </a>
+                                <div class="input-field col s10">
                                     <i class="prefix mdi mdi-barcode-scan"></i>
                                     <label for="barcode">Hier scannen</label>
                                     <input id="barcode" required type="text" name="barcode" length="13" autofocus/>
@@ -73,12 +97,12 @@
                             </ul>
                         </div>
                     </div>
+                    <div class="viewport" id="interactive" style="max-width: 100%">
+
+                    </div>
                 </div>
             </div>
         </main>
-<script>
-    jQuery(document).ready(function($) {
-
-    });
-</script>
+<script src="libs/quagga.min.js"></script>
+<script src="js/scan.js"></script>
 {include file="newEnd.tpl"}
