@@ -56,7 +56,6 @@ function onSend() {
                     Materialize.toast('Person gesucht!', 2000, 'red');
                     $("#scanWanted").show();
                     audioWanted.play();
-                    checkIn(data["cID"]);
                 } else if(!data["enoughTime"]) {
                     $("#modalTime").openModal();
                     $("#name").html(data["fname"]+" "+data["lname"]);

@@ -9,11 +9,11 @@ var pagesize = 75;
 ////////////////////////////////////
 var listElemTmplt = `
     <tr class="{{color}} clickable" id="entry{{id}}">
-        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{tID}}</td>
-        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{{timestamp}}}</td>
-        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{citizenName}}</td>
-        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{citizenClassLevel}}</td>
-        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{id}}'">{{{prefix}}} {{username}}</td>
+        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{cID}}'">{{tID}}</td>
+        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{cID}}'">{{{timestamp}}}</td>
+        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{cID}}'">{{citizenName}}</td>
+        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{cID}}'">{{citizenClassLevel}}</td>
+        <td onclick="window.location = 'citizen.php?action=citizeninfo&cID={{cID}}'">{{{prefix}}} {{username}}</td>
     </tr>
         `;
 var template = Handlebars.compile(listElemTmplt);
