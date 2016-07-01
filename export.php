@@ -99,6 +99,16 @@ if($action == "exportClasslist") {
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
         exit;
     }
+} elseif($action == "printPassportColor") {
+    if ($user->isActionAllowed(PERM_ADMIN_EXPORT)) {
+        $link = \Entrance\Citizen::printPassportColor($group);
+        \Entrance\Util::forwardTo(str_replace("/var/www/html/", "/", $link));
+        exit; //To not show the list
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Export", $user);
+        $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
+    }
 }
 
 if($user->isActionAllowed(PERM_ADMIN_EXPORT)) {

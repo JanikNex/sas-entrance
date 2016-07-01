@@ -1181,12 +1181,12 @@ class Citizen {
      */
     public static function printPassport($data, $group = 0, $mode = 'normal'){
         $size = sizeof($data);
-        $pages = ceil($size/10);
+        $pages = ceil($size/12);
         $dwoo = new \Dwoo\Core();
         $tpl = new \Dwoo\Template\File('tpl/passport.tpl');
-        if($size> 10){
+        if($size> 12){
             $html = "";
-            $pgsdata = array_chunk($data, 10);
+            $pgsdata = array_chunk($data, 12);
             foreach($pgsdata as $page) {
                 $pgdata = [
                     "size" => sizeof($page),
@@ -1206,6 +1206,144 @@ class Citizen {
         $link = "/var/www/html/entrance/pdf/passports-".$group."-".date("Y-m-d_H-i-s").".pdf";
         Util::writePDF($html, $link);
         return $link;
+    }
+
+    /**
+     * Prints passport(s) from given citizenpassportdata | passport mode can be specified in dataarray
+     * @param array[] $data [["work", []],["normal", []]]
+     * @param int $group
+     * @return string URL of saved PDF
+     */
+    public static function printPassportModechanger($data, $group = 0){
+        $html = "";
+        if ($data[0][1] != []) {
+            $size = sizeof($data[0][1]);
+            $pages = ceil($size / 12);
+            $dwoo = new \Dwoo\Core();
+            $tpl = new \Dwoo\Template\File('tpl/passport.tpl');
+            if ($size > 12) {
+
+                $pgsdata = array_chunk($data[0][1], 12);
+                foreach ($pgsdata as $page) {
+                    $pgdata = [
+                        "size" => sizeof($page),
+                        "data" => $page,
+                        "mode" => $data[0][0]
+                    ];
+                    $html .= $dwoo->get($tpl, $pgdata);
+                }
+            } else {
+                $pgdata = [
+                    "size" => $size,
+                    "data" => $data[0][1],
+                    "mode" => $data[0][0]
+                ];
+                $html .= $dwoo->get($tpl, $pgdata);
+            }
+        }
+        if ($data[1][1] != []) {
+            $size = sizeof($data[1][1]);
+            $pages = ceil($size / 12);
+            if ($size > 12) {
+
+                $pgsdata = array_chunk($data[1][1], 12);
+                foreach ($pgsdata as $page) {
+                    $pgdata = [
+                        "size" => sizeof($page),
+                        "data" => $page,
+                        "mode" => $data[1][0]
+                    ];
+                    $html .= $dwoo->get($tpl, $pgdata);
+                }
+            } else {
+                $pgdata = [
+                    "size" => $size,
+                    "data" => $data[1][1],
+                    "mode" => $data[1][0]
+                ];
+                $html .= $dwoo->get($tpl, $pgdata);
+            }
+        }
+        $link = "/var/www/html/entrance/pdf/passports-".$group."-".date("Y-m-d_H-i-s").".pdf";
+        Util::writePDF($html, $link);
+        return $link;
+    }
+
+
+    public static function printPassportColor($color){
+        if ($color == "red"){
+            $citizens = [];
+            $data = [];
+            $citizens = array_merge($citizens, self::getAllSpecials("monarch"));
+            $citizens = array_merge($citizens, self::getAllSpecials("constitutional"));
+            $citizens = array_merge($citizens, self::getAllSpecials("government"));
+            $citizens = array_unique($citizens);
+            foreach ($citizens as $citizen){
+                array_push($data, self::fromCID($citizen)->getCitizenPassportData("normal"));
+            }
+            return self::printPassport($data, $color, "normal");
+        }elseif ($color == "yellow"){
+            //
+        }elseif ($color == "blue"){
+            $citizens = self::getAllSpecials("police");
+            $data = [["work", []],["normal", []]];
+            foreach ($citizens as $citizen){
+                $currentCitizen = self::fromCID($citizen);
+                if ($currentCitizen->isChief())
+                    array_push($data[1][1], $currentCitizen->getCitizenPassportData("work"));
+                elseif (!$currentCitizen->isChief()) {
+                    array_push($data[0][1], $currentCitizen->getCitizenPassportData("work"));
+                }
+            }
+            return self::printPassportModechanger($data, $color);
+        }elseif ($color == "lightblue"){
+            $citizens = self::getAllSpecials("borderguard");
+            $data = [["work", []],["normal", []]];
+            foreach ($citizens as $citizen){
+                $currentCitizen = self::fromCID($citizen);
+                if ($currentCitizen->isChief())
+                    array_push($data[1][1], $currentCitizen->getCitizenPassportData("work"));
+                elseif (!$currentCitizen->isChief()) {
+                    array_push($data[0][1], $currentCitizen->getCitizenPassportData("work"));
+                }
+            }
+            return self::printPassportModechanger($data, $color);
+        }elseif ($color == "green"){
+            $citizens = self::getAllSpecials("centralbank");
+            $data = [["work", []],["normal", []]];
+            foreach ($citizens as $citizen){
+                $currentCitizen = self::fromCID($citizen);
+                if ($currentCitizen->isChief())
+                    array_push($data[1][1], $currentCitizen->getCitizenPassportData("work"));
+                elseif (!$currentCitizen->isChief()) {
+                    array_push($data[0][1], $currentCitizen->getCitizenPassportData("work"));
+                }
+            }
+            return self::printPassportModechanger($data, $color);
+        }elseif ($color == "lightgreen"){
+            $citizens = self::getAllSpecials("warehouse");
+            $data = [["work", []],["normal", []]];
+            foreach ($citizens as $citizen){
+                $currentCitizen = self::fromCID($citizen);
+                if ($currentCitizen->isChief())
+                    array_push($data[1][1], $currentCitizen->getCitizenPassportData("work"));
+                elseif (!$currentCitizen->isChief()) {
+                    array_push($data[0][1], $currentCitizen->getCitizenPassportData("work"));
+                }
+            }
+            return self::printPassportModechanger($data, $color);
+        }elseif ($color == "orange"){
+            $citizens = self::getAllSpecials("parliament");
+            $data = [];
+            foreach ($citizens as $citizen){
+                array_push($data, self::fromCID($citizen)->getCitizenPassportData("normal"));
+            }
+            return self::printPassport($data, $color, "normal");
+        }elseif ($color == "gray"){
+            //
+        }elseif ($color == "pink"){
+            //
+        }
     }
 
     /**
@@ -1629,6 +1767,7 @@ class Citizen {
         return array_unique($citizens);
     }
 
+
     public static function getAllSpecials($group = 'all'){
         $citizens = [];
         if($group == 'all' or $group == 'orga') {
@@ -1706,10 +1845,22 @@ class Citizen {
         return Employer::forCID($this->cID);
     }
 
+    /**
+     * Return if this citizen in chief in one of his employers
+     * @return bool
+     */
+    public function isChief(){
+        foreach ($this->getEmployer() as $employer){
+            if (in_array($this, $employer->getChief())){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function getEmployerData(){
-        $employers = $this->getEmployer();
         $array = [];
-        foreach ($employers as $employer){
+        foreach ($this->getEmployer() as $employer){
             array_push($array, $employer->asArrayOptimized());
         }
         return $array;
