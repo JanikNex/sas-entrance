@@ -22,7 +22,7 @@ const CSORTING = [
 
 const CFILTERING = [
     ""          => " AND cID != 0",
-    "Alle"      => " AND cID != 0",
+    "Alle"      => " AND cID != 0 AND classLevel != 13",
     "Stufe5"    => " AND cID != 0 AND classLevel = 5 ",
     "Stufe6"    => " AND cID != 0 AND classLevel = 6 ",
     "Stufe7"    => " AND cID != 0 AND classLevel = 7 ",
@@ -40,7 +40,7 @@ const CFILTERING = [
     "Stufe14"   => " AND cID != 0 AND classLevel = 14 ",
     "Stufe15"   => " AND cID != 0 AND classLevel = 15 ",
     "Stufe16"   => " AND cID != 0 AND classLevel = 16 ",
-    "Schüler"   => " AND cID != 0 AND classLevel < 14 ",
+    "Schüler"   => " AND cID != 0 AND classLevel < 13 ",
     "ohneVisumK"=> " AND cID != 0 AND classLevel < 15 ",
     "Visum"     => " AND cID != 0 AND classLevel = 15 ",
     "Lehrer"    => " AND cID != 0 AND classLevel = 14 ",
