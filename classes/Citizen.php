@@ -1283,7 +1283,12 @@ class Citizen {
             }
             return self::printPassport($data, $color, "normal");
         }elseif ($color == "yellow"){
-            //
+            $citizens = self::getAllSpecials("justice");
+            $data = [];
+            foreach ($citizens as $citizen){
+                array_push($data, self::fromCID($citizen)->getCitizenPassportData("normal"));
+            }
+            return self::printPassport($data, $color, "normal");
         }elseif ($color == "blue"){
             $citizens = self::getAllSpecials("police");
             $data = [["work", []],["normal", []]];
@@ -1342,7 +1347,17 @@ class Citizen {
         }elseif ($color == "gray"){
             //
         }elseif ($color == "pink"){
-            //
+            $citizens = self::getAllSpecials("factoryinspectorare");
+            $data = [["work", []],["normal", []]];
+            foreach ($citizens as $citizen){
+                $currentCitizen = self::fromCID($citizen);
+                if ($currentCitizen->isChief())
+                    array_push($data[1][1], $currentCitizen->getCitizenPassportData("work"));
+                elseif (!$currentCitizen->isChief()) {
+                    array_push($data[0][1], $currentCitizen->getCitizenPassportData("work"));
+                }
+            }
+            return self::printPassportModechanger($data, $color);
         }
     }
 
@@ -1410,46 +1425,69 @@ class Citizen {
 
         if ($this->isMonarch()) {
             array_push($array, "Monarch");
-            if ($permissions == "") {
-                $permissions = "xxx";
-            }
         }
         if ($this->isParlament()) {
             array_push($array, "Parlament");
-            if ($permissions == "") {
-                $permissions = "xxx";
+            if ($permissions == "" and $this->isChief()) {
+                $permissions = "Parlament";
+            }else{
+                $permissions = "";
             }
         }
         if ($this->isGovernment()) {
-            array_push($array, "Regierung");
+            array_push($array, "Minister");
             if ($permissions == "") {
-                $permissions = "xxx";
+                $permissions = "Alles";
             }
         }
         if ($this->isAdministrator()) {
             array_push($array, "Administrator");
             if ($permissions == "") {
-                $permissions = "Entrance";
+                $permissions = "IT";
             }
         }
         if ($this->isJustice()) {
-            array_push($array, "Justiz");
-            if ($permissions == "") {
-                $permissions = "xxx";
+            foreach ($this->getEmployer() as $employer){
+                if ($employer->getEmID() == 211){
+                    array_push($array, "Staatsanwalt");
+                    if ($this->isChief()) {
+                        $permissions = "Staatsanwaltschaft";
+                    }else{
+                        $permissions = "";
+                    }
+                } elseif ($employer->getEmID() == 212){
+                    array_push($array, "Schriftführer d. Gerichte");
+                    if ($this->isChief()) {
+                        $permissions = "Schriftführer Gerichte";
+                    }else{
+                        $permissions = "";
+                    }
+                } elseif ($employer->getEmID() == 213){
+                    array_push($array, "Justizsekretär");
+                    if ($this->isChief()) {
+                        $permissions = "Justizsekretäre";
+                    }else{
+                        $permissions = "";
+                    }
+                } elseif ($employer->getEmID() == 210){
+                    array_push($array, "Richter");
+                }
             }
         }
         if ($this->isConstitutional()) {
             array_push($array, "Verfassungsrat");
             if ($permissions == "") {
-                $permissions = "xxx";
+                $permissions = "";
             }
         }
         if ($mode == "work") {  //Dienstausweise bzw. Ränge, welche nur auf Dienstausweisen sichtbar sein sollen
             if ($this->isPolice()) {
                 array_push($array, "Polizei");
-                if ($permissions == "") {
-                    $permissions = "xxx";
-                }
+                if ($permissions == "" and $this->isChief()) {
+                    $permissions = "Polizei";
+                }else{
+                    $permissions = "";
+            }
             }
             if ($this->isOrga()) {
                 array_push($array, "Orga-Team");
@@ -1457,19 +1495,35 @@ class Citizen {
             }
             if ($this->isCentralBank()) {
                 array_push($array, "Zentralbank");
-                $permissions = "xxx";
+                if ($permissions == "" and $this->isChief()) {
+                    $permissions = "Zentralbank";
+                }else{
+                    $permissions = "";
+            }
             }
             if ($this->isBorderGuard()) {
                 array_push($array, "Grenzschutz");
-                $permissions = "xxx";
+                if ($this->isChief()) {
+                    $permissions = $permissions.", Grenzschutz";
+                }else{
+                    $permissions = "";
+            }
             }
             if ($this->isWarehouse()) {
                 array_push($array, "Warenlager");
-                $permissions = "xxx";
+                if ($permissions == "" and $this->isChief()) {
+                    $permissions = "Warenlager";
+                }else{
+                    $permissions = "";
+            }
             }
             if ($this->isFactoryInspectorare()) {
                 array_push($array, "Gewerbeaufsicht");
-                $permissions = "xxx";
+                if ($permissions == "" and $this->isChief()) {
+                    $permissions = "Gewerbeaufsicht";
+                }else{
+                    $permissions = "";
+            }
             }
         }
         if ($this->isCourrier()){
@@ -1834,6 +1888,10 @@ class Citizen {
         if ($this->isMonarch()) return false;
         if ($this->isGovernment()) return false;
         if ($this->isJustice()) return false;
+        if ($this->isConstitutional()) return false;
+        if ($this->isCentralBank() or $this->isPolice() or $this->isBorderGuard() or $this->isWarehouse() or $this->isFactoryInspectorare()){
+            if ($this->isChief()) return false;
+        }
         return true;
     }
 

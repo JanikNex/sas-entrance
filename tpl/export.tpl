@@ -13,9 +13,23 @@
                     <div class="card-action">
                         <a onclick="update('exportClasslist')" href="#">Klassenliste</a>
                         <a onclick="update('exportPassports')" href="#">Alle Ausweise</a>
-                        <a href="export.php?action=printPassportWorkers">Dienstausweise</a>
                         <a onclick="update('exportClasslist10h')" href="#">10Uhr-Liste</a>
                     </div>
+                </div>
+                <div class="fixed-action-btn horizontal click-to-toggle" style="bottom: 45px; right: 24px;">
+                    <a class="btn-floating btn blue-grey">
+                        <i class="material-icons">picture_in_picture</i>
+                    </a>
+                    <ul>
+                        <li><a class="btn-floating red tooltipped" data-position="top" data-delay="50" data-tooltip="König, Minister, VRat" href="export.php?action=printPassportColor&group=red"><i class="material-icons">picture_in_picture</i></a></li>
+                        <li><a class="btn-floating orange tooltipped" data-position="top" data-delay="50" data-tooltip="Parlament" href="export.php?action=printPassportColor&group=orange"><i class="material-icons">picture_in_picture</i></a></li>
+                        <li><a class="btn-floating yellow tooltipped" data-position="top" data-delay="50" data-tooltip="Justiz" href="export.php?action=printPassportColor&group=yellow"><i class="material-icons">picture_in_picture</i></a></li>
+                        <li><a class="btn-floating green darken-4 tooltipped" data-position="top" data-delay="50" data-tooltip="Zentralbank" href="export.php?action=printPassportColor&group=green"><i class="material-icons">picture_in_picture</i></a></li>
+                        <li><a class="btn-floating light-green lighten-1 tooltipped" data-position="top" data-delay="50" data-tooltip="Warenlager" href="export.php?action=printPassportColor&group=lightgreen"><i class="material-icons">picture_in_picture</i></a></li>
+                        <li><a class="btn-floating cyan accent-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Polizei" href="export.php?action=printPassportColor&group=blue"><i class="material-icons">picture_in_picture</i></a></li>
+                        <li><a class="btn-floating cyan lighten-4 tooltipped" data-position="top" data-delay="50" data-tooltip="Grenzschutz" href="export.php?action=printPassportColor&group=lightblue"><i class="material-icons">picture_in_picture</i></a></li>
+                        <li><a class="btn-floating pink tooltipped" data-position="top" data-delay="50" data-tooltip="Gewerbeaufsicht" href="export.php?action=printPassportColor&group=pink"><i class="material-icons">picture_in_picture</i></a></li>
+                    </ul>
                 </div>
             </div>
             <div class="col s12 m12" id="waiting">
