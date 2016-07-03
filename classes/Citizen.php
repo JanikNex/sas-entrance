@@ -1362,6 +1362,21 @@ class Citizen {
     }
 
     /**
+     * Print passports for all guests of honor (classlevel 17)
+     * @return string link
+     */
+    public static function printHonorGuestPassports(){
+        $pdo = new PDO_MYSQL();
+        $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE classLevel = 17");
+        $citizens = $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
+        $data = [];
+        foreach ($citizens as $citizen){
+            array_push($data, $citizen->getCitizenPassportData("normal"));
+        }
+        return self::printPassport($data, "honor", "normal");
+    }
+
+    /**
      * Returns an array with all important student informations and his times per day
      * @return array
      */
