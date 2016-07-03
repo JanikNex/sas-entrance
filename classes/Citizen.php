@@ -1325,7 +1325,7 @@ class Citizen {
                 }
             }
             return self::printPassportModechanger($data, $color);
-        }elseif ($color == "lightgreen"){
+        }elseif ($color == "cyan"){
             $citizens = self::getAllSpecials("warehouse");
             $data = [["work", []],["normal", []]];
             foreach ($citizens as $citizen){
@@ -1471,6 +1471,14 @@ class Citizen {
                     }
                 } elseif ($employer->getEmID() == 210){
                     array_push($array, "Richter");
+                }
+            }
+        }
+        foreach ($this->getEmployer() as $employer) {
+            if ($employer->getEmID() == 206) {
+                if ($this->isChief()) {
+                    $permissions = "Staatskanzlei, R020, Aula";
+                    array_push($array, "Staatskanzlei");
                 }
             }
         }
