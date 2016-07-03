@@ -16,7 +16,7 @@ $(document).ready(function() {
 function update(hash) {
     console.log(hash);
     if(hash == "exportClasslist") exportClass();
-    else if(hash == "exportClasslist10h") exportClass();
+    else if(hash == "exportClasslist10h") exportClass10h();
     else if(hash == "exportPassports") exportPassport();
     else if(hash == "exportOnePassport") exportOnePassport();
     else if(hash == "exportPassportGroup") exportPassportGroup();

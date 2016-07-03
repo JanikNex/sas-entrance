@@ -10,7 +10,9 @@
                                 {if $page.citizen.classlevel<=13}{$page.citizen.classlevel}
                                 {elseif $page.citizen.classlevel==14}Lehrer
                                 {elseif $page.citizen.classlevel==15}Visum
-                                {else}Kurier{/if}<br/>
+                                {elseif $page.citizen.classlevel==16}Kurier
+                                {elseif $page.citizen.classlevel==17}Ehrengast
+                                {else}-{/if}<br/>
                                 <b>Angestellt bei:</b><br/>
                                 {loop $page.employer}
                                     <a class="lbtn btn-flat left-align white black-text col s12" href="employer.php?action=info&emID={$emID}">{$emID}: {$name}</a>

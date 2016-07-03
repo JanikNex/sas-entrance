@@ -21,8 +21,8 @@ const CSORTING = [
 ];
 
 const CFILTERING = [
-    ""          => " AND cID != 0",
-    "Alle"      => " AND cID != 0 AND classLevel != 13",
+    ""          => " AND cID != 0 AND classLevel != 17",
+    "Alle"      => " AND cID != 0 AND classLevel != 13 AND classLevel != 17",
     "Stufe5"    => " AND cID != 0 AND classLevel = 5 ",
     "Stufe6"    => " AND cID != 0 AND classLevel = 6 ",
     "Stufe7"    => " AND cID != 0 AND classLevel = 7 ",
@@ -1536,6 +1536,9 @@ class Citizen {
         }
         if ($this->isCourrier()){
             array_push($array, "Kurier");
+        }
+        if ($this->getClasslevel() == 17){
+            array_push($array, "Ehrengast");
         }
         $roll = $array[0];
         foreach ($array as $part) {
