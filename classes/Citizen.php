@@ -1181,12 +1181,12 @@ class Citizen {
      */
     public static function printPassport($data, $group = 0, $mode = 'normal'){
         $size = sizeof($data);
-        $pages = ceil($size/12);
+        $pages = ceil($size/14);
         $dwoo = new \Dwoo\Core();
         $tpl = new \Dwoo\Template\File('tpl/passport.tpl');
-        if($size> 12){
+        if($size> 14){
             $html = "";
-            $pgsdata = array_chunk($data, 12);
+            $pgsdata = array_chunk($data, 14);
             foreach($pgsdata as $page) {
                 $pgdata = [
                     "size" => sizeof($page),
@@ -1218,12 +1218,12 @@ class Citizen {
         $html = "";
         if ($data[0][1] != []) {
             $size = sizeof($data[0][1]);
-            $pages = ceil($size / 12);
+            $pages = ceil($size / 14);
             $dwoo = new \Dwoo\Core();
             $tpl = new \Dwoo\Template\File('tpl/passport.tpl');
-            if ($size > 12) {
+            if ($size > 14) {
 
-                $pgsdata = array_chunk($data[0][1], 12);
+                $pgsdata = array_chunk($data[0][1], 14);
                 foreach ($pgsdata as $page) {
                     $pgdata = [
                         "size" => sizeof($page),
@@ -1243,10 +1243,10 @@ class Citizen {
         }
         if ($data[1][1] != []) {
             $size = sizeof($data[1][1]);
-            $pages = ceil($size / 12);
-            if ($size > 12) {
+            $pages = ceil($size / 14);
+            if ($size > 14) {
 
-                $pgsdata = array_chunk($data[1][1], 12);
+                $pgsdata = array_chunk($data[1][1], 14);
                 foreach ($pgsdata as $page) {
                     $pgdata = [
                         "size" => sizeof($page),

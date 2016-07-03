@@ -307,5 +307,57 @@
             </td>
         {/if}
     </tr>
+    <tr>
+        {if $size >= 13}
+            <td style="width: 45.00mm; height: 20mm; padding-left: 5mm; padding-right: 2mm; max-height: 20mm; max-width: 45.00mm;">
+                <table>
+                    <tr style="height: 5mm;"><td colspan="2" style="font-size: 4mm">Staat Schlopolis - Ausweis</td></tr>
+                    <tr style="height: 16mm;">
+                        <td style="width: 36.00mm;">
+                            {if $data[12].roll[0] == ""}<br/>{/if}
+                            {if $data[12].roll[1] == ""}<br/>{/if}
+                            <span style="font-size: 4mm">{$data[12].name}</span><br/>
+                            <span style="font-size: 4mm">{$data[12].firstname}</span><br/>
+                            {if $data[12].roll[0] != ""}<span style="font-size: 2mm">{$data[12].roll[0]}</span><br/>{/if}
+                            {if $data[12].roll[1] != ""}<span style="font-size: 2mm">Weisungsbefugnis: {$data[12].roll[1]}</span>{/if}<br/>
+                            {if $mode == "work"}<span style="font-size: 4mm; font-weight: bold">Dienstausweis</span>{/if}
+                        </td>
+                        <td>
+                            <img src="http://192.168.2.47/entrance/Schlopolis.png" style="position: fixed; top: 0; right: 0; height: 23mm; width: 23mm" /><br/>
+                            {if $mode == "normal" and $data[12].classlevel != 14}<barcode type="CODABAR" value="{$data[12].barcode}" label="label" style="width:28mm; height:9mm; color: #000000; font-size: 2mm"></barcode>
+                            {elseif $mode == "normal" and $data[12].classlevel == 14}<barcode type="CODABAR" value="0000000000000" label="label" style="width:28mm; height:9mm; color: #FFFFFF; font-size: 2mm"></barcode>
+                            {else} <barcode type="CODABAR" value="0000000000000" label="label" style="width:28mm; height:9mm; color: #FFFFFF; font-size: 2mm"></barcode>
+                            {/if}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        {/if}
+        {if $size >= 14}
+            <td style="width: 45.00mm; height: 20mm; padding-left: 5mm; padding-right: 2mm; max-height: 20mm; max-width: 45.00mm;">
+                <table>
+                    <tr style="height: 5mm;"><td colspan="2" style="font-size: 4mm">Staat Schlopolis - Ausweis</td></tr>
+                    <tr style="height: 16mm;">
+                        <td style="width: 36.00mm;">
+                            {if $data[13].roll[0] == ""}<br/>{/if}
+                            {if $data[13].roll[1] == ""}<br/>{/if}
+                            <span style="font-size: 4mm">{$data[13].name}</span><br/>
+                            <span style="font-size: 4mm">{$data[13].firstname}</span><br/>
+                            {if $data[13].roll[0] != ""}<span style="font-size: 2mm">{$data[13].roll[0]}</span><br/>{/if}
+                            {if $data[13].roll[1] != ""}<span style="font-size: 2mm">Weisungsbefugnis: {$data[13].roll[1]}</span>{/if}<br/>
+                            {if $mode == "work"}<span style="font-size: 4mm; font-weight: bold">Dienstausweis</span>{/if}
+                        </td>
+                        <td>
+                            <img src="http://192.168.2.47/entrance/Schlopolis.png" style="position: fixed; top: 0; right: 0; height: 23mm; width: 23mm" /><br/>
+                            {if $mode == "normal" and $data[13].classlevel != 14}<barcode type="CODABAR" value="{$data[13].barcode}" label="label" style="width:28mm; height:9mm; color: #000000; font-size: 2mm"></barcode>
+                            {elseif $mode == "normal" and $data[13].classlevel == 14}<barcode type="CODABAR" value="0000000000000" label="label" style="width:28mm; height:9mm; color: #FFFFFF; font-size: 2mm"></barcode>
+                            {else} <barcode type="CODABAR" value="0000000000000" label="label" style="width:28mm; height:9mm; color: #FFFFFF; font-size: 2mm"></barcode>
+                            {/if}
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        {/if}
+    </tr>
 </table>
 </page>
