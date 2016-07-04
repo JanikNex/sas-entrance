@@ -1230,7 +1230,8 @@ class Citizen {
                     $pgdata = [
                         "size" => sizeof($page),
                         "data" => $page,
-                        "mode" => $data[0][0]
+                        "mode" => $data[0][0],
+                        "IP" => SERVER_IP
                     ];
                     $html .= $dwoo->get($tpl, $pgdata);
                 }
@@ -1238,7 +1239,8 @@ class Citizen {
                 $pgdata = [
                     "size" => $size,
                     "data" => $data[0][1],
-                    "mode" => $data[0][0]
+                    "mode" => $data[0][0],
+                    "IP" => SERVER_IP
                 ];
                 $html .= $dwoo->get($tpl, $pgdata);
             }
@@ -1253,7 +1255,8 @@ class Citizen {
                     $pgdata = [
                         "size" => sizeof($page),
                         "data" => $page,
-                        "mode" => $data[1][0]
+                        "mode" => $data[1][0],
+                        "IP" => SERVER_IP
                     ];
                     $html .= $dwoo->get($tpl, $pgdata);
                 }
@@ -1261,7 +1264,8 @@ class Citizen {
                 $pgdata = [
                     "size" => $size,
                     "data" => $data[1][1],
-                    "mode" => $data[1][0]
+                    "mode" => $data[1][0],
+                    "IP" => SERVER_IP
                 ];
                 $html .= $dwoo->get($tpl, $pgdata);
             }
@@ -1368,6 +1372,13 @@ class Citizen {
                 }
             }
             return self::printPassportModechanger($data, $color);
+        }elseif ($color == "courrier"){
+            $citizens = self::getAllCitizen("", "Kurier");
+            $data = [];
+            foreach ($citizens as $citizen){
+                array_push($data, $citizen->getCitizenPassportData($mode="normal"));
+            }
+            return self::printPassport($data, $color, "normal");
         }
     }
 

@@ -15,6 +15,7 @@
                         <a onclick="update('exportPassports')" href="#">Alle Ausweise</a>
                         <a onclick="update('exportClasslist10h')" href="#">10Uhr-Liste</a>
                         <a href="export.php?action=printPassportHonorGuests">Ehrengast-Ausweise</a>
+                        <a href="export.php?action=printPassportColor&group=courrier">Kurier-Ausweise</a>
                     </div>
                 </div>
                 <div class="fixed-action-btn horizontal click-to-toggle" style="bottom: 45px; right: 24px;">
