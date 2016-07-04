@@ -1344,8 +1344,16 @@ class Citizen {
                 array_push($data, self::fromCID($citizen)->getCitizenPassportData("normal"));
             }
             return self::printPassport($data, $color, "normal");
-        }elseif ($color == "gray"){
-            //
+        }elseif ($color == "press"){
+            $citizens = Employer::fromEMID(70)->getStaff();
+            $citizens = array_merge($citizens, Employer::fromEMID(91)->getStaff());
+            $citizens = array_merge($citizens, Employer::fromEMID(116)->getStaff());
+            $citizens = array_merge($citizens, Employer::fromEMID(221)->getStaff());
+            $data = [];
+            foreach ($citizens as $citizen){
+                array_push($data, $citizen->getCitizenPassportData($mode="work"));
+            }
+            return self::printPassport($data, $color, "work");
         }elseif ($color == "pink"){
             $citizens = self::getAllSpecials("factoryinspectorare");
             $data = [["work", []],["normal", []]];
@@ -1510,7 +1518,7 @@ class Citizen {
                     $permissions = "Polizei";
                 }else{
                     $permissions = "";
-            }
+                }
             }
             if ($this->isOrga()) {
                 array_push($array, "Orga-Team");
@@ -1522,7 +1530,7 @@ class Citizen {
                     $permissions = "Zentralbank";
                 }else{
                     $permissions = "";
-            }
+                }
             }
             if ($this->isBorderGuard()) {
                 array_push($array, "Grenzschutz");
@@ -1530,7 +1538,7 @@ class Citizen {
                     $permissions = $permissions.", Grenzschutz";
                 }else{
                     $permissions = "";
-            }
+                }
             }
             if ($this->isWarehouse()) {
                 array_push($array, "Warenlager");
@@ -1538,7 +1546,7 @@ class Citizen {
                     $permissions = "Warenlager";
                 }else{
                     $permissions = "";
-            }
+                }
             }
             if ($this->isFactoryInspectorare()) {
                 array_push($array, "Gewerbeaufsicht");
@@ -1546,8 +1554,27 @@ class Citizen {
                     $permissions = "Gewerbeaufsicht";
                 }else{
                     $permissions = "";
+                }
             }
+            foreach ($this->getEmployer() as $employer) {
+                if ($employer->getEmID() == 70) {
+                    array_push($array, "Presse");
+                    $permissions = "";
+                }
+                elseif ($employer->getEmID() == 91) {
+                    array_push($array, "Presse");
+                    $permissions = "";
+                }
+                elseif ($employer->getEmID() == 116) {
+                    array_push($array, "Presse");
+                    $permissions = "";
+                }
+                elseif ($employer->getEmID() == 221) {
+                    array_push($array, "Presse");
+                    $permissions = "";
+                }
             }
+
         }
         if ($this->isCourrier()){
             array_push($array, "Kurier");

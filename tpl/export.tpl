@@ -30,6 +30,7 @@
                         <li><a class="btn-floating cyan accent-3 tooltipped" data-position="top" data-delay="50" data-tooltip="Polizei" href="export.php?action=printPassportColor&group=blue"><i class="material-icons">picture_in_picture</i></a></li>
                         <li><a class="btn-floating cyan lighten-4 tooltipped" data-position="top" data-delay="50" data-tooltip="Grenzschutz" href="export.php?action=printPassportColor&group=lightblue"><i class="material-icons">picture_in_picture</i></a></li>
                         <li><a class="btn-floating pink tooltipped" data-position="top" data-delay="50" data-tooltip="Gewerbeaufsicht" href="export.php?action=printPassportColor&group=pink"><i class="material-icons">picture_in_picture</i></a></li>
+                        <li><a class="btn-floating gray tooltipped" data-position="top" data-delay="50" data-tooltip="Presse" href="export.php?action=printPassportColor&group=press"><i class="material-icons">picture_in_picture</i></a></li>
                     </ul>
                 </div>
             </div>
