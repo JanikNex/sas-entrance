@@ -1191,7 +1191,8 @@ class Citizen {
                 $pgdata = [
                     "size" => sizeof($page),
                     "data" => $page,
-                    "mode" => $mode
+                    "mode" => $mode,
+                    "IP" => SERVER_IP
                 ];
                 $html .= $dwoo->get($tpl, $pgdata);
             }
@@ -1199,7 +1200,8 @@ class Citizen {
             $pgdata = [
                 "size" => $size,
                 "data" => $data,
-                "mode" => $mode
+                "mode" => $mode,
+                "IP" => SERVER_IP
             ];
             $html = $dwoo->get($tpl, $pgdata);
         }

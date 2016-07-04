@@ -47,4 +47,4 @@ define("PERM_TRACING_LIST", "citizen.tracing.list");
 define("PERM_EMPLOYER_LIST", "employer.list");
 define("PERM_EMPLOYER_INFO", "employer.info");
 
-define("SERVER_IP", "http://192.168.2.47");
+define("SERVER_IP", "http://mc.yannickfelix.tk");

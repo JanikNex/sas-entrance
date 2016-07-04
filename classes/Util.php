@@ -94,8 +94,7 @@ namespace Entrance;
                  "perm" => $user->getPermAsArray(),
                  "editor" => $editor ? 1:0,
                  "undoUrl" => $undoUrl,
-                 "backable" => $backable ? 1:0,
-                 "IP" => SERVER_IP
+                 "backable" => $backable ? 1:0
              ],
              "perm" => $user->getPermAsArray()
          ];
