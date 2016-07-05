@@ -20,12 +20,13 @@ require_once 'classes/TracingEntry.php';
 require_once 'classes/Employer.php';
 require_once 'classes/LogEntry.php';
 
-$user = \Entrance\Util::checkSession();
+$action = $_GET['action'];
+
+if($action != "counter") $user = \Entrance\Util::checkSession();
 $pdo = new \Entrance\PDO_MYSQL();
 Dwoo\Autoloader::register();
 $dwoo = new Dwoo\Core();
 
-$action = $_GET['action'];
 $cID    = $_GET['cID'];
 $roll   = $_GET['roll'];
 
@@ -176,27 +177,22 @@ if($action == "new") {
         exit;
     }
 } elseif($action == "counter") {
-    if($user->isActionAllowed(PERM_CITIZEN_PRESENT_NUMBER)) {
-        header('Content-Type: text/html; charset=utf-8'); // sorgt für die korrekte Kodierung
-        header('Cache-Control: must-revalidate, pre-check=0, no-store, no-cache, max-age=0, post-check=0'); // ist mal wieder wichtig wegen IE
-        switch($_GET['type']) {
-            case "all":
-                echo \Entrance\Citizen::getCurrentCitizenCount("","","");
-                break;
-            case "visit":
-                echo \Entrance\Citizen::getCurrentVisitorCount();
-                break;
-            case "student":
-                echo \Entrance\Citizen::getCurrentStudentCount();
-                break;
-            default:
-                echo \Entrance\Citizen::getCurrentCitizenCount("","","");
-        }
-        exit;
-    } else {
-        echo "NO!";
-        exit();
+    header('Content-Type: text/html; charset=utf-8'); // sorgt für die korrekte Kodierung
+    header('Cache-Control: must-revalidate, pre-check=0, no-store, no-cache, max-age=0, post-check=0'); // ist mal wieder wichtig wegen IE
+    switch($_GET['type']) {
+        case "all":
+            echo \Entrance\Citizen::getCurrentCitizenCount("","","");
+            break;
+        case "visit":
+            echo \Entrance\Citizen::getCurrentVisitorCount();
+            break;
+        case "student":
+            echo \Entrance\Citizen::getCurrentStudentCount();
+            break;
+        default:
+            echo \Entrance\Citizen::getCurrentCitizenCount("","","");
     }
+    exit;
 } elseif($action == "kickall") {
     if($user->isActionAllowed(PERM_ADMIN_KICKALL)) {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Alle rausschmeißen", $user);
