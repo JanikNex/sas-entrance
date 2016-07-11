@@ -41,8 +41,8 @@ function onSend() {
                     audioWanted.play();
                     checkIn(data["cID"]);
                 } else {
-                    Materialize.toast('Citizendata ok.', 2000, 'green');
-                    Materialize.toast('Trying checkIn', 2000, 'green');
+                    Materialize.toast('Citizendata ok.', 2000, 'orange');
+                    Materialize.toast('Trying checkIn', 2000, 'orange');
                     checkIn(data["cID"]);
                 }
             } else {
@@ -61,8 +61,8 @@ function onSend() {
                     $("#name").html(data["fname"]+" "+data["lname"]);
                     $("#time").html(data["timeToday"])
                 } else {
-                    Materialize.toast('Citizendata ok.', 2000, 'green');
-                    Materialize.toast('Trying checkIn', 2000, 'green');
+                    Materialize.toast('Citizendata ok.', 2000, 'orange');
+                    Materialize.toast('Trying checkIn', 2000, 'orange');
                     checkOut(data["cID"]);
                 }
             }
@@ -105,6 +105,7 @@ function prepare() {
     $("#name").html("...");
     $("#iname").html("...");
     $("#classlvl").html("...");
+    $("#cID").html("...");
     $("ul#logs").html('<li class="collection-item avatar"><i class="material-icons circle grey">code</i> <span class="title">Warte auf Scan....</span> <p> </p> </li>');
 
     $.getJSON("check.php?action=stateInfo", null, function(data) {
@@ -120,6 +121,7 @@ function updateCitizenData(data) {
     if(data["locked"]) $("#isLocked").show(); else $("#isLocked").hide();
     $("#iname").html(data["fname"]+" "+data["lname"]);
     $("#classlvl").html(data["classlvl"]);
+    $("#cID").html(data["cID"]);
 
     if(data["log"]) {
         $("ul#logs").html("");

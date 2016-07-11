@@ -71,6 +71,8 @@
                         <span id="iname"></span></p>
                     <p><b>Klassenstufe:</b>
                         <span id="classlvl"></span>
+                    <p><b>ID:</b>
+                        <span id="cID"></span>
                     </p>
                 </div>
             </div>

@@ -87,6 +87,7 @@
                                     <a class="collapsible-header">Personen<i class="mdi-navigation-arrow-drop-down"></i></a>
                                     <div class="collapsible-body">
                                         <ul>
+                                            {if $args.perm.citizen_view == 1}<li><a href="d_singleinfo.php">Einzelne Person</a></li>{/if}
                                             {if $args.perm.citizen_view == 1}<li><a href="citizen.php">Alle Personen</a></li>{/if}
                                             {if $args.perm.citizen_info_difference == 1}<li><a href="citizen.php?action=badcitizen">Böse Schüler</a></li>{/if}
                                             {if $args.perm.citizen_present_list == 1}<li><a href="citizen.php?action=listInState">zZ im Staat</a></li>{/if}

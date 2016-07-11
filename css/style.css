@@ -20,6 +20,14 @@ header, main, footer {
     cursor: pointer;
 }
 
+.header {
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 10px;
+}
+
+
 /*# sourceMappingURL=style.css.map */
 
 /* fallback */
