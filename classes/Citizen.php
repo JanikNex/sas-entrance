@@ -932,7 +932,7 @@ class Citizen {
             if ($student->getClasslevel() <= 10) {
                 if (!((substr($student->getBarcode(), 8, 2) == $currentClass[0]) && (substr($student->getBarcode(), 10, 1) == $currentClass[1]))) {
                     $currentClass = [substr($student->getBarcode(), 8, 2), substr($student->getBarcode(), 10, 1)];
-                    array_push($list, ["Klasse", $currentClass[0], $CLASS[$currentClass[1]]]);
+                    array_push($list, ["Klasse", $currentClass[0], $CLASS[$currentClass[1]-1]]);
                 }
             } else {
                 if (!((substr($student->getBarcode(), 8, 2) == $currentClass[0]) && (substr($student->getClassdetail(), 2) == $currentClass[1]))) {
@@ -962,7 +962,7 @@ class Citizen {
                 if ($student->getClasslevel() <= 10) {
                     if (!((substr($student->getBarcode(), 8, 2) == $currentClass[0]) && (substr($student->getBarcode(), 10, 1) == $currentClass[1]))) {
                         $currentClass = [substr($student->getBarcode(), 8, 2), substr($student->getBarcode(), 10, 1)];
-                        array_push($list, ["Klasse", $currentClass[0], $CLASS[$currentClass[1]]]);
+                        array_push($list, ["Klasse", $currentClass[0], $CLASS[$currentClass[1]-1]]);
                     }
                 } else {
                     if (!((substr($student->getBarcode(), 8, 2) == $currentClass[0]) && (substr($student->getClassdetail(), 2) == $currentClass[1]))) {

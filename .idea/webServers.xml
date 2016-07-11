@@ -10,8 +10,8 @@
           <option name="port" value="21" />
         </fileTransfer>
       </webServer>
-      <webServer id="a69ddb96-803f-4a2a-b6b6-05f2a9ddf7fd" name="meiner" url="http://192.168.2.47">
-        <fileTransfer host="192.168.2.47" port="22" privateKey="C:\Users\yanni\.ssh\id_rsa" rootFolder="/var/www/html" accessType="SFTP" passphrase="dfecdfcfdfd3dfcbdf98df9adf9bdf98" username="sadmin" keyPair="true">
+      <webServer id="a69ddb96-803f-4a2a-b6b6-05f2a9ddf7fd" name="meiner" url="http://192.168.2.19">
+        <fileTransfer host="192.168.2.19" port="22" privateKey="C:\Users\yanni\.ssh\id_rsa" rootFolder="/var/www/" accessType="SFTP" passphrase="dfecdfcfdfd3dfcbdf98df9adf9bdf98" username="pi" keyPair="true">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" />
           </advancedOptions>
