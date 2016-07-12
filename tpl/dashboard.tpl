@@ -14,7 +14,7 @@
                 <div class="row">
                     <div class="card-panel col s12 m8">
                         <!-- Staatkontrolle -->
-                        <p class="center-align"><b>Staatskontrolle</b></p>
+                        <p class="header indigo-text">Staatskontrolle</p>
                         <p id="stateState"></p>
                         <p>
                             {if $header.perm.admin_state_open == 1}
@@ -74,7 +74,7 @@
             <div class="col s12 m4">
                 <div class="card-panel">
                     <!-- die letzten 5 Logs aus der Datenbank -->
-                    <p class="center-align"><b>Logs</b></p>
+                    <p class="header indigo-text">Logs</p>
                     <ul class="collection" id="logs">
 
                     </ul>

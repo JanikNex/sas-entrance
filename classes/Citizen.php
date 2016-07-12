@@ -235,7 +235,7 @@ class Citizen {
             $hits = [];
             foreach($array as $citizen) {
                 if($citizen->isCitizenLocked()) {
-                    $keys["id"] = $citizen->getID();
+                    $keys["id"] = $citizen->getCID();
                     $keys["fname"] = utf8_encode($citizen->getFirstname());
                     $keys["lname"] = utf8_encode($citizen->getLastname());
                     $keys["st"] = utf8_encode($citizen->isCitizenInState() ? 1 : 0);
@@ -487,7 +487,7 @@ class Citizen {
      * @return Citizen[]
      */
     public static function getAllVisitorsInState($sort = "", $page = 1, $pagesize = 9999999, $search = "") {
-        return self::getAllCitizen($sort, "Schüler", $page, $pagesize, $search);
+        return self::getAllCitizenInStateSimple($sort, "Visum", $page, $pagesize, $search);
     }
 
     /**
@@ -509,19 +509,7 @@ class Citizen {
      * @return Citizen[]
      */
     public static function getAllCourriersOutOfState($sort, $page, $pagesize, $search){
-        $pdo = new PDO_MYSQL();
-        if($search != "") {
-            $startElem = ($page-1) * $pagesize;
-            $endElem = $startElem + $pagesize;
-            $query = "SELECT cID FROM entrance_citizen WHERE LOWER(CONCAT(firstname,' ', lastname,' ',barcode)) LIKE LOWER('%".$_GET["search"]."%') AND classlevel = 16 AND state = 1  ".CSORTING[$sort]." LIMIT ".$startElem.','.$endElem;
-            $stmt = $pdo->queryMulti($query);
-            return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
-        } else {
-            $startElem = ($page-1) * $pagesize;
-            $endElem = $startElem + $pagesize;
-            $stmt = $pdo->queryMulti("SELECT cID FROM entrance_citizen WHERE classlevel = 16 AND state = 1 " . CSORTING[$sort]." LIMIT ".$startElem.','.$endElem);
-            return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\Citizen::fromCID");
-        }
+        return self::getAllCitizenInStateSimple("descID","Kurier");
     }
 
     /**
