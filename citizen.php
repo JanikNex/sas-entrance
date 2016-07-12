@@ -194,30 +194,6 @@ if($action == "new") {
             echo \Entrance\Citizen::getCurrentCitizenCount("","","");
     }
     exit;
-} elseif($action == "kickall") {
-    if($user->isActionAllowed(PERM_ADMIN_KICKALL)) {
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Alle rausschmeißen", $user);
-        $dwoo->output("tpl/kickAllConfirm.tpl", $pgdata);
-        exit;
-    } else {
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Alle rausschmeißen", $user);
-        $dwoo->output("tpl/noPrivilegesSpecial.tpl", $pgdata);
-        exit();
-    }
-} elseif($action == "confirmKickAll") {
-    if($user->isActionAllowed(PERM_ADMIN_KICKALL)) {
-
-        if($_POST["security1"] == "iScH bIn MiR wIrKlIsCh sIsChAaAa!!" && $_POST["security2"] == "ok") {
-            \Entrance\LogEntry::kickAllCitizensOutOfState($user);
-        }
-        \Entrance\Util::forwardTo("citizen.php");
-
-        exit;
-    } else {
-        $pgdata = \Entrance\Util::getEditorPageDataStub("Alle rausschmeißen", $user);
-        $dwoo->output("tpl/noPrivilegesSpecial.tpl", $pgdata);
-        exit();
-    }
 } elseif($action == "addTracing" and is_numeric($cID)) {
     if($user->isActionAllowed(PERM_TRACING_ADD)) {
         \Entrance\TracingEntry::createTracingEntry(\Entrance\Citizen::fromCID($cID),$user);
