@@ -107,14 +107,6 @@ function prepare() {
     $("#classlvl").html("...");
     $("#cID").html("...");
     $("ul#logs").html('<li class="collection-item avatar"><i class="material-icons circle grey">code</i> <span class="title">Warte auf Scan....</span> <p> </p> </li>');
-
-    $.getJSON("check.php?action=stateInfo", null, function(data) {
-        if(data["stateState"]) $("#scanClosed").hide();
-        else {
-            $("#scanClosed").show();
-            audioClosed.play()
-        }
-    });
 }
 
 function updateCitizenData(data) {
@@ -220,3 +212,16 @@ function reloadCitizenData() {
         }
     });
 }
+
+function refresh() {
+    $.getJSON("check.php?action=stateInfo", null, function(data) {
+        if(data["stateState"]) $("#scanClosed").hide();
+        else {
+            $("#scanClosed").show();
+            audioClosed.play()
+        }
+    });
+    window.setTimeout("refresh()",1000);
+}
+
+$.(document).ready(refresh);
