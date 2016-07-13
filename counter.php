@@ -21,24 +21,19 @@
             <div class="nav-wrapper indigo">
                 <span class="brand-logo" style="padding-left: 20px;">Schlopolis</span>
                 <ul class="right hide-on-med-and-down">
-                    <li id="timehour" style="font-size: 40px;" class="odometer"></li>
+                    <li id="timehour" style="font-size: 40px;"></li>
                     <li style="font-size: 40px;"> : </li>
-                    <li id="timemin" style="font-size: 40px;" class="odometer"></li>
+                    <li id="timemin" style="font-size: 40px;"></li>
                     <li style="font-size: 40px;"> : </li>
-                    <li id="timesec" style="font-size: 40px;" class="odometer"></li>
+                    <li id="timesec" style="font-size: 40px;"></li>
                 </ul>
             </div>
         </nav>
-        <script>
-        window.odometerOptions = {
-            format: '(.ddd)'
-        };
-        </script>
         <main style="padding:0;">
             <div class="container">
                 <div class="row center">
                         <h1 class="center">Aktuell sind</h1>
-                        <div id="count" class="odometer" style="text-align: right; font-size: 35vh;"></div>
+                        <div id="count" style="text-align: right; font-size: 35vh;"></div>
                     <h1 class="center"><?php if($_GET['type'] == "all") echo "Personen"; elseif($_GET['type'] == "visit") echo "Besucher"; else echo "Bürger";?> im Staat</h1>
                 </div>
             </div>
@@ -53,39 +48,76 @@
     </style>
     <script>
         $(document).ready(function() {
-          $(".dropdown-button").dropdown();
+            $(".dropdown-button").dropdown();
 
-          // Initialize collapse button
-          $(".button-collapse").sideNav();
-          // Initialize collapsible (uncomment the line below if you use the dropdown variation)
-          //$('.collapsible').collapsible();
+            // Initialize collapse button
+            $(".button-collapse").sideNav();
+            // Initialize collapsible (uncomment the line below if you use the dropdown variation)
+            //$('.collapsible').collapsible();
 
-          $('.odometer').html(123); // with jQuery
-          (function() {
-              var oldOpen = XMLHttpRequest.prototype.open;
-              window.openHTTPs = 0;
-              XMLHttpRequest.prototype.open = function(method, url, async, user, pass) {
-                  window.openHTTPs++;
-                  this.addEventListener("readystatechange", function() {
-                      if(this.readyState == 4) {
-                          window.openHTTPs--;
-                      }
-                  }, false);
-                  oldOpen.call(this, method, url, async, user, pass);
-              }
-          })();
+            od = new Odometer({
+                el: document.querySelector("#count"),
+                value: 0,
+
+                // Any option (other than auto and selector) can be passed in here
+                format: '( ddd)',
+                duration: 750
+            });
+
+            od1 = new Odometer({
+                el: document.querySelector("#timehour"),
+                value: 0,
+
+                // Any option (other than auto and selector) can be passed in here
+                format: '(dd)',
+                duration: 4000
+            });
+            od2 = new Odometer({
+                el: document.querySelector("#timemin"),
+                value: 0,
+
+                // Any option (other than auto and selector) can be passed in here
+                format: '(dd)',
+                duration: 2000
+            });
+            od3 = new Odometer({
+                el: document.querySelector("#timesec"),
+                value: 0,
+
+                // Any option (other than auto and selector) can be passed in here
+                format: '(dd)',
+                duration: 250
+            });
+
+            (function () {
+                var oldOpen = XMLHttpRequest.prototype.open;
+                window.openHTTPs = 0;
+                XMLHttpRequest.prototype.open = function (method, url, async, user, pass) {
+                    window.openHTTPs++;
+                    this.addEventListener("readystatechange", function () {
+                        if (this.readyState == 4) {
+                            window.openHTTPs--;
+                        }
+                    }, false);
+                    oldOpen.call(this, method, url, async, user, pass);
+                }
+            })();
             refresh();
             refreshCaller();
+            refreshTime();
         });
 
         function refreshCaller() {
             if(window.openHTTPs == 0) refresh();
-            // den Inhalt des Requests in das <div> schreiben
+            window.setTimeout("refreshCaller()", 250);
+        }
+
+        function refreshTime() {
             var d = new Date();
             $('#timehour').html(100+d.getHours());
             $('#timemin').html(100+d.getMinutes());
             $('#timesec').html(100+d.getSeconds());
-            window.setTimeout("refreshCaller()", 250);
+            window.setTimeout("refreshTime()", 100);
         }
 
         var request = false;
