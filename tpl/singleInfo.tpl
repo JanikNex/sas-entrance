@@ -27,9 +27,12 @@
             <div class="col s12 m6 offset-m1">
                 <div class="card-panel row">
                     <p class="header indigo-text">Aktionen</p>
-                    <a onclick="currInfo()" class="col s12 btn indigo">Infoseite</a><br/><br/>
-                    <a onclick="currCheckIn()" class="col s12 btn indigo">Einbuchen</a><br/><br/>
-                    <a onclick="currCheckOut()" class="col s12 btn indigo">Ausbuchen</a><br/><br/>
+                    <a id="btnRefresh" onclick="checkData()" class="col s12 btn green">Aktualisieren</a><br/><br/>
+                    <a id="btnCurrInfo" onclick="currInfo()" class="col s12 btn indigo">Infoseite</a><br/><br/>
+                    <a id="btnCurrCheckIn" onclick="currCheckIn()" class="col s12 btn indigo">Einbuchen</a><br/><br/>
+                    <a id="btnCurrCheckOut" onclick="currCheckOut()" class="col s12 btn indigo">Ausbuchen</a><br/><br/>
+                    <a id="btnCurrErrIgnore" onclick="currErrIgnore()" class="col s12 btn red lighten-2">Fehler ignorieren</a><br/><br/>
+                    <a id="btnCurrErrCorrect" onclick="currErrCorrect()" class="col s12 btn red lighten-2">Fehler korrigieren</a><br/><br/>
                 </div>
                 <div class="card-panel row">
                     <p class="header indigo-text">Logs</p>

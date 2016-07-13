@@ -3,6 +3,7 @@
  */
 
 var currCitizenID = -1;
+var currCitizenBarcode = 0;
 var logTmplt = Handlebars.compile(`
     <li class="collection-item avatar">
         <i class="material-icons circle {{color}}">{{icon}}</i>
@@ -20,8 +21,15 @@ $(document).ready(function () {
         if(e.which == 13) {
             e.preventDefault();
             checkData();
+            currCitizenBarcode = $("#barcode").val();
+            $("#barcode").val("");
         }
     });
+    $("#btnCurrInfo").addClass("disabled");
+    $("#btnCurrCheckIn").addClass("disabled");
+    $("#btnCurrCheckOut").addClass("disabled");
+    $("#btnCurrErrCorrect").addClass("disabled");
+    $("#btnCurrErrIgnore").addClass("disabled");
 });
 
 function checkData() {
@@ -34,6 +42,17 @@ function checkData() {
             $("#iName").html(data.citizen.firstname+" "+data.citizen.lastname);
             $("#iClasslvl").html(data.citizen.classlevel);
             $("#iTimeToday").html(data.citizen.timeToday);
+
+            $("#btnCurrInfo").removeClass("disabled");
+            $("#btnCurrCheckIn").removeClass("disabled");
+            $("#btnCurrCheckOut").removeClass("disabled");
+            if(data.citizen.locked) {
+                $("#btnCurrErrCorrect").removeClass("disabled");
+                $("#btnCurrErrIgnore").removeClass("disabled");
+            } else {
+                $("#btnCurrErrCorrect").addClass("disabled");
+                $("#btnCurrErrIgnore").addClass("disabled");
+            }
 
             if(data.citizen.inState == 0) $("#iState").html("<span class='green-text bolden'>Im Staat</span>")
             else if(data.citizen.inState == 1) $("#iState").html("<span class='red-text bolden'>nicht im Staat</span>")
@@ -65,6 +84,11 @@ function checkData() {
                 });
             } else $("ul#logs").html('<li class="collection-item avatar"><i class="material-icons circle grey">code</i> <span class="title">Keine Einträge verfügbar.</span> <p> </p> </li>');
         } else {
+            $("#btnCurrInfo").addClass("disabled");
+            $("#btnCurrCheckIn").addClass("disabled");
+            $("#btnCurrCheckOut").addClass("disabled");
+            $("#btnCurrErrCorrect").addClass("disabled");
+            $("#btnCurrErrIgnore").addClass("disabled");
             Materialize.toast("Person nicht gefunden.", 500, "red");
         }
     });
@@ -96,6 +120,30 @@ function currCheckOut() {
                 Materialize.toast('Error: ' + data["error"]["errorString"], 4000, 'red');
             } else Materialize.toast('Internal Error: ' + data["error"], 4000, 'red');
         }
+        checkData();
+    });
+}
+
+function currErrCorrect() {
+    data = {
+        barcode: currCitizenBarcode
+    }
+    $.post("errors.php?action=autoCorrectJ", data, function(data) {
+        json = JSON.parse(data);
+        if(json.success) Materialize.toast("Korrigiert.", 2000, "green");
+        else Materialize.toast("Mhh oukaay.", 4000, "red");
+        checkData();
+    });
+}
+
+function currErrIgnore() {
+    data = {
+        barcode: currCitizenBarcode
+    }
+    $.post("errors.php?action=autoIgnoreJ", data, function(data) {
+        json = JSON.parse(data);
+        if(json.success) Materialize.toast("Ignoriert. ^^", 2000, "green");
+        else Materialize.toast("Mhh oukaay.", 4000, "red");
         checkData();
     });
 }

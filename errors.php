@@ -83,7 +83,18 @@ if($action == "correctThis" and is_numeric($eID)) {
         $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
         exit;
     }
+} elseif($action == "autoCorrectJ") {
+    if($user->isActionAllowed(PERM_CITIZEN_CORRECT_ERRORS) or $user->isActionAllowed(PERM_ADMIN_ERRORS)) {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Fehler beheben", $user);
+        $citizen = \Entrance\Citizen::fromBarcode($_POST["barcode"]);
 
+        echo json_encode(["success" => $citizen->forceErrorCorrect($user)]);
+        exit; //To not show the list
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Fehler beim Fehler", $user);
+        $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
+    }
 } elseif($action == "correct") {
     if($user->isActionAllowed(PERM_CITIZEN_CORRECT_ERRORS) or $user->isActionAllowed(PERM_ADMIN_ERRORS)) {
         $pgdata = \Entrance\Util::getEditorPageDataStub("Fehler beheben", $user);
@@ -129,6 +140,20 @@ if($action == "correctThis" and is_numeric($eID)) {
             }
         }
         $dwoo->output("tpl/errorIgnore.tpl", $pgdata);
+
+        exit; //To not show the list
+    } else {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Fehler beim Fehler ignorieren", $user);
+        $dwoo->output("tpl/noPrivileges.tpl", $pgdata);
+        exit;
+    }
+} elseif($action == "autoIgnoreJ") {
+    if($user->isActionAllowed(PERM_CITIZEN_IGNORE_ERRORS) or $user->isActionAllowed(PERM_ADMIN_ERRORS)) {
+        $pgdata = \Entrance\Util::getEditorPageDataStub("Fehler ignorieren", $user);
+        $citizen = \Entrance\Citizen::fromBarcode($_POST["barcode"]);
+
+        echo json_encode(["success" => $citizen->forceErrorCorrectIgnore($user)]);
+
 
         exit; //To not show the list
     } else {
