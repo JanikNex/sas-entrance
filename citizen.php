@@ -178,22 +178,23 @@ if($action == "new") {
     }
 } elseif($action == "counter") {
     if(true) {
-    header('Content-Type: text/html; charset=utf-8'); // sorgt für die korrekte Kodierung
-    header('Cache-Control: must-revalidate, pre-check=0, no-store, no-cache, max-age=0, post-check=0'); // ist mal wieder wichtig wegen IE
-    switch($_GET['type']) {
-        case "all":
-            echo \Entrance\Citizen::getCurrentCitizenCount("","","");
-            break;
-        case "visit":
-            echo \Entrance\Citizen::getCurrentVisitorCount();
-            break;
-        case "student":
-            echo \Entrance\Citizen::getCurrentStudentCount();
-            break;
-        default:
-            echo \Entrance\Citizen::getCurrentCitizenCount("","","");
+        header('Content-Type: text/html; charset=utf-8'); // sorgt für die korrekte Kodierung
+        header('Cache-Control: must-revalidate, pre-check=0, no-store, no-cache, max-age=0, post-check=0'); // ist mal wieder wichtig wegen IE
+        switch ($_GET['type']) {
+            case "all":
+                echo \Entrance\Citizen::getCurrentCitizenCount("", "", "");
+                break;
+            case "visit":
+                echo \Entrance\Citizen::getCurrentVisitorCount();
+                break;
+            case "student":
+                echo \Entrance\Citizen::getCurrentStudentCount();
+                break;
+            default:
+                echo \Entrance\Citizen::getCurrentCitizenCount("", "", "");
+        }
+        exit;
     }
-    exit;
 } elseif($action == "addTracing" and is_numeric($cID)) {
     if($user->isActionAllowed(PERM_TRACING_ADD)) {
         \Entrance\TracingEntry::createTracingEntry(\Entrance\Citizen::fromCID($cID),$user);

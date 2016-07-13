@@ -292,6 +292,25 @@ class LogEntry {
     }
 
     /**
+     * @param $filtertext string
+     * @return Log[]
+     */
+    public static function getLogsFiltered($filtertext) {
+        $pdo = new PDO_MYSQL();
+        $stmt = $pdo->queryMulti("SELECT lID FROM entrance_logs WHERE uID in (".$filtertext.") order by lID desc limit 20");
+        return $stmt->fetchAll(PDO::FETCH_FUNC, "\\Entrance\\LogEntry::fromLID");
+    }
+
+    /**
+     * @return int
+     */
+    public static function getCountLogsToday() {
+        $pdo = new PDO_MYSQL();
+        $res = $pdo->query("select count(*) as count from entrance_logs WHERE DATE(`timestamp`) = CURDATE()");
+        return $res->count;
+    }
+
+    /**
      * Checks out all Citizens in State!
      * @see kickCitizenOutOfState()
      *

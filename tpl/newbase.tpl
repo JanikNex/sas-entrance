@@ -144,6 +144,7 @@
                                             {if $args.perm.admin_kickall == 1}<li><a href="d_kick.php">Alle Rausschmeißen</a></li>{/if}
                                             {if $args.perm.admin_tracing == 1}<li><a href="citizen.php?action=allTracings">Alle Fahndungen</a></li>{/if}
                                             {if $args.perm.admin_state_dashboard == 1}<li><a href="dashboard.php">Staats Dashboard</a></li>{/if}
+                                            {if $args.perm.admin_state_dashboard == 1}<li><a href="d_adminControl.php">Yannicks Dashboard</a></li>{/if}
                                             {if $args.perm.admin_state_dashboard == 1}<li><a href="stats.php">Statistik</a></li>{/if}
                                             {if $args.perm.admin_export == 1}<li><a href="export.php">Exportieren</a></li>{/if}
                                         </ul>
@@ -154,7 +155,7 @@
                         <li class="divider"></li>
                         <li style="height: 100px"></li>
                         <li class="indigo" style="position: fixed; width: 240px; bottom: 0px; font-size: 12px; line-height: 16px; padding:10px">
-                            Entrance Version 1.0.0<br/>© 2016 Yannick Félix & Janik Rapp
+                            Entrance Version 1.0.3<br/>© 2016 Yannick Félix & Janik Rapp
                         </li>
                         {/if}
                     </ul>
