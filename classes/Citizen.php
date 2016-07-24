@@ -666,15 +666,19 @@ class Citizen {
         elseif ($this->isCitizenInState() == 2) {
             $pdo->query("UPDATE entrance_citizen SET state = 2 WHERE cID = :cID", [":cID" => $this->getCID()]);
         }
+
+        $isBad = $this->isBad() ? 1:0;
+        $pdo->query("UPDATE entrance_citizen SET isBad = :isBad WHERE cID = :cID", [":cID" => $this->getCID(), ":isBad" => $isBad]);
+    }
+
+    public function isBad() {
         $days = LogEntry::getProjectDays();
-        $isBad = 0;
         foreach($days as $day){
-            if(($this -> getTimePerDay($day) <= 21600) && ($this->getClasslevel()<13)){
-                $isBad = 1;
-                break;
+            if(($this->getClasslevel()<13) && ($this -> getTimePerDay($day) <= 20640)){
+                return true;
             }
         }
-        $pdo->query("UPDATE entrance_citizen SET isBad = :isBad WHERE cID = :cID", [":cID" => $this->getCID(), ":isBad" => $isBad]);
+        return false;
     }
 
     /**
@@ -917,18 +921,20 @@ class Citizen {
         array_push($label, "Gesamtzeit");
         array_push($list, $label);
         foreach ($students as $student){
-            if ($student->getClasslevel() <= 10) {
-                if (!((substr($student->getBarcode(), 8, 2) == $currentClass[0]) && (substr($student->getBarcode(), 10, 1) == $currentClass[1]))) {
-                    $currentClass = [substr($student->getBarcode(), 8, 2), substr($student->getBarcode(), 10, 1)];
-                    array_push($list, ["Klasse", $currentClass[0], $CLASS[$currentClass[1]-1]]);
+            if($student->isBad()) {
+                if($student->getClasslevel() <= 10) {
+                    if(!((substr($student->getBarcode(), 8, 2) == $currentClass[0]) && (substr($student->getBarcode(), 10, 1) == $currentClass[1]))) {
+                        $currentClass = [substr($student->getBarcode(), 8, 2), substr($student->getBarcode(), 10, 1)];
+                        array_push($list, ["Klasse", $currentClass[0], $CLASS[$currentClass[1] - 1]]);
+                    }
+                } else {
+                    if(!((substr($student->getBarcode(), 8, 2) == $currentClass[0]) && (substr($student->getClassdetail(), 2) == $currentClass[1]))) {
+                        $currentClass = [substr($student->getClassdetail(), 0, 2), substr($student->getClassdetail(), 2)];
+                        array_push($list, ["Kurs", $currentClass[0], $currentClass[1]]);
+                    }
                 }
-            } else {
-                if (!((substr($student->getBarcode(), 8, 2) == $currentClass[0]) && (substr($student->getClassdetail(), 2) == $currentClass[1]))) {
-                    $currentClass = [substr($student->getClassdetail(), 0, 2), substr($student->getClassdetail(), 2)];
-                    array_push($list, ["Kurs", $currentClass[0], $currentClass[1]]);
-                }
+                array_push($list, $student->timeAsArray());
             }
-            array_push($list, $student->timeAsArray());
         }
 
         return $list;

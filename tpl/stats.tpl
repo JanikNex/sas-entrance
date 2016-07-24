@@ -7,6 +7,8 @@
                     <h5>Statistik</h5>
                     <div id="stat" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
                     <br/><br/>
+                    <div id="stat2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                    <br/><br/>
                 </div>
             </div>
         </div>

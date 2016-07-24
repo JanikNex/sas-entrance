@@ -49,7 +49,7 @@
             </div>
         </main>
         <footer class="indigo white-text" style="position: fixed; bottom: 0; left: 0; right: 0; padding: 5px;">
-            SaS Zugangskontrolle v1.0.3 &copy2016 Janik Rapp & Yannick F&#233;lix
+            SaS Zugangskontrolle v1.0.5 &copy2016 Janik Rapp & Yannick F&#233;lix
         </footer>
     </body>
     <style>
